@@ -12,7 +12,7 @@
 namespace margelo::nitro::filament {
 
 HybridModel::HybridModel(std::shared_ptr<HybridEngine> engine, std::shared_ptr<ModelCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 double HybridModel::getRootEntity() {
   return core_->snapshot().rootEntity;

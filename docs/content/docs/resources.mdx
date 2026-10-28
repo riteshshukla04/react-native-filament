@@ -260,7 +260,6 @@ export function CoinList() {
 ```tsx
 import { useEffect, useState } from 'react'
 import { Image, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 const coin = Image.resolveAssetSource(require('./coin.glb'))
@@ -304,8 +303,8 @@ export function TwoViews() {
 
   return (
     <View style={{ flex: 1 }}>
-      <NativeFilamentView style={{ aspectRatio: 2 }} hybridRef={callback(setTop)} />
-      <NativeFilamentView style={{ aspectRatio: 2 }} hybridRef={callback(setBottom)} />
+      <NativeFilamentView style={{ aspectRatio: 2 }} hybridRef={setTop} />
+      <NativeFilamentView style={{ aspectRatio: 2 }} hybridRef={setBottom} />
     </View>
   )
 }

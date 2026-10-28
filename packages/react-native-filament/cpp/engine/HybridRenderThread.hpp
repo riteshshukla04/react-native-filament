@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EngineCore.hpp"
-#include "HybridRenderThreadSpec.hpp"
+#include <NitroFilament/HybridRenderThreadSpec.hpp>
 
 #include <memory>
 
@@ -9,14 +9,22 @@ namespace margelo::nitro::filament {
 
 class HybridRenderThread final : public HybridRenderThreadSpec {
 public:
-  explicit HybridRenderThread(std::shared_ptr<EngineCore> engine) : HybridObject(TAG), engine_(std::move(engine)) {}
+  struct Class {
+    using Base = HybridRenderThreadSpec::Class;
+    static constexpr const char* name = "RenderThread";
+    static const std::shared_ptr<const HybridClass>& get();
+  };
+
+  explicit HybridRenderThread(std::shared_ptr<EngineCore> engine) : engine_(std::move(engine)) {}
 
   bool getIsCurrentThread() override;
   bool getHasRuntime() override;
-  std::shared_ptr<HybridRenderThreadCleanupSpec> retainCleanup(const std::function<void()>& cleanup) override;
+  std::shared_ptr<HybridRenderThreadCleanupSpec> retainCleanup(const Callback<void()>& cleanup) override;
 
 protected:
-  void loadHybridMethods() override;
+  const std::shared_ptr<const HybridClass>& getHybridClass() override {
+    return Class::get();
+  }
 
 private:
   jsi::Value createQueue(jsi::Runtime& runtime, const jsi::Value& thisValue, const jsi::Value* args, size_t count);

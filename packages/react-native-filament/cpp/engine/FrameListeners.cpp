@@ -6,7 +6,7 @@
 
 namespace margelo::nitro::filament {
 
-std::shared_ptr<FrameListener> FrameListeners::add(std::function<bool(const FrameInfo&)> callback) {
+std::shared_ptr<FrameListener> FrameListeners::add(Callback<bool(const FrameInfo&)> callback) {
   auto listener = std::make_shared<FrameListener>(std::move(callback));
   listeners_.push_back(listener);
   return listener;
@@ -33,7 +33,7 @@ bool FrameListeners::dispatch(const FrameInfo& frame, const worklets::WorkletRun
         continue;
       }
       try {
-        wantsFrame = listener->callback(frame) || wantsFrame;
+        wantsFrame = listener->callback.callSync(frame) || wantsFrame;
       } catch (const std::exception& error) {
         logError(std::string("A frame listener threw: ") + error.what());
       }

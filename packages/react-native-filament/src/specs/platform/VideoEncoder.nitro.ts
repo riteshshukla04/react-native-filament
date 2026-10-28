@@ -1,11 +1,18 @@
-import type { HybridObject, UInt64 } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject, type UInt64 } from 'react-native-nitro-modules'
+import type { VideoEncoderOptions } from '../types/VideoEncoderOptions'
+
+export * from '#nitro/VideoEncoder'
 
 /**
  * An H.264 MP4 writer that Filament renders into: `AVAssetWriter` on iOS, an asynchronous
  * `MediaCodec` and `MediaMuxer` on Android. Its methods are called from one thread at a time; its
  * listeners fire on any thread. Internal to react-native-filament.
  */
-export interface VideoEncoder extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
+@Apple({ language: 'swift', implementation: { className: 'HybridVideoEncoder' } })
+@Android({ language: 'kotlin', implementation: { className: 'HybridVideoEncoder' } })
+export declare class VideoEncoder extends HybridObject {
+  /** Resolves once the encoder accepts frames. */
+  static create(options: VideoEncoderOptions): Promise<VideoEncoder>
   /**
    * The native target to render the next frame into: a `CVPixelBuffer` on iOS that stays valid
    * until it is submitted, the encoder's input `ANativeWindow` on Android.

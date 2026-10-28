@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, View } from 'react-native'
 import { useSharedValue, withTiming } from 'react-native-reanimated'
-import { callback } from 'react-native-nitro-modules'
 import {
   bindSharedValue,
   defaultIndirectLightSource,
@@ -92,7 +91,7 @@ export function FadeOutExample() {
 
   return (
     <View style={styles.background}>
-      <NativeFilamentView style={styles.container} transparent hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} transparent hybridRef={setView} />
       <Button title="Fade out" onPress={fadeOut} />
     </View>
   )

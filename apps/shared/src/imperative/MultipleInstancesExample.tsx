@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 import { bundledAsset } from '../utils/bundledAsset'
 
@@ -63,7 +62,7 @@ export function MultipleInstancesExample() {
 
   return (
     <View style={styles.background}>
-      <NativeFilamentView style={styles.container} transparent hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} transparent hybridRef={setView} />
     </View>
   )
 }

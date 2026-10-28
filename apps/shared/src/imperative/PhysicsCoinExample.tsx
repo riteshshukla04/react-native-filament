@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { scheduleOnRN } from 'react-native-worklets'
 import {
   composeTransform,
@@ -146,7 +145,7 @@ export function PhysicsCoinExample() {
 
   return (
     <View style={styles.container}>
-      <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} hybridRef={setView} />
       <Text style={styles.status}>{status}</Text>
       <Button title="Drop again" disabled={simulation == null} onPress={dropAgain} />
     </View>

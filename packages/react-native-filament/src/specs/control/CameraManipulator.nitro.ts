@@ -1,5 +1,7 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { LookAt } from '../types/LookAt'
+
+export * from '#nitro/CameraManipulator'
 
 /**
  * Orbits a camera around a target from drag and pinch input. Commands are queued from any thread
@@ -10,7 +12,9 @@ import type { LookAt } from '../types/LookAt'
  * so the limit is only reached by flooding other commands; those calls throw
  * `FilamentQueueFullError` and change nothing. A started drag can always end.
  */
-export interface CameraManipulator extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"control/HybridCameraManipulator.hpp"', className: 'HybridCameraManipulator' } })
+@Android({ language: 'c++', implementation: { include: '"control/HybridCameraManipulator.hpp"', className: 'HybridCameraManipulator' } })
+export declare class CameraManipulator extends HybridObject {
   /**
    * Starts a drag that orbits, or pans when `strafe` is true. Ends a drag still in progress first.
    * @thread any

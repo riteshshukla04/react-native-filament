@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
   Filament,
@@ -113,7 +112,7 @@ export function BackgroundShadowsExample() {
 
   return (
     <View style={styles.container}>
-      <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} hybridRef={setView} />
       <Button title={showBounds ? 'Hide bounds' : 'Show bounds'} disabled={bounds == null} onPress={toggleBounds} />
     </View>
   )

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridLightManagerSpec.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridLightManagerSpec.hpp>
 
 #include <filament/LightManager.h>
 

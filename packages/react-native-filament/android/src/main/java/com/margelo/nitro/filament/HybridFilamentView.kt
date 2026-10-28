@@ -6,6 +6,7 @@ import android.widget.FrameLayout
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
 import com.facebook.react.uimanager.ThemedReactContext
+import com.margelo.nitro.core.callSync
 
 @Keep
 @DoNotStrip
@@ -13,7 +14,7 @@ class HybridFilamentView(context: ThemedReactContext) : HybridFilamentViewSpec()
   private val container = FrameLayout(context)
   private var source: SurfaceSource = createSource(transparent = false)
   private var observer: SurfaceObserver? = null
-  private var lease: HybridNativeSurface? = null
+  private var lease: NativeSurfaceLease? = null
   private var holder: SurfaceObserver? = null
 
   override val view: View = container
@@ -42,13 +43,13 @@ class HybridFilamentView(context: ThemedReactContext) : HybridFilamentViewSpec()
     val created = source.createLease(::onLeaseReleased) ?: return
     lease = created
     holder = observer
-    observer.onCreated(created)
+    observer.onCreated.callSync(created.toNativeSurface())
   }
 
   override fun onSurfaceResized() {
     val current = lease ?: return
     current.resize(source.size)
-    holder?.onResized(current)
+    holder?.onResized?.callSync(current.toNativeSurface())
   }
 
   override fun onSurfaceDestroyed() {
@@ -61,10 +62,10 @@ class HybridFilamentView(context: ThemedReactContext) : HybridFilamentViewSpec()
     val current = lease ?: return
     val previous = holder ?: return
     holder = null
-    previous.onDestroyed(current)
+    previous.onDestroyed.callSync(current.toNativeSurface())
   }
 
-  private fun onLeaseReleased(released: HybridNativeSurface) {
+  private fun onLeaseReleased(released: NativeSurfaceLease) {
     container.post {
       if (lease !== released) return@post
       val withdrawn = holder == null
@@ -79,4 +80,6 @@ class HybridFilamentView(context: ThemedReactContext) : HybridFilamentViewSpec()
     container.addView(created.view, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
     return created
   }
+
+  companion object : HybridFilamentViewSpec.Companion
 }

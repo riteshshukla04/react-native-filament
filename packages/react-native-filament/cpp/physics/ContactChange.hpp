@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CollisionEventKind.hpp"
+#include <NitroFilament/CollisionEventKind.hpp>
 
 #include <memory>
 

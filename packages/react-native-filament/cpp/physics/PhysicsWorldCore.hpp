@@ -37,7 +37,7 @@ public:
   std::shared_ptr<CollisionShapeCore> adoptShape(std::shared_ptr<CollisionShapeCore> shape);
   std::shared_ptr<RigidBodyCore> createBody(const std::shared_ptr<CollisionShapeCore>& shape, const RigidBodyCore::Setup& setup);
   void detach(RigidBodyCore& body);
-  std::shared_ptr<CollisionListeners::Entry> addCollisionListener(CollisionListeners::Callback callback);
+  std::shared_ptr<CollisionListeners::Entry> addCollisionListener(CollisionListeners::Listener callback);
   bool step(double deltaSeconds);
 
 protected:

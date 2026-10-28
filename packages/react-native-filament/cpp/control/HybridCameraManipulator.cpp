@@ -3,7 +3,7 @@
 namespace margelo::nitro::filament {
 
 HybridCameraManipulator::HybridCameraManipulator(std::shared_ptr<EngineCore> engine, std::shared_ptr<ManipulatorCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 HybridCameraManipulator::~HybridCameraManipulator() {
   core_->stop();

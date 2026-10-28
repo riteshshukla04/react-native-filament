@@ -1,8 +1,8 @@
 #pragma once
 
-#include "HybridCameraManipulatorSpec.hpp"
 #include "ManipulatorCore.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridCameraManipulatorSpec.hpp>
 
 #include <memory>
 

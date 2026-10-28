@@ -57,7 +57,7 @@ void PhysicsWorldCore::detach(RigidBodyCore& body) {
   bodyCount_ = bodies_.size();
 }
 
-std::shared_ptr<CollisionListeners::Entry> PhysicsWorldCore::addCollisionListener(CollisionListeners::Callback callback) {
+std::shared_ptr<CollisionListeners::Entry> PhysicsWorldCore::addCollisionListener(CollisionListeners::Listener callback) {
   return collisionListeners_.add(std::move(callback));
 }
 

@@ -369,7 +369,6 @@ export function App() {
 `,
     imperative: `
 import React, { useEffect, useState } from 'react'
-import { callback } from 'react-native-nitro-modules'
 import { Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 export function App() {
@@ -392,7 +391,7 @@ export function App() {
       starting.then(({ engine }) => engine.shutdown())
     }
   }, [view])
-  return <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 }
 `,
   },
@@ -1336,7 +1335,7 @@ export function App() {
     imperative: `
 import { runOnRenderThread, type Camera, type Engine, type FilamentView, type Scene, type ViewTarget } from 'react-native-filament'
 
-// \`view\` comes from <NativeFilamentView hybridRef={callback(setView)} />.
+// \`view\` comes from <NativeFilamentView hybridRef={setView} />.
 async function attachView(engine: Engine, view: FilamentView, scene: Scene, camera: Camera) {
   const target = await engine.createViewTarget(view, { clearOptions: { color: [0, 0, 0, 1] } })
   await runOnRenderThread(engine, () => {

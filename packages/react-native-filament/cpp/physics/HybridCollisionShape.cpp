@@ -16,7 +16,7 @@ std::shared_ptr<HybridCollisionShapeSpec> HybridCollisionShape::of(const std::sh
 }
 
 HybridCollisionShape::HybridCollisionShape(std::shared_ptr<EngineCore> engine, std::shared_ptr<CollisionShapeCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 CollisionShapeType HybridCollisionShape::getType() {
   return core_->type();

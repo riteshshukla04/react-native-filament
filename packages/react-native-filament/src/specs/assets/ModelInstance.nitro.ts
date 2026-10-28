@@ -1,11 +1,15 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { Entity } from '../types/Entity'
 import type { Animator } from './Animator.nitro'
+
+export * from '#nitro/ModelInstance'
 
 /**
  * One instance of a Model: its entities, animator, material variants and skins.
  */
-export interface ModelInstance extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"assets/HybridModelInstance.hpp"', className: 'HybridModelInstance' } })
+@Android({ language: 'c++', implementation: { include: '"assets/HybridModelInstance.hpp"', className: 'HybridModelInstance' } })
+export declare class ModelInstance extends HybridObject {
   /** @thread any */
   readonly rootEntity: Entity
   /** @thread any */

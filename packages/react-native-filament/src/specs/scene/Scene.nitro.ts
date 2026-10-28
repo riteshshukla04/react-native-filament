@@ -1,14 +1,18 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { Entity } from '../types/Entity'
 import type { Model } from '../assets/Model.nitro'
 import type { IndirectLight } from './IndirectLight.nitro'
 import type { Skybox } from './Skybox.nitro'
 
+export * from '#nitro/Scene'
+
 /**
  * The set of entities, lights, indirect light and skybox a ViewTarget or Recorder renders. Create
  * one with `Engine.createScene()`.
  */
-export interface Scene extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"scene/HybridScene.hpp"', className: 'HybridScene' } })
+@Android({ language: 'c++', implementation: { include: '"scene/HybridScene.hpp"', className: 'HybridScene' } })
+export declare class Scene extends HybridObject {
   /**
    * Number of entities in the scene.
    * @thread render

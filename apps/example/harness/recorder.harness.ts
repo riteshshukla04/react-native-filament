@@ -1,16 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { NitroModules, type HybridObject } from 'react-native-nitro-modules'
-import { Filament, runOnRenderThread, type Engine, type Model, type Recorder } from 'react-native-filament'
+import { Filament, Recorder, RenderTarget, runOnRenderThread, type Engine, type Model } from 'react-native-filament'
+import { AssetIO } from 'react-native-filament/src/specs/platform/AssetIO.nitro'
 import { readMp4Info } from './mp4'
 import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
 const coin = bundledAsset(require('../assets/coin.glb'))
 
-interface AssetIO extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
-  read(uri: string): Promise<ArrayBuffer>
-}
-
-const assetIO = NitroModules.createHybridObject<AssetIO>('AssetIO')
+const assetIO = new AssetIO()
 
 function createRecorder(engine: Engine, model: Model): Promise<Recorder> {
   return runOnRenderThread(engine, () => {
@@ -52,6 +48,11 @@ describe('Recorder', () => {
 
   afterEach(async () => {
     await engine.shutdown()
+  })
+
+  it('is a RenderTarget through the native class hierarchy', () => {
+    expect(recorder).toBeInstanceOf(Recorder)
+    expect(recorder).toBeInstanceOf(RenderTarget)
   })
 
   it('writes an MP4 with the requested size, frame count and duration', async () => {

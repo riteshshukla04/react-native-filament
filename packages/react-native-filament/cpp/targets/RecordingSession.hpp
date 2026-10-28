@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridVideoEncoderSpec.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridVideoEncoderSpecCxx.hpp>
 
 #include <NitroModules/Promise.hpp>
 #include <filament/SwapChain.h>
@@ -14,8 +14,8 @@ namespace margelo::nitro::filament {
 
 struct RecordingSession {
   std::shared_ptr<EngineCore> engine;
-  std::shared_ptr<HybridVideoEncoderSpec> encoder;
-  std::shared_ptr<Promise<std::string>> promise;
+  HybridVideoEncoderSpecCxx encoder;
+  Promise<std::string> promise;
   uint32_t frameCount;
   int64_t presentationBaseNanos;
   uint32_t admitted = 0;

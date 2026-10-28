@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridValueBindingSpec.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridValueBindingSpec.hpp>
 
 #include <atomic>
 #include <memory>

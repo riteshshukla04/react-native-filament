@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CameraCore.hpp"
-#include "HybridCameraSpec.hpp"
+#include <NitroFilament/HybridCameraSpec.hpp>
 
 #include <memory>
 

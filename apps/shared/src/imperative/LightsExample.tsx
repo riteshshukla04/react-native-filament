@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 import { bundledAsset } from '../utils/bundledAsset'
 
@@ -68,7 +67,7 @@ export function LightsExample() {
 
   return (
     <View style={styles.container}>
-      <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} hybridRef={setView} />
       {!rendered && <Text style={styles.loading}>Loading…</Text>}
     </View>
   )

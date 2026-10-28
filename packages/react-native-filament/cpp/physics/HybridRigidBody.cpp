@@ -19,7 +19,7 @@ std::shared_ptr<HybridRigidBodySpec> HybridRigidBody::of(const std::shared_ptr<E
 }
 
 HybridRigidBody::HybridRigidBody(std::shared_ptr<EngineCore> engine, std::shared_ptr<RigidBodyCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 std::string HybridRigidBody::getId() {
   return core_->id();
@@ -82,7 +82,7 @@ std::optional<double> HybridRigidBody::getEntity() {
   return entity.has_value() ? std::optional<double>(fromEntity(*entity)) : std::nullopt;
 }
 
-void HybridRigidBody::setEntity(std::optional<double> entity) {
+void HybridRigidBody::setEntity(const std::optional<double>& entity) {
   RigidBodyCore& core = usable("RigidBody.entity");
   if (entity.has_value()) {
     requireComponent(engine_->engine().getTransformManager(), *entity, "RigidBody.entity", "transform");

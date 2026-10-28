@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AnimationPlayerCore.hpp"
-#include "HybridAnimationPlayerSpec.hpp"
+#include <NitroFilament/HybridAnimationPlayerSpec.hpp>
 
 #include <memory>
 

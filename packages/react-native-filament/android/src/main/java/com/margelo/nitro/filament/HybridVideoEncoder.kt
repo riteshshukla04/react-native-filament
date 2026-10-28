@@ -8,7 +8,12 @@ import android.os.HandlerThread
 import android.view.Surface
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.core.Callback
 import com.margelo.nitro.core.Promise
+import com.margelo.nitro.core.callSync
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import java.io.File
 
 @Keep
@@ -41,9 +46,9 @@ class HybridVideoEncoder(options: VideoEncoderOptions) : HybridVideoEncoderSpec(
     onFrameAccepted()
   }
 
-  override fun setListeners(onFrameAccepted: () -> Unit, onError: (error: Throwable) -> Unit) {
-    this.onFrameAccepted = onFrameAccepted
-    handler.post { this.onError = onError }
+  override fun setListeners(onFrameAccepted: Callback<() -> Unit>, onError: Callback<(error: Throwable) -> Unit>) {
+    this.onFrameAccepted = { onFrameAccepted.callSync() }
+    handler.post { this.onError = { error -> onError.callSync(error) } }
   }
 
   override fun finish(): Promise<String> {
@@ -89,5 +94,13 @@ class HybridVideoEncoder(options: VideoEncoderOptions) : HybridVideoEncoderSpec(
     NativeWindow.release(window)
     inputSurface.release()
     thread.quitSafely()
+  }
+
+  companion object : HybridVideoEncoderSpec.Companion {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    override fun create(options: VideoEncoderOptions): Promise<HybridVideoEncoderSpec> = Promise.async(scope) {
+      HybridVideoEncoder(options)
+    }
   }
 }

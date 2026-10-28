@@ -1,7 +1,11 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
+
+export * from '#nitro/Snapshot'
 
 /** One rendered frame of a `ViewTarget`, kept natively until read. */
-export interface Snapshot extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"targets/HybridSnapshot.hpp"', className: 'HybridSnapshot' } })
+@Android({ language: 'c++', implementation: { include: '"targets/HybridSnapshot.hpp"', className: 'HybridSnapshot' } })
+export declare class Snapshot extends HybridObject {
   /** Width in pixels. @thread any */
   readonly width: number
   /** Height in pixels. @thread any */

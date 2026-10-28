@@ -17,11 +17,15 @@ public:
       : queue_(std::move(queue)), runtime_(std::move(runtime)) {}
 
   void runSync(std::function<void()>&& function) override {
-    std::shared_ptr<EngineCore> engine = queue_->engine();
-    if (engine == nullptr || !engine->thread().isCurrentThread()) {
+    if (!isOnDispatcher()) {
       throw std::runtime_error("FilamentThreadError: synchronous work for the render runtime must run on its render thread.");
     }
     function();
+  }
+
+  bool isOnDispatcher() override {
+    std::shared_ptr<EngineCore> engine = queue_->engine();
+    return engine != nullptr && engine->thread().isCurrentThread();
   }
 
   void runAsync(std::function<void()>&& function) override {

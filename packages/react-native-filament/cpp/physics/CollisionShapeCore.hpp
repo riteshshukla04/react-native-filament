@@ -1,9 +1,9 @@
 #pragma once
 
-#include "CollisionShapeType.hpp"
-#include "CylinderAxis.hpp"
-#include "HybridCollisionShapeSpec.hpp"
 #include "resources/Resource.hpp"
+#include <NitroFilament/CollisionShapeType.hpp>
+#include <NitroFilament/CylinderAxis.hpp>
+#include <NitroFilament/HybridCollisionShapeSpec.hpp>
 
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
 

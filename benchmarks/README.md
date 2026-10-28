@@ -15,6 +15,21 @@ Measured on a Samsung Galaxy F14 (Exynos 1330, Mali-G68, 90 Hz) and the iPhone 1
 - The simulator reaches 60 fps everywhere for both versions, so on iOS only CPU and memory separate them.
 - **An idle on-demand scene gives its upload memory back.** Filament frees the CPU copies of uploaded textures in a later flush and evicts its staging buffers only after several frames, and Android's allocator keeps freed pages until the process allocates again. So once an on-demand Engine has nothing left to render after a load, it waits for the GPU with `flushAndWait()`, returns free heap pages to the system and renders a few more frames (11 on Metal, 4 on Vulkan) before it goes idle. The idle scene then needs no more memory than the continuous one: 101 MB against 98 MB on the simulator (404 MB before), and on the phone 1062 MB against 1139 MB on Vulkan and 738 MB against 832 MB on OpenGL, with the same 97–106 MB native heap instead of 300–400 MB.
 
+## Nitro Modules 1.0
+
+The same scenes on the Galaxy F14 with Vulkan, 3 runs each, before and after the move to React Native 0.88 and Nitro Modules 1.0 (`1.0.0-alpha.nightly.105`). The middle column isolates React Native 0.88; it was measured before the render runtime drained its microtasks after each job. Files: `results/android-rn083-nitro037-vulkan.json`, `results/android-rn088-nitro037-vulkan.json` and `results/android-rn088-nitro1-vulkan.json`.
+
+| Scene | Metric | RN 0.83, Nitro 0.37 | RN 0.88, Nitro 0.37 | RN 0.88, Nitro 1.0 |
+|---|---|---|---|---|
+| Static model, continuous | Render fps / CPU % | 90.3 / 29.1 | 90.3 / 29.1 | 90.3 / 31.4 |
+| Static model, on-demand | CPU % | 5.4 | 5.5 | 4.9 |
+| Animated model | Render fps / CPU % | 90.3 / 32.1 | 90.3 / 31.4 | 90.3 / 32.1 |
+| 100 animated drones | Render fps / CPU % | 25.7 / 10.7 | 26.4 / 10.2 | 26.7 / 9.6 |
+| 400 coins rotated from JS each frame | Render fps / CPU % | 90.2 / 15.5 | 90.1 / 15.8 | 90.2 / 16.2 |
+| 200 physics coins | Render fps / CPU % | 86.6 / 10.7 | 86.8 / 10.7 | 86.3 / 10.5 |
+
+Frame rates are unchanged, and JS and UI threads stay at 90 fps in every scene. CPU moves by at most 2.3 points. The continuous static scene and the rotations scene use 0.4 to 2.3 points more in every pass, inside a single-run spread of 27% to 32%: a separate 5-run pass of the static scene measured 30.5% on Nitro 0.37 and 30.9% on Nitro 1.0. The render loop, animation and physics run in C++, and the rotations scene's 400 calls per frame cross Nitro on the render thread in both versions, so the upgrade changes the code shape rather than the per-frame cost.
+
 ## Scenes
 
 The `Benchmarks` section of the example app holds one screen per scene. Each screen draws the scene full screen and logs one `RNFBENCH` line per second.

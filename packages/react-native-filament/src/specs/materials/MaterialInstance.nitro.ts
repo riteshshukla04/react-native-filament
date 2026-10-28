@@ -1,4 +1,4 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { ColorSpace } from '../types/ColorSpace'
 import type { CullingMode } from '../types/CullingMode'
 import type { Float3 } from '../types/Float3'
@@ -8,11 +8,15 @@ import type { SamplerOptions } from '../types/SamplerOptions'
 import type { TransparencyMode } from '../types/TransparencyMode'
 import type { Texture } from './Texture.nitro'
 
+export * from '#nitro/MaterialInstance'
+
 /**
  * Parameter values for a material. Every member runs on the render thread. Setting a parameter the
  * material does not declare, or with the wrong type, throws.
  */
-export interface MaterialInstance extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"materials/HybridMaterialInstance.hpp"', className: 'HybridMaterialInstance' } })
+@Android({ language: 'c++', implementation: { include: '"materials/HybridMaterialInstance.hpp"', className: 'HybridMaterialInstance' } })
+export declare class MaterialInstance extends HybridObject {
   /** Name of the instance; for a model, the glTF material name. */
   readonly instanceName: string
   /** Name of the material it was created from. For a model, gltfio's shared ubershader. */

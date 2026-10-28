@@ -91,7 +91,7 @@ namespace {
 
 } // namespace
 
-HybridMaterialInstance::HybridMaterialInstance(MaterialInstanceRef ref) : HybridObject(TAG), ref_(std::move(ref)) {}
+HybridMaterialInstance::HybridMaterialInstance(MaterialInstanceRef ref) : ref_(std::move(ref)) {}
 
 std::string HybridMaterialInstance::getInstanceName() {
   const char* name = usable("MaterialInstance.instanceName").getName();

@@ -5,7 +5,7 @@
 namespace margelo::nitro::filament {
 
 HybridTransformBinding::HybridTransformBinding(std::shared_ptr<EngineCore> engine, std::shared_ptr<TransformBindingCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 HybridTransformBinding::~HybridTransformBinding() {
   core_->stop();

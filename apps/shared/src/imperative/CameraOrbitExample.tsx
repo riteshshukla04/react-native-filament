@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, type LayoutChangeEvent } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
-import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
   Filament,
@@ -63,7 +62,7 @@ function OrbitView({ engine, manipulator }: { engine: Engine; manipulator: Camer
   return (
     <GestureDetector gesture={gesture}>
       <View style={styles.container} onLayout={onLayout}>
-        <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+        <NativeFilamentView style={styles.container} hybridRef={setView} />
         {failure != null && <Text style={styles.failure}>Could not load the helmet: {failure}</Text>}
       </View>
     </GestureDetector>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "LookAt.hpp"
 #include "engine/EngineCore.hpp"
 #include "resources/Resource.hpp"
 #include "resources/Users.hpp"
+#include <NitroFilament/LookAt.hpp>
 
 #include <filament/Camera.h>
 #include <utils/Entity.h>

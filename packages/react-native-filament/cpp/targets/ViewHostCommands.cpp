@@ -7,7 +7,7 @@
 namespace margelo::nitro::filament {
 
 ViewHost::ClearSettings toClearSettings(const std::optional<ClearOptions>& options) {
-  ClearOptions resolved = options.value_or(ClearOptions());
+  ClearOptions resolved = options.value_or(ClearOptions(std::nullopt, std::nullopt, std::nullopt));
   auto [r, g, b, a] = resolved.color.value_or(std::make_tuple(0.0, 0.0, 0.0, 0.0));
   return {.color = {static_cast<float>(r), static_cast<float>(g), static_cast<float>(b), static_cast<float>(a)},
           .clear = resolved.clear.value_or(true),

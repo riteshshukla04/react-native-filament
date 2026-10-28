@@ -16,7 +16,7 @@ static ::filament::math::double3 toDouble3(const std::tuple<double, double, doub
 }
 
 HybridCamera::HybridCamera(std::shared_ptr<HybridEngine> engine, std::shared_ptr<CameraCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 double HybridCamera::getEntity() {
   return fromEntity(core_->entity());

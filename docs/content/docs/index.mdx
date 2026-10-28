@@ -23,10 +23,10 @@ react-native-filament renders 3D scenes in React Native with Google's [Filament]
 Install react-native-filament with its two required peers, [Nitro Modules](https://nitro.margelo.com) and [react-native-worklets](https://docs.swmansion.com/react-native-worklets):
 
 ```npm
-npm i react-native-filament react-native-nitro-modules@0.37 react-native-worklets@0.13
+npm i react-native-filament react-native-nitro-modules@alpha-nightly react-native-worklets@0.13
 ```
 
-react-native-filament 2.0 supports React Native 0.88, Nitro Modules 0.37.x and react-native-worklets 0.13.x, so pin the peers to those versions.
+react-native-filament 2.0 supports React Native 0.88, Nitro Modules 1.0 and react-native-worklets 0.13.x, so pin the peers to those versions.
 
 [Reanimated](https://docs.swmansion.com/react-native-reanimated) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler) are optional. Every animatable prop accepts a Reanimated `SharedValue`, and [`useOrbitGestures`](/api/hooks/use-orbit-gestures) returns a Gesture Handler gesture.
 
@@ -121,7 +121,6 @@ export function MyScene() {
 ```tsx title="MyScene.tsx"
 import React, { useEffect, useState } from 'react'
 import { Image } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 const drone = Image.resolveAssetSource(require('./drone.glb'))
@@ -177,7 +176,7 @@ export function MyScene() {
     }
   }, [view])
 
-  return <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 }
 ```
 

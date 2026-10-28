@@ -273,7 +273,7 @@ void EngineCore::runWorklet(const std::shared_ptr<worklets::SerializableWorklet>
   }
 }
 
-std::shared_ptr<FrameListener> EngineCore::addFrameListener(std::function<bool(const FrameInfo&)> callback) {
+std::shared_ptr<FrameListener> EngineCore::addFrameListener(Callback<bool(const FrameInfo&)> callback) {
   std::shared_ptr<FrameListener> listener = frameListeners_.add(std::move(callback));
   listenersWantFrame_ = true;
   updateDemand();
@@ -406,15 +406,15 @@ void EngineCore::returnRuntimeToPool() {
   }
 }
 
-std::shared_ptr<Promise<void>> EngineCore::shutdown() {
+Promise<void> EngineCore::shutdown() {
   std::unique_lock lock(shutdownMutex_);
-  if (shutdownPromise_ != nullptr) {
-    return shutdownPromise_;
+  if (shutdownPromise_.has_value()) {
+    return *shutdownPromise_;
   }
-  shutdownPromise_ = Promise<void>::create();
+  shutdownPromise_ = Promise<void>::pending();
   live_ = false;
   thread_->post({.run = [self = shared_from_this()] { self->shutdownOnRenderThread(); }});
-  return shutdownPromise_;
+  return *shutdownPromise_;
 }
 
 void EngineCore::shutdownOnRenderThread() {

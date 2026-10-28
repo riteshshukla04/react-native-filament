@@ -236,7 +236,6 @@ export function App() {
 ```tsx
 import { View } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
-import { callback } from 'react-native-nitro-modules'
 import { NativeFilamentView, runOnRenderThread, useOrbitGestures, type CameraManipulator, type FilamentView } from 'react-native-filament'
 
 // After creating the Engine, a camera and a view target as in Getting Started:
@@ -252,7 +251,7 @@ function OrbitView({ manipulator, onView }: { manipulator: CameraManipulator; on
   return (
     <GestureDetector gesture={gesture}>
       <View style={{ flex: 1 }} onLayout={({ nativeEvent }) => manipulator.setViewport(nativeEvent.layout.width, nativeEvent.layout.height)}>
-        <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(onView)} />
+        <NativeFilamentView style={{ flex: 1 }} hybridRef={onView} />
       </View>
     </GestureDetector>
   )

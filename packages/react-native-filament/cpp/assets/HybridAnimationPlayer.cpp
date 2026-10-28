@@ -8,7 +8,7 @@
 namespace margelo::nitro::filament {
 
 HybridAnimationPlayer::HybridAnimationPlayer(std::shared_ptr<EngineCore> engine, std::shared_ptr<AnimationPlayerCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 HybridAnimationPlayer::~HybridAnimationPlayer() {
   core_->stop();

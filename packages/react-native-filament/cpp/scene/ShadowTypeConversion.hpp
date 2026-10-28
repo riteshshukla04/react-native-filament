@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ShadowType.hpp"
+#include <NitroFilament/ShadowType.hpp>
 
 #include <filament/Options.h>
 

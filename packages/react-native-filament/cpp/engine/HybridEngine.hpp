@@ -1,11 +1,11 @@
 #pragma once
 
 #include "EngineCore.hpp"
-#include "HybridEngineSpec.hpp"
 #include "assets/AssetBytes.hpp"
 #include "geometry/GeometryCore.hpp"
 #include "materials/MaterialCore.hpp"
 #include "scene/LightCore.hpp"
+#include <NitroFilament/HybridEngineSpec.hpp>
 
 #include <memory>
 
@@ -24,8 +24,8 @@ public:
   RenderMode getRenderMode() override;
   void setRenderMode(RenderMode renderMode) override;
 
-  std::shared_ptr<Promise<std::shared_ptr<HybridViewTargetSpec>>> createViewTarget(const std::shared_ptr<HybridFilamentViewSpec>& view,
-                                                                                   const ViewTargetOptions& options) override;
+  Promise<std::shared_ptr<HybridViewTargetSpec>> createViewTarget(const HybridFilamentViewSpecCxx& view,
+                                                                  const ViewTargetOptions& options) override;
   std::shared_ptr<HybridRecorderSpec> createRecorder(const RecorderOptions& options) override;
   std::shared_ptr<HybridPhysicsWorldSpec> createPhysicsWorld(const PhysicsWorldOptions& options) override;
   std::shared_ptr<HybridSceneSpec> createScene() override;
@@ -40,20 +40,19 @@ public:
                                                     const std::shared_ptr<HybridMaterialInstanceSpec>& material) override;
   std::shared_ptr<HybridRenderableSpec> createBackground(const std::shared_ptr<HybridMaterialInstanceSpec>& material) override;
   std::shared_ptr<HybridRenderableSpec> createDebugBox(const DebugBoxOptions& options) override;
-  std::shared_ptr<Promise<std::shared_ptr<HybridModelSpec>>> loadModel(const AssetSource& source, const ModelLoadOptions& options) override;
-  std::shared_ptr<Promise<std::shared_ptr<HybridMaterialSpec>>> loadMaterial(const AssetSource& source) override;
-  std::shared_ptr<Promise<std::shared_ptr<HybridTextureSpec>>> loadTexture(const AssetSource& source,
-                                                                           const TextureLoadOptions& options) override;
-  std::shared_ptr<Promise<std::shared_ptr<HybridSkyboxSpec>>> loadSkybox(const AssetSource& source) override;
-  std::shared_ptr<Promise<std::shared_ptr<HybridIndirectLightSpec>>> loadIndirectLight(const AssetSource& source,
-                                                                                       const IndirectLightOptions& options) override;
+  Promise<std::shared_ptr<HybridModelSpec>> loadModel(const AssetSource& source, const ModelLoadOptions& options) override;
+  Promise<std::shared_ptr<HybridMaterialSpec>> loadMaterial(const AssetSource& source) override;
+  Promise<std::shared_ptr<HybridTextureSpec>> loadTexture(const AssetSource& source, const TextureLoadOptions& options) override;
+  Promise<std::shared_ptr<HybridSkyboxSpec>> loadSkybox(const AssetSource& source) override;
+  Promise<std::shared_ptr<HybridIndirectLightSpec>> loadIndirectLight(const AssetSource& source,
+                                                                      const IndirectLightOptions& options) override;
   std::shared_ptr<HybridTransformBindingSpec> createTransformBinding(double entity) override;
   std::shared_ptr<HybridValueBindingSpec> createValueBinding(double initialValue) override;
   std::shared_ptr<HybridCameraManipulatorSpec> createOrbitManipulator(const OrbitManipulatorOptions& options) override;
-  std::shared_ptr<HybridFrameListenerSubscriptionSpec> addOnFrameListener(const std::function<bool(const FrameInfo&)>& listener) override;
+  std::shared_ptr<HybridFrameListenerSubscriptionSpec> addOnFrameListener(const Callback<bool(const FrameInfo&)>& listener) override;
   void requestFrame() override;
   EngineDebugStats getDebugStats() override;
-  std::shared_ptr<Promise<void>> shutdown() override;
+  Promise<void> shutdown() override;
   void dispose() override;
   size_t getExternalMemorySize() noexcept override;
 
@@ -61,8 +60,7 @@ public:
 
 private:
   template <typename T>
-  void withAssetBytes(const AssetSource& source, const std::shared_ptr<Promise<T>>& promise,
-                      std::function<void(const std::shared_ptr<ArrayBuffer>& bytes)> onRenderThread);
+  void withAssetBytes(const AssetSource& source, const Promise<T>& promise, std::function<void(const ArrayBuffer& bytes)> onRenderThread);
 
   std::shared_ptr<EngineCore> core_;
   std::shared_ptr<HybridRenderThreadSpec> renderThread_;

@@ -1,0 +1,571 @@
+{
+  "version": 2,
+  "classes": {
+    "AnimationPlayer": {
+      "android": {
+        "implementation": {
+          "className": "HybridAnimationPlayer",
+          "include": "\"assets/HybridAnimationPlayer.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridAnimationPlayer",
+          "include": "\"assets/HybridAnimationPlayer.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Animator": {
+      "android": {
+        "implementation": {
+          "className": "HybridAnimator",
+          "include": "\"assets/HybridAnimator.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridAnimator",
+          "include": "\"assets/HybridAnimator.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "AssetIO": {
+      "android": {
+        "implementation": {
+          "className": "HybridAssetIO"
+        },
+        "language": "kotlin"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridAssetIO"
+        },
+        "language": "swift"
+      }
+    },
+    "Camera": {
+      "android": {
+        "implementation": {
+          "className": "HybridCamera",
+          "include": "\"scene/HybridCamera.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridCamera",
+          "include": "\"scene/HybridCamera.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "CameraManipulator": {
+      "android": {
+        "implementation": {
+          "className": "HybridCameraManipulator",
+          "include": "\"control/HybridCameraManipulator.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridCameraManipulator",
+          "include": "\"control/HybridCameraManipulator.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "CollisionShape": {
+      "android": {
+        "implementation": {
+          "className": "HybridCollisionShape",
+          "include": "\"physics/HybridCollisionShape.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridCollisionShape",
+          "include": "\"physics/HybridCollisionShape.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Engine": {
+      "android": {
+        "implementation": {
+          "className": "HybridEngine",
+          "include": "\"engine/HybridEngine.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridEngine",
+          "include": "\"engine/HybridEngine.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "FilamentFactory": {
+      "android": {
+        "implementation": {
+          "className": "HybridFilamentFactory",
+          "include": "\"engine/HybridFilamentFactory.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridFilamentFactory",
+          "include": "\"engine/HybridFilamentFactory.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "FilamentView": {
+      "android": {
+        "implementation": {
+          "className": "HybridFilamentView"
+        },
+        "language": "kotlin"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridFilamentView"
+        },
+        "language": "swift"
+      }
+    },
+    "FrameListenerSubscription": {
+      "android": {
+        "implementation": {
+          "className": "HybridFrameListenerSubscription",
+          "include": "\"engine/HybridFrameListenerSubscription.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridFrameListenerSubscription",
+          "include": "\"engine/HybridFrameListenerSubscription.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "IndirectLight": {
+      "android": {
+        "implementation": {
+          "className": "HybridIndirectLight",
+          "include": "\"scene/HybridIndirectLight.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridIndirectLight",
+          "include": "\"scene/HybridIndirectLight.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Light": {
+      "android": {
+        "implementation": {
+          "className": "HybridLight",
+          "include": "\"scene/HybridLight.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridLight",
+          "include": "\"scene/HybridLight.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "LightManager": {
+      "android": {
+        "implementation": {
+          "className": "HybridLightManager",
+          "include": "\"scene/HybridLightManager.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridLightManager",
+          "include": "\"scene/HybridLightManager.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Material": {
+      "android": {
+        "implementation": {
+          "className": "HybridMaterial",
+          "include": "\"materials/HybridMaterial.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridMaterial",
+          "include": "\"materials/HybridMaterial.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "MaterialInstance": {
+      "android": {
+        "implementation": {
+          "className": "HybridMaterialInstance",
+          "include": "\"materials/HybridMaterialInstance.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridMaterialInstance",
+          "include": "\"materials/HybridMaterialInstance.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Model": {
+      "android": {
+        "implementation": {
+          "className": "HybridModel",
+          "include": "\"assets/HybridModel.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridModel",
+          "include": "\"assets/HybridModel.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "ModelInstance": {
+      "android": {
+        "implementation": {
+          "className": "HybridModelInstance",
+          "include": "\"assets/HybridModelInstance.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridModelInstance",
+          "include": "\"assets/HybridModelInstance.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "PhysicsWorld": {
+      "android": {
+        "implementation": {
+          "className": "HybridPhysicsWorld",
+          "include": "\"physics/HybridPhysicsWorld.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridPhysicsWorld",
+          "include": "\"physics/HybridPhysicsWorld.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "PlatformServices": {
+      "android": {
+        "implementation": {
+          "className": "HybridPlatformServices",
+          "include": "\"platform/HybridPlatformServices.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridPlatformServices",
+          "include": "\"platform/HybridPlatformServices.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Recorder": {
+      "android": {
+        "implementation": {
+          "className": "HybridRecorder",
+          "include": "\"targets/HybridRecorder.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridRecorder",
+          "include": "\"targets/HybridRecorder.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "RenderTarget": {
+      "android": {
+        "allowInheritance": true,
+        "allowMultipleImplementations": true,
+        "language": "c++"
+      },
+      "apple": {
+        "allowInheritance": true,
+        "allowMultipleImplementations": true,
+        "language": "c++"
+      }
+    },
+    "RenderThread": {
+      "android": {
+        "implementation": {
+          "className": "HybridRenderThread",
+          "include": "\"engine/HybridRenderThread.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridRenderThread",
+          "include": "\"engine/HybridRenderThread.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "RenderThreadCleanup": {
+      "android": {
+        "implementation": {
+          "className": "HybridRenderThreadCleanup",
+          "include": "\"engine/HybridRenderThreadCleanup.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridRenderThreadCleanup",
+          "include": "\"engine/HybridRenderThreadCleanup.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Renderable": {
+      "android": {
+        "implementation": {
+          "className": "HybridRenderable",
+          "include": "\"geometry/HybridRenderable.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridRenderable",
+          "include": "\"geometry/HybridRenderable.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "RenderableManager": {
+      "android": {
+        "implementation": {
+          "className": "HybridRenderableManager",
+          "include": "\"scene/HybridRenderableManager.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridRenderableManager",
+          "include": "\"scene/HybridRenderableManager.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "RigidBody": {
+      "android": {
+        "implementation": {
+          "className": "HybridRigidBody",
+          "include": "\"physics/HybridRigidBody.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridRigidBody",
+          "include": "\"physics/HybridRigidBody.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Scene": {
+      "android": {
+        "implementation": {
+          "className": "HybridScene",
+          "include": "\"scene/HybridScene.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridScene",
+          "include": "\"scene/HybridScene.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Skybox": {
+      "android": {
+        "implementation": {
+          "className": "HybridSkybox",
+          "include": "\"scene/HybridSkybox.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridSkybox",
+          "include": "\"scene/HybridSkybox.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Snapshot": {
+      "android": {
+        "implementation": {
+          "className": "HybridSnapshot",
+          "include": "\"targets/HybridSnapshot.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridSnapshot",
+          "include": "\"targets/HybridSnapshot.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "Texture": {
+      "android": {
+        "implementation": {
+          "className": "HybridTexture",
+          "include": "\"materials/HybridTexture.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridTexture",
+          "include": "\"materials/HybridTexture.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "TransformBinding": {
+      "android": {
+        "implementation": {
+          "className": "HybridTransformBinding",
+          "include": "\"control/HybridTransformBinding.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridTransformBinding",
+          "include": "\"control/HybridTransformBinding.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "TransformManager": {
+      "android": {
+        "implementation": {
+          "className": "HybridTransformManager",
+          "include": "\"scene/HybridTransformManager.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridTransformManager",
+          "include": "\"scene/HybridTransformManager.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "ValueBinding": {
+      "android": {
+        "implementation": {
+          "className": "HybridValueBinding",
+          "include": "\"control/HybridValueBinding.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridValueBinding",
+          "include": "\"control/HybridValueBinding.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "VideoEncoder": {
+      "android": {
+        "implementation": {
+          "className": "HybridVideoEncoder"
+        },
+        "language": "kotlin"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridVideoEncoder"
+        },
+        "language": "swift"
+      }
+    },
+    "View": {
+      "android": {
+        "implementation": {
+          "className": "HybridView",
+          "include": "\"scene/HybridView.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridView",
+          "include": "\"scene/HybridView.hpp\""
+        },
+        "language": "c++"
+      }
+    },
+    "ViewTarget": {
+      "android": {
+        "implementation": {
+          "className": "HybridViewTarget",
+          "include": "\"targets/HybridViewTarget.hpp\""
+        },
+        "language": "c++"
+      },
+      "apple": {
+        "implementation": {
+          "className": "HybridViewTarget",
+          "include": "\"targets/HybridViewTarget.hpp\""
+        },
+        "language": "c++"
+      }
+    }
+  }
+}

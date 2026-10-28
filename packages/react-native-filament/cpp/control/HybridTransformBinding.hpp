@@ -1,8 +1,8 @@
 #pragma once
 
-#include "HybridTransformBindingSpec.hpp"
 #include "TransformBindingCore.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridTransformBindingSpec.hpp>
 
 #include <memory>
 

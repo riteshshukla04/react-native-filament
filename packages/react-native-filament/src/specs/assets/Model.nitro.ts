@@ -1,13 +1,17 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { Aabb } from '../types/Aabb'
 import type { Entity } from '../types/Entity'
 import type { ModelInstance } from './ModelInstance.nitro'
+
+export * from '#nitro/Model'
 
 /**
  * A glTF 2.0 binary (`.glb`) loaded with `Engine.loadModel()`, with one or more instances that share
  * its resources. Add it to a Scene with `Scene.addModel()`.
  */
-export interface Model extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"assets/HybridModel.hpp"', className: 'HybridModel' } })
+@Android({ language: 'c++', implementation: { include: '"assets/HybridModel.hpp"', className: 'HybridModel' } })
+export declare class Model extends HybridObject {
   /** @thread any */
   readonly rootEntity: Entity
   /** Every entity of every instance, including instances created later. @thread any */

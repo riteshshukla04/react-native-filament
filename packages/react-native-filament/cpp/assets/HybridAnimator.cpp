@@ -12,8 +12,7 @@ namespace margelo::nitro::filament {
 
 HybridAnimator::HybridAnimator(std::shared_ptr<HybridEngine> engine, std::shared_ptr<ModelCore> core, size_t instanceIndex,
                                std::shared_ptr<const ModelInstanceSnapshot> snapshot)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)), instanceIndex_(instanceIndex), snapshot_(std::move(snapshot)) {
-}
+    : engine_(std::move(engine)), core_(std::move(core)), instanceIndex_(instanceIndex), snapshot_(std::move(snapshot)) {}
 
 std::vector<AnimationInfo> HybridAnimator::getAnimations() {
   return animations();

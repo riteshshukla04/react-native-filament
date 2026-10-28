@@ -222,7 +222,6 @@ import { FilamentView } from 'react-native-filament'
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { callback } from 'react-native-nitro-modules'
 import { NativeFilamentView, type Engine, type FilamentView } from 'react-native-filament'
 
 function Surface({ engine }: { engine: Engine }) {
@@ -238,7 +237,7 @@ function Surface({ engine }: { engine: Engine }) {
       creating.then((target) => target.dispose())
     }
   }, [engine, view])
-  return <NativeFilamentView style={{ flex: 1, backgroundColor: 'lightblue' }} transparent hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1, backgroundColor: 'lightblue' }} transparent hybridRef={setView} />
 }
 ```
 

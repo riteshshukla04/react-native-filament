@@ -1,9 +1,9 @@
 #pragma once
 
-#include "AmbientOcclusionOptions.hpp"
-#include "BloomOptions.hpp"
-#include "DynamicResolutionOptions.hpp"
-#include "TemporalAntiAliasingOptions.hpp"
+#include <NitroFilament/AmbientOcclusionOptions.hpp>
+#include <NitroFilament/BloomOptions.hpp>
+#include <NitroFilament/DynamicResolutionOptions.hpp>
+#include <NitroFilament/TemporalAntiAliasingOptions.hpp>
 
 #include <filament/Options.h>
 

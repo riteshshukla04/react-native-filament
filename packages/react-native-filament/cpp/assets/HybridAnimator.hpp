@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridAnimatorSpec.hpp"
 #include "ModelCore.hpp"
+#include <NitroFilament/HybridAnimatorSpec.hpp>
 
 #include <memory>
 

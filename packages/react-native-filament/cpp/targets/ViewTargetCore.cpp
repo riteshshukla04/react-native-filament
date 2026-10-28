@@ -16,36 +16,36 @@ ViewTargetCore::ViewTargetCore(::filament::Engine& engine, ::filament::Renderer&
                                ClearSettings clear)
     : ViewHost("ViewTarget", engine, renderer, clear), callbacks_(callbacks) {}
 
-void ViewTargetCore::attach(const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {
-  if (surface_ != nullptr) {
-    detach(surface_);
+void ViewTargetCore::attach(const NativeSurface& surface) {
+  if (surface_.has_value()) {
+    detach(NativeSurface(*surface_));
   }
-  uint64_t handle = surface->getHandle();
-  if (!isLive() || handle == 0) {
-    surface->release();
+  if (!isLive() || surface.isReleased.callSync()) {
+    surface.release.callSync();
     return;
   }
-  uint64_t flags = surface->getTransparent() ? ::filament::SwapChain::CONFIG_TRANSPARENT : 0;
-  swapChain_ = engine_.createSwapChain(reinterpret_cast<void*>(handle), flags);
+  uint64_t flags = surface.transparent ? ::filament::SwapChain::CONFIG_TRANSPARENT : 0;
+  swapChain_ = engine_.createSwapChain(reinterpret_cast<void*>(surface.handle), flags);
   surface_ = surface;
   revoked_ = false;
   updateViewport(surface);
 }
 
-void ViewTargetCore::resize(const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {
-  if (surface == surface_) {
+void ViewTargetCore::resize(const NativeSurface& surface) {
+  if (isCurrent(surface)) {
+    surface_ = surface;
     updateViewport(surface);
   }
 }
 
-void ViewTargetCore::detach(const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {
-  if (surface != surface_) {
-    surface->release();
+void ViewTargetCore::detach(const NativeSurface& surface) {
+  if (!isCurrent(surface)) {
+    surface.release.callSync();
     return;
   }
   destroySwapChain();
-  surface_->release();
-  surface_ = nullptr;
+  surface_->release.callSync();
+  surface_.reset();
   width_ = 0;
   height_ = 0;
 }
@@ -112,12 +112,12 @@ std::function<void()> ViewTargetCore::addResizeListener(std::function<void(doubl
   return remove;
 }
 
-void ViewTargetCore::pick(double x, double y, std::shared_ptr<PickPromise> promise) {
+void ViewTargetCore::pick(double x, double y, PickPromise promise) {
   const ::filament::Viewport& viewport = view_->getViewport();
   double pixelX = x * contentScale_;
   double pixelY = static_cast<double>(viewport.height) - y * contentScale_;
   if (pixelX < 0 || pixelY < 0 || pixelX >= viewport.width || pixelY >= viewport.height) {
-    promise->resolve(std::nullopt);
+    promise.resolve(std::nullopt);
     return;
   }
   uint64_t id = nextQueryId_++;
@@ -137,10 +137,10 @@ void ViewTargetCore::completePick(uint64_t id, const ::filament::View::PickingQu
   if (found == pendingPicks_.end()) {
     return;
   }
-  std::shared_ptr<PickPromise> promise = std::move(found->second);
+  PickPromise promise = std::move(found->second);
   pendingPicks_.erase(found);
   if (result.renderable.isNull()) {
-    promise->resolve(std::nullopt);
+    promise.resolve(std::nullopt);
     return;
   }
   const ::filament::Viewport& viewport = view_->getViewport();
@@ -149,10 +149,10 @@ void ViewTargetCore::completePick(uint64_t id, const ::filament::View::PickingQu
                                  result.fragCoords.z * 2.0 - 1.0, 1.0);
   ::filament::math::double4 viewPosition = inverse(camera.getProjectionMatrix()) * clip;
   ::filament::math::double4 world = camera.getModelMatrix() * (viewPosition / viewPosition.w);
-  promise->resolve(PickResult(static_cast<double>(result.renderable.getId()), std::make_tuple(world.x, world.y, world.z)));
+  promise.resolve(PickResult(static_cast<double>(result.renderable.getId()), std::make_tuple(world.x, world.y, world.z)));
 }
 
-void ViewTargetCore::takeSnapshot(std::shared_ptr<SnapshotPromise> promise) {
+void ViewTargetCore::takeSnapshot(SnapshotPromise promise) {
   uint64_t id = nextQueryId_++;
   pendingSnapshots_.emplace(id, std::move(promise));
   requestedSnapshots_.push_back(id);
@@ -163,10 +163,10 @@ void ViewTargetCore::completeSnapshot(uint64_t id, std::vector<uint8_t>&& pixels
   if (found == pendingSnapshots_.end()) {
     return;
   }
-  std::shared_ptr<SnapshotPromise> promise = std::move(found->second);
+  SnapshotPromise promise = std::move(found->second);
   pendingSnapshots_.erase(found);
   auto snapshot = std::make_shared<const SnapshotCore>(SnapshotCore{.width = width, .height = height, .rgba = std::move(pixels)});
-  promise->resolve(std::make_shared<HybridSnapshot>(snapshot));
+  promise.resolve(std::make_shared<HybridSnapshot>(snapshot));
 }
 
 void ViewTargetCore::readRequestedSnapshots() {
@@ -192,15 +192,15 @@ void ViewTargetCore::readRequestedSnapshots() {
 void ViewTargetCore::rejectPendingQueries() {
   auto disposed =
       std::make_exception_ptr(std::runtime_error("FilamentDisposedError: the ViewTarget was disposed before the query finished."));
-  std::unordered_map<uint64_t, std::shared_ptr<PickPromise>> picks;
+  std::unordered_map<uint64_t, PickPromise> picks;
   picks.swap(pendingPicks_);
   for (auto& [id, promise] : picks) {
-    promise->reject(disposed);
+    promise.reject(std::exception_ptr(disposed));
   }
-  std::unordered_map<uint64_t, std::shared_ptr<SnapshotPromise>> snapshots;
+  std::unordered_map<uint64_t, SnapshotPromise> snapshots;
   snapshots.swap(pendingSnapshots_);
   for (auto& [id, promise] : snapshots) {
-    promise->reject(disposed);
+    promise.reject(std::exception_ptr(disposed));
   }
   requestedSnapshots_.clear();
 }
@@ -209,10 +209,14 @@ void ViewTargetCore::destroyNative() {
   rejectPendingQueries();
   resizeListeners_.clear();
   firstFrame_.clear();
-  if (surface_ != nullptr) {
-    detach(surface_);
+  if (surface_.has_value()) {
+    detach(NativeSurface(*surface_));
   }
   destroyViewHost();
+}
+
+bool ViewTargetCore::isCurrent(const NativeSurface& surface) const {
+  return surface_.has_value() && surface_->handle == surface.handle;
 }
 
 double ViewTargetCore::pointsPerPixel() const {
@@ -228,10 +232,10 @@ void ViewTargetCore::destroySwapChain() {
   engine_.flushAndWait();
 }
 
-void ViewTargetCore::updateViewport(const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {
-  double width = surface->getWidth();
-  double height = surface->getHeight();
-  contentScale_ = surface->getContentScale() > 0 ? surface->getContentScale() : 1;
+void ViewTargetCore::updateViewport(const NativeSurface& surface) {
+  double width = surface.width;
+  double height = surface.height;
+  contentScale_ = surface.contentScale > 0 ? surface.contentScale : 1;
   bool changed = width != width_ || height != height_;
   width_ = width;
   height_ = height;

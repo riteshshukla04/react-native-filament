@@ -5,10 +5,12 @@ const fs = require('fs')
 const root = path.resolve(__dirname, '..', '..')
 const config = getDefaultConfig(__dirname)
 const sharedAssetNames = new Set(fs.readdirSync(path.join(root, 'apps', 'shared', 'assets')))
+const librarySource = path.join(root, 'packages', 'react-native-filament', 'src', 'index.ts')
 
 config.resolver.assetExts = [...config.resolver.assetExts, 'glb', 'ktx', 'filamat']
 // Shared assets are served from this app's `assets` symlink so their URLs stay under /assets/.
 config.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === 'react-native-filament') return { type: 'sourceFile', filePath: librarySource }
   const fileName = path.basename(moduleName)
   if (!sharedAssetNames.has(fileName)) return context.resolveRequest(context, moduleName, platform)
   return { type: 'assetFiles', filePaths: [path.join(__dirname, 'assets', fileName)] }

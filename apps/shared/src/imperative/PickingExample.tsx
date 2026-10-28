@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { callback } from 'react-native-nitro-modules'
 import { scheduleOnRN } from 'react-native-worklets'
 import {
   defaultIndirectLightSource,
@@ -91,7 +90,7 @@ export function PickingExample() {
     <View style={styles.container}>
       <GestureDetector gesture={tap}>
         <View style={styles.container}>
-          <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+          <NativeFilamentView style={styles.container} hybridRef={setView} />
         </View>
       </GestureDetector>
       <Text style={styles.message}>{message}</Text>

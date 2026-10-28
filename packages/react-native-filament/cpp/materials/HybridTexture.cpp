@@ -3,7 +3,7 @@
 namespace margelo::nitro::filament {
 
 HybridTexture::HybridTexture(std::shared_ptr<EngineCore> engine, std::shared_ptr<TextureCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 double HybridTexture::getWidth() {
   return core_->width();

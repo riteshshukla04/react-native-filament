@@ -29,7 +29,7 @@ namespace {
 
 } // namespace
 
-HybridLightManager::HybridLightManager(std::shared_ptr<EngineCore> engine) : HybridObject(TAG), engine_(std::move(engine)) {}
+HybridLightManager::HybridLightManager(std::shared_ptr<EngineCore> engine) : engine_(std::move(engine)) {}
 
 LightType HybridLightManager::getType(double entity) {
   auto [manager, instance] = light(entity, "LightManager.getType()");

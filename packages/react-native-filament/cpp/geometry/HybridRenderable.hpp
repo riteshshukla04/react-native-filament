@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GeometryCore.hpp"
-#include "HybridRenderableSpec.hpp"
+#include <NitroFilament/HybridRenderableSpec.hpp>
 
 #include <memory>
 

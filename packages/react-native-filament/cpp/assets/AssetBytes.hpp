@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AssetUri.hpp"
+#include <NitroFilament/AssetUri.hpp>
 
 #include <NitroModules/ArrayBuffer.hpp>
 #include <NitroModules/Promise.hpp>
@@ -10,9 +10,9 @@
 
 namespace margelo::nitro::filament {
 
-using AssetSource = std::variant<std::shared_ptr<ArrayBuffer>, AssetUri>;
+using AssetSource = std::variant<ArrayBuffer, AssetUri>;
 
-std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>> readAssetBytes(const AssetSource& source);
+Promise<ArrayBuffer> readAssetBytes(const AssetSource& source);
 std::string temporaryDirectory();
 
 } // namespace margelo::nitro::filament

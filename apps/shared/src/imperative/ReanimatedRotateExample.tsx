@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated'
-import { callback } from 'react-native-nitro-modules'
 import {
   bindSharedValue,
   defaultIndirectLightSource,
@@ -67,7 +66,7 @@ export function ReanimatedRotateExample() {
     }
   }, [view, angle])
 
-  return <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={styles.container} hybridRef={setView} />
 }
 
 const styles = StyleSheet.create({

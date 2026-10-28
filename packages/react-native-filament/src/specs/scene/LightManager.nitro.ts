@@ -1,8 +1,10 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { Entity } from '../types/Entity'
 import type { Float2 } from '../types/Float2'
 import type { Float3 } from '../types/Float3'
 import type { LightType } from '../types/LightType'
+
+export * from '#nitro/LightManager'
 
 /**
  * Reads and writes the light components of entities, including lights loaded with a model. Every
@@ -11,7 +13,9 @@ import type { LightType } from '../types/LightType'
  * for point and spot lights; `getIntensity` returns lux for directional and sun lights but candela for
  * point and spot lights.
  */
-export interface LightManager extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"scene/HybridLightManager.hpp"', className: 'HybridLightManager' } })
+@Android({ language: 'c++', implementation: { include: '"scene/HybridLightManager.hpp"', className: 'HybridLightManager' } })
+export declare class LightManager extends HybridObject {
   getType(entity: Entity): LightType
   getIntensity(entity: Entity): number
   setIntensity(entity: Entity, intensity: number): void

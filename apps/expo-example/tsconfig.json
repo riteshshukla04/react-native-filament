@@ -2,6 +2,7 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "resolvePackageJsonImports": true,
     "paths": {
       "react-native-filament": ["../../packages/react-native-filament/src/index"]
     }

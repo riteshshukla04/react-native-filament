@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridRecorderSpec.hpp"
 #include "RecorderCore.hpp"
+#include <NitroFilament/HybridRecorderSpec.hpp>
 
 #include <atomic>
 #include <memory>
@@ -22,12 +22,12 @@ public:
   void setScene(const std::shared_ptr<HybridSceneSpec>& scene) override;
   void setCamera(const std::shared_ptr<HybridCameraSpec>& camera) override;
   void setClearOptions(const ClearOptions& options) override;
-  std::shared_ptr<Promise<std::string>> record(double frameCount) override;
+  Promise<std::string> record(double frameCount) override;
   void dispose() override;
   size_t getExternalMemorySize() noexcept override;
 
 private:
-  void startEncoder(uint32_t frameCount, const std::shared_ptr<Promise<std::string>>& promise);
+  void startEncoder(uint32_t frameCount, const Promise<std::string>& promise);
 
   std::shared_ptr<HybridEngine> engine_;
   std::shared_ptr<RecorderCore> core_;

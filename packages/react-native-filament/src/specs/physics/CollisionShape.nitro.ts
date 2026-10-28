@@ -1,9 +1,13 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { CollisionShapeType } from '../types/CollisionShapeType'
 import type { Float3 } from '../types/Float3'
 
+export * from '#nitro/CollisionShape'
+
 /** A shape that rigid bodies share. It lives as long as a body or JS uses it. */
-export interface CollisionShape extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"physics/HybridCollisionShape.hpp"', className: 'HybridCollisionShape' } })
+@Android({ language: 'c++', implementation: { include: '"physics/HybridCollisionShape.hpp"', className: 'HybridCollisionShape' } })
+export declare class CollisionShape extends HybridObject {
   /** @thread any */
   readonly type: CollisionShapeType
   /** @thread render */

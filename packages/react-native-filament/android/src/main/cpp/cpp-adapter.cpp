@@ -1,4 +1,4 @@
-#include "NitroFilamentOnLoad.hpp"
+#include <NitroFilament/private/NitroFilamentOnLoad.hpp>
 #include <fbjni/fbjni.h>
 #include <jni.h>
 

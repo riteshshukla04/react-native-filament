@@ -17,7 +17,7 @@
         "react-native-blob-util": "^0.25.1",
         "react-native-filament": "workspace:^",
         "react-native-gesture-handler": "~2.33.1",
-        "react-native-nitro-modules": "0.37.1",
+        "react-native-nitro-modules": "1.0.0-alpha.nightly.105.g69d365fc9b18",
         "react-native-reanimated": "4.7.1",
         "react-native-safe-area-context": "~5.10.1",
         "react-native-screens": "~4.30.0",
@@ -66,7 +66,7 @@
         "react-native-blob-util": "^0.25.1",
         "react-native-filament": "workspace:^",
         "react-native-gesture-handler": "~2.33.1",
-        "react-native-nitro-modules": "0.37.1",
+        "react-native-nitro-modules": "1.0.0-alpha.nightly.105.g69d365fc9b18",
         "react-native-reanimated": "4.7.1",
         "react-native-safe-area-context": "~5.10.1",
         "react-native-screens": "~4.30.0",
@@ -116,12 +116,12 @@
         "eslint": "^8.57.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-prettier": "^5.0.1",
-        "nitrogen": "0.37.1",
+        "nitrogen": "1.0.0-alpha.nightly.105.g69d365fc9b18",
         "prettier": "^3.0.3",
         "react": "19.3.0",
         "react-native": "0.88.1",
         "react-native-gesture-handler": "~2.33.1",
-        "react-native-nitro-modules": "0.37.1",
+        "react-native-nitro-modules": "1.0.0-alpha.nightly.105.g69d365fc9b18",
         "react-native-worklets": "0.13.1",
         "typescript": "~5.9.2",
       },
@@ -129,7 +129,7 @@
         "react": "*",
         "react-native": ">=0.88.0",
         "react-native-gesture-handler": ">=2.30.0",
-        "react-native-nitro-modules": ">=0.37.1 <0.38.0",
+        "react-native-nitro-modules": ">=1.0.0-alpha.0 <2.0.0",
         "react-native-worklets": ">=0.13.0 <0.14.0",
       },
       "optionalPeers": [
@@ -2322,7 +2322,9 @@
 
     "next-themes": ["next-themes@0.4.6", "", { "peerDependencies": { "react": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc", "react-dom": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc" } }, "sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA=="],
 
-    "nitrogen": ["nitrogen@0.37.1", "", { "dependencies": { "chalk": "^5.3.0", "react-native-nitro-modules": "^0.37.1", "ts-morph": "^28.0.0", "yargs": "^18.0.0", "zod": "^4.4.3" }, "bin": { "nitrogen": "lib/index.js" } }, "sha512-RMK1n8xV7B38JorfLCFexgPEDp7/4CnM/AR0R3UfikufXo8qB8TecgtY+sW0xjOjZJYwW5bJJI/kyZjusYk4JA=="],
+    "nitro-core": ["nitro-core@1.0.0-alpha.nightly.105.g69d365fc9b18", "", {}, "sha512-+3gvXKKLgp5FofLE3JBHFmr10qZYWcElJjZVGNfpBZnDFrucnA6Mc5U0ptW8opUq1vZa6DqoRMK7K9eb4v6GHQ=="],
+
+    "nitrogen": ["nitrogen@1.0.0-alpha.nightly.105.g69d365fc9b18", "", { "dependencies": { "chalk": "^5.3.0", "nitro-core": "1.0.0-alpha.nightly.105.g69d365fc9b18", "ts-morph": "^28.0.0", "yargs": "^18.1.0", "zod": "^4.4.3" }, "bin": { "nitrogen": "bin/nitrogen.js" } }, "sha512-/9w37XiwnHG0zC6jwSlYLu5lTarmrxpMIFm3PIFeIPY0l7HMaqzFeDLRM4EywCnupM2D/L350UEpljvulXE0VA=="],
 
     "nocache": ["nocache@3.0.4", "", {}, "sha512-WDD0bdg9mbq6F4mRxEYcPWwfA1vxd0mrvKOyxI7Xj/atfRHVeutzuWByG//jfm4uPzp0y4Kj051EORCBSQMycw=="],
 
@@ -2498,7 +2500,7 @@
 
     "react-native-is-edge-to-edge": ["react-native-is-edge-to-edge@1.3.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-NIXU/iT5+ORyCc7p0z2nnlkouYKX425vuU1OEm6bMMtWWR9yvb+Xg5AZmImTKoF9abxCPqrKC3rOZsKzUYgYZA=="],
 
-    "react-native-nitro-modules": ["react-native-nitro-modules@0.37.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-KpW6EQVQ/bfegpCGxN9Be+ndvsfj56t4IESEvCASu9gWpJa/NDfHpIeIwCOvZQ3eXmLEj6YD4wCLqcC1FJPr2w=="],
+    "react-native-nitro-modules": ["react-native-nitro-modules@1.0.0-alpha.nightly.105.g69d365fc9b18", "", { "dependencies": { "nitro-core": "1.0.0-alpha.nightly.105.g69d365fc9b18" }, "peerDependencies": { "react": "*", "react-native": ">=0.88.0" } }, "sha512-aVLBanaeV1Envu6e6yF6bmDpgPKEKKGD3L2anwTrt8EmR2TZX1FfkKxvleqYoYSbNn9nH0rwrWQLnTSU6u1FEA=="],
 
     "react-native-reanimated": ["react-native-reanimated@4.7.1", "", { "dependencies": { "react-native-is-edge-to-edge": "^1.3.1", "semver": "^7.7.3" }, "peerDependencies": { "react": "*", "react-native": "0.86 - 0.88", "react-native-worklets": "0.13.x" } }, "sha512-HviDFSZ6V4KTRsrLS6hRbBJ4j63l/L8a5az0EoWdJwaMLYnBNyYISTDxwXpEYkMbAbLzCMCviIdiOxXHYQWcNA=="],
 

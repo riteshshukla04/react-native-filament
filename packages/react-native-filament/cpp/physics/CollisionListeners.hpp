@@ -13,16 +13,16 @@ namespace margelo::nitro::filament {
 
 class CollisionListeners final {
 public:
-  using Callback = std::function<bool(const std::vector<ContactChange>&)>;
+  using Listener = std::function<bool(const std::vector<ContactChange>&)>;
 
   struct Entry {
-    explicit Entry(Callback callback) : callback(std::move(callback)) {}
+    explicit Entry(Listener callback) : callback(std::move(callback)) {}
 
-    Callback callback;
+    Listener callback;
     std::atomic<bool> removed{false};
   };
 
-  std::shared_ptr<Entry> add(Callback callback);
+  std::shared_ptr<Entry> add(Listener callback);
   bool empty();
   void dispatch(const std::vector<ContactChange>& changes, const worklets::WorkletRuntime& runtime);
   void clear();

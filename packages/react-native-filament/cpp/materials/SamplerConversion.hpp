@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SamplerOptions.hpp"
+#include <NitroFilament/SamplerOptions.hpp>
 
 #include <filament/TextureSampler.h>
 

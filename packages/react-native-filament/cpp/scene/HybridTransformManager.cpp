@@ -14,7 +14,7 @@ namespace margelo::nitro::filament {
 using ::filament::math::float3;
 using ::filament::math::mat4f;
 
-HybridTransformManager::HybridTransformManager(std::shared_ptr<EngineCore> engine) : HybridObject(TAG), engine_(std::move(engine)) {}
+HybridTransformManager::HybridTransformManager(std::shared_ptr<EngineCore> engine) : engine_(std::move(engine)) {}
 
 Mat4Tuple HybridTransformManager::getTransform(double entity) {
   ::filament::TransformManager& tm = transforms("TransformManager.getTransform()");
@@ -64,7 +64,7 @@ std::optional<double> HybridTransformManager::getParent(double entity) {
   return fromEntity(parent);
 }
 
-void HybridTransformManager::setParent(double entity, std::optional<double> parent) {
+void HybridTransformManager::setParent(double entity, const std::optional<double>& parent) {
   ::filament::TransformManager& tm = transforms("TransformManager.setParent()");
   auto instance = requireComponent(tm, entity, "TransformManager.setParent()", "transform");
   auto parentInstance = parent.has_value() ? requireComponent(tm, parent.value(), "TransformManager.setParent()", "transform")

@@ -1,4 +1,4 @@
-import type { HybridObject, Sync } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { EngineBackend } from '../types/EngineBackend'
 import type { Entity } from '../types/Entity'
 import type { AssetSource } from '../types/AssetSource'
@@ -42,11 +42,15 @@ import type { OrbitManipulatorOptions } from '../types/OrbitManipulatorOptions'
 import type { FrameListenerSubscription } from './FrameListenerSubscription.nitro'
 import type { RenderThread } from './RenderThread.nitro'
 
+export * from '#nitro/Engine'
+
 /**
  * A Filament engine with its own render thread. Create one with `Filament.createEngine()`; it creates
  * and loads every other native object and renders into ViewTargets and Recorders.
  */
-export interface Engine extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"engine/HybridEngine.hpp"', className: 'HybridEngine' } })
+@Android({ language: 'c++', implementation: { include: '"engine/HybridEngine.hpp"', className: 'HybridEngine' } })
+export declare class Engine extends HybridObject {
   /** @thread any */
   readonly backend: EngineBackend
   /** @thread any */
@@ -181,7 +185,7 @@ export interface Engine extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
    * listener returns `true`. In `continuous` mode every frame renders anyway.
    * @thread render
    */
-  addOnFrameListener(listener: Sync<(frame: FrameInfo) => boolean>): FrameListenerSubscription
+  addOnFrameListener(listener: (frame: FrameInfo) => boolean): FrameListenerSubscription
   /**
    * Renders one more frame in `on-demand` mode.
    * @thread any

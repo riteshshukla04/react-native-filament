@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { Filament, NativeFilamentView, type Engine, type FilamentView } from 'react-native-filament'
 
 export function ClearColorExample() {
@@ -21,7 +20,7 @@ export function ClearColorExample() {
 
   return (
     <View style={styles.container}>
-      <NativeFilamentView style={styles.filament} hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.filament} hybridRef={setView} />
       <Text testID="clear-color-backend" style={styles.label}>
         {engine == null ? 'Starting…' : `Rendering with ${engine.backend}`}
       </Text>
