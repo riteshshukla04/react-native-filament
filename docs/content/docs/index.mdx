@@ -47,13 +47,16 @@ If the app uses Reanimated 4, keep `react-native-reanimated/plugin` instead. It 
 </Step>
 <Step>
 
-### Install the pods
+### Set up iOS
+
+Nitro Modules 1.0 builds iOS libraries with Swift Package Manager. Download Filament's iOS libraries once, then let React Native link every package into your Xcode project:
 
 ```sh
-cd ios && pod install
+node node_modules/react-native-filament/scripts/prepare-filament-apple.js
+npx react-native spm
 ```
 
-The first `pod install` and the first Android build download the prebuilt Filament binaries from GitHub, verify their SHA-256 checksums and cache them for every later build.
+The script and the first Android build download the prebuilt Filament binaries from GitHub, verify their SHA-256 checksums and cache them for every later build. Every native library of the app needs Swift Package Manager support. For one that only ships a podspec, `npx react-native spm scaffold` generates a `Package.swift`.
 
 </Step>
 <Step>
@@ -82,7 +85,7 @@ Models load from glTF 2.0 binaries (`.glb`). Convert other formats, such as glTF
 </Callout>
 
 <Callout type="info" title="Building without GitHub access">
-Set `RNF_FILAMENT_BASE_URL` to a mirror of the Filament release assets. To use a local copy, set `RNF_FILAMENT_IOS_ARCHIVE` for `pod install` and `RNF_FILAMENT_ARCHIVE` for Gradle. The checksum is verified either way.
+Set `RNF_FILAMENT_BASE_URL` to a mirror of the Filament release assets. To use a local copy, set `RNF_FILAMENT_IOS_ARCHIVE` for `prepare-filament-apple.js` and `RNF_FILAMENT_ARCHIVE` for Gradle. The checksum is verified either way.
 </Callout>
 
 Using Expo? See [Expo](/docs/expo).

@@ -143,11 +143,7 @@ The bundled environment, `RNF_default_env_ibl.ktx`, is about 2 MB. If you never 
 <Tabs items={['iOS', 'Android']}>
 <Tab value="iOS">
 
-Add this line at the top of your `ios/Podfile`:
-
-```ruby
-$RNFExcludeAssets = true
-```
+Swift Package Manager always copies it into react-native-filament's resource bundle, so it can't be left out on iOS yet.
 
 </Tab>
 <Tab value="Android">

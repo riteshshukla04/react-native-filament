@@ -16,12 +16,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     appDelegate.reactNativeFactory?.startReactNative(
       withModuleName: "AppExampleFabric",
       in: window,
-      launchOptions: connectionOptions.urlContexts.first.map { [UIApplication.LaunchOptionsKey.url: $0.url] }
+      connectionOptions: connectionOptions
     )
   }
 
   func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-    guard let url = URLContexts.first?.url else { return }
-    RCTLinkingManager.application(UIApplication.shared, open: url, options: [:])
+    RCTLinkingManager.scene(scene, openURLContexts: URLContexts)
   }
 }

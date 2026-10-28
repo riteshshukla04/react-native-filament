@@ -5,7 +5,6 @@
 /// Copyright © Marc Rousavy @ Margelo
 ///
 #include <NitroFilament/private/NitroFilament-Swift-Cxx-Umbrella.hpp>
-#include <NitroFilament/private/HybridAssetIOSpecSwift.hpp>
 #include <NitroFilament/private/HybridVideoEncoderSpecSwift.hpp>
 #include <NitroModules/NitroModules-Swift-Cxx-Umbrella.hpp>
 #include <NitroModules/JSIConverter+SwiftString.hpp>
@@ -19,16 +18,6 @@
 #include <NitroModules/SwiftResult.hpp>
 
 namespace margelo::nitro::filament::swift_bridge {
-  std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_ create_std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_(void* NON_NULL pointer) {
-    return std::make_shared<margelo::nitro::filament::HybridAssetIOSpecSwift>(::NitroFilament::HybridAssetIOSpec_cxx::fromUnsafe(pointer));
-  }
-
-  void* NON_NULL get_std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_(const std::shared_ptr<HybridObject>& value) {
-    auto wrapper = std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpecSwift>(value);
-    if (!wrapper) throw std::runtime_error("HybridAssetIOSpec is not implemented in Swift");
-    return wrapper->getSwiftPart().toUnsafe();
-  }
-
   std__shared_ptr_margelo__nitro__filament__HybridVideoEncoderSpec_ create_std__shared_ptr_margelo__nitro__filament__HybridVideoEncoderSpec_(void* NON_NULL pointer) {
     return std::make_shared<margelo::nitro::filament::HybridVideoEncoderSpecSwift>(::NitroFilament::HybridVideoEncoderSpec_cxx::fromUnsafe(pointer));
   }

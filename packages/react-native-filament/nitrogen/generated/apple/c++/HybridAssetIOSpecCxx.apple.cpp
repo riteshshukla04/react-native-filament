@@ -6,45 +6,40 @@
 ///
 
 #include <NitroFilament/HybridAssetIOSpecCxx.hpp>
-#include <NitroFilament/private/HybridAssetIOSpecSwift.hpp>
+#include <NitroFilament/HybridAssetIOSpec.hpp>
 #include <stdexcept>
 #include <string>
 #include <NitroModules/ArrayBuffer.hpp>
 #include <NitroModules/Promise.hpp>
-#include <NitroFilament/private/HybridAssetIOSpec_cxx+NitroFilament-SwiftConverter.hpp>
-#include <NitroFilament/private/NitroFilament-Swift-Cxx-Umbrella.hpp>
-#include <NitroModules/SwiftConverter.hpp>
+#include "HybridAssetIO.hpp"
 
 namespace margelo::nitro::filament {
 
   HybridAssetIOSpecCxx HybridAssetIOSpecCxx::fromNative(const std::shared_ptr<HybridObject>& implementation) {
-    if (std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpecSwift>(implementation) == nullptr) [[unlikely]] {
+    if (std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpec>(implementation) == nullptr) [[unlikely]] {
       throw std::invalid_argument("Cannot use a HybridObject that does not implement AssetIO as HybridAssetIOSpecCxx.");
     }
     return HybridAssetIOSpecCxx(implementation);
   }
 
   HybridAssetIOSpecCxx HybridAssetIOSpecCxx::create() {
-    auto __result = margelo::nitro::filament::HybridAssetIOSpecSwift::constructor();
-    return SwiftConverter<margelo::nitro::filament::HybridAssetIOSpecCxx, ::NitroFilament::HybridAssetIOSpec_cxx>::fromSwift(__result);
+    return fromNative(std::make_shared<::margelo::nitro::filament::HybridAssetIO>());
   }
 
   std::string HybridAssetIOSpecCxx::getTemporaryDirectory() const {
-    auto __implementation = std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpecSwift>(getNativeObject());
+    auto __implementation = std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpec>(getNativeObject());
     if (__implementation == nullptr) [[unlikely]] {
       throw std::invalid_argument("Cannot call AssetIO.getTemporaryDirectory on an empty or incompatible C++ adapter.");
     }
-    auto __result = __implementation->getTemporaryDirectory();
-    return SwiftConverter<std::string, swift::String>::fromSwift(__result);
+    return __implementation->getTemporaryDirectory();
   }
 
   Promise<ArrayBuffer> HybridAssetIOSpecCxx::read(const std::string& uri) const {
-    auto __implementation = std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpecSwift>(getNativeObject());
+    auto __implementation = std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpec>(getNativeObject());
     if (__implementation == nullptr) [[unlikely]] {
       throw std::invalid_argument("Cannot call AssetIO.read on an empty or incompatible C++ adapter.");
     }
-    auto __result = __implementation->read(SwiftConverter<std::string, swift::String>::toSwift(uri));
-    return SwiftConverter<Promise<ArrayBuffer>, Promise<ArrayBuffer>>::fromSwift(__result);
+    return __implementation->read(std::forward<decltype(uri)>(uri));
   }
 
 } // namespace margelo::nitro::filament
@@ -52,15 +47,15 @@ namespace margelo::nitro::filament {
 namespace margelo::nitro {
 
   margelo::nitro::filament::HybridAssetIOSpecCxx JSIConverter<margelo::nitro::filament::HybridAssetIOSpecCxx>::fromJSI(jsi::Runtime& runtime, const jsi::Value& value) {
-    return margelo::nitro::filament::HybridAssetIOSpecCxx::fromNative(JSIConverter<std::shared_ptr<margelo::nitro::filament::HybridAssetIOSpecSwift>>::fromJSI(runtime, value));
+    return margelo::nitro::filament::HybridAssetIOSpecCxx::fromNative(JSIConverter<std::shared_ptr<margelo::nitro::filament::HybridAssetIOSpec>>::fromJSI(runtime, value));
   }
 
   jsi::Value JSIConverter<margelo::nitro::filament::HybridAssetIOSpecCxx>::toJSI(jsi::Runtime& runtime, const margelo::nitro::filament::HybridAssetIOSpecCxx& value) {
-    return JSIConverter<std::shared_ptr<margelo::nitro::filament::HybridAssetIOSpecSwift>>::toJSI(runtime, std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpecSwift>(value.getNativeObject()));
+    return JSIConverter<std::shared_ptr<margelo::nitro::filament::HybridAssetIOSpec>>::toJSI(runtime, std::dynamic_pointer_cast<margelo::nitro::filament::HybridAssetIOSpec>(value.getNativeObject()));
   }
 
   bool JSIConverter<margelo::nitro::filament::HybridAssetIOSpecCxx>::canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
-    return JSIConverter<std::shared_ptr<margelo::nitro::filament::HybridAssetIOSpecSwift>>::canConvert(runtime, value);
+    return JSIConverter<std::shared_ptr<margelo::nitro::filament::HybridAssetIOSpec>>::canConvert(runtime, value);
   }
 
 } // namespace margelo::nitro

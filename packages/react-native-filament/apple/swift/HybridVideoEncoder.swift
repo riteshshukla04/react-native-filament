@@ -9,14 +9,22 @@ final class HybridVideoEncoder: HybridVideoEncoderSpec_base, HybridVideoEncoderS
   private var pending: [EncodedFrame] = []
   private var onFrameAccepted: (() -> Void)?
   private var onError: ((Error) -> Void)?
-  private var finishing: Promise<String>?
+  private var finishing: (any Promise<String>)?
   private var readyObservation: NSKeyValueObservation?
 
-  init(writer: VideoWriter, fps: Double, queue: DispatchQueue) {
+  static func create(options: VideoEncoderOptions) throws -> any Promise<any HybridVideoEncoderSpec> {
+    let queue = DispatchQueue(label: "com.margelo.filament.video-encoder")
+    return Promise___NitroFilament__HybridVideoEncoderSpec_cxx.parallel(queue) {
+      let writer = try VideoWriter(options: options)
+      return try HybridVideoEncoder(writer: writer, fps: options.fps, queue: queue)
+    }
+  }
+
+  private init(writer: VideoWriter, fps: Double, queue: DispatchQueue) throws {
     self.writer = writer
     self.fps = fps
     self.queue = queue
-    super.init()
+    try super.init()
     readyObservation = writer.input.observe(\.isReadyForMoreMediaData, options: [.new]) { [weak self] _, _ in
       guard let self else { return }
       self.queue.async { self.appendReadyFrames() }
@@ -40,15 +48,15 @@ final class HybridVideoEncoder: HybridVideoEncoderSpec_base, HybridVideoEncoderS
     }
   }
 
-  func setListeners(onFrameAccepted: @escaping () -> Void, onError: @escaping (Error) -> Void) throws {
+  func setListeners(onFrameAccepted: any Callback<(), Void>, onError: any Callback<(any Error), Void>) throws {
     queue.async {
-      self.onFrameAccepted = onFrameAccepted
-      self.onError = onError
+      self.onFrameAccepted = { try? onFrameAccepted.callSync() }
+      self.onError = { error in try? onError.callSync(error) }
     }
   }
 
-  func finish() throws -> Promise<String> {
-    let promise = Promise<String>()
+  func finish() throws -> any Promise<String> {
+    let promise = Promise_swift__String.pending()
     queue.async {
       self.finishing = promise
       self.finishIfDrained()
@@ -60,7 +68,7 @@ final class HybridVideoEncoder: HybridVideoEncoderSpec_base, HybridVideoEncoderS
     acquired.removeAll()
     queue.async {
       self.pending.removeAll()
-      self.finishing?.reject(withError: VideoEncoderError.cancelled)
+      self.finishing?.reject(error: VideoEncoderError.cancelled)
       self.finishing = nil
       if self.writer.writer.status == .writing {
         self.writer.writer.cancelWriting()
@@ -87,9 +95,9 @@ final class HybridVideoEncoder: HybridVideoEncoderSpec_base, HybridVideoEncoderS
     writer.input.markAsFinished()
     writer.writer.finishWriting { [writer] in
       if writer.writer.status == .completed {
-        promise.resolve(withResult: writer.url.absoluteString)
+        promise.resolve(result: writer.url.absoluteString)
       } else {
-        promise.reject(withError: VideoEncoderError.writingFailed(writer.writer.error))
+        promise.reject(error: VideoEncoderError.writingFailed(writer.writer.error))
       }
     }
   }
@@ -97,7 +105,7 @@ final class HybridVideoEncoder: HybridVideoEncoderSpec_base, HybridVideoEncoderS
   private func fail(_ error: Error) {
     pending.removeAll()
     onError?(error)
-    finishing?.reject(withError: error)
+    finishing?.reject(error: error)
     finishing = nil
   }
 }

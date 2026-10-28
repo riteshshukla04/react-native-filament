@@ -26,7 +26,7 @@
 #include <NitroFilament/HybridCollisionShapeSpec.hpp>
 #include <NitroFilament/HybridPhysicsWorldSpec.hpp>
 #include <NitroFilament/HybridRigidBodySpec.hpp>
-#include <NitroFilament/private/HybridAssetIOSpecSwift.hpp>
+#include <NitroFilament/HybridAssetIOSpec.hpp>
 #include <NitroFilament/HybridPlatformServicesSpec.hpp>
 #include <NitroFilament/private/HybridVideoEncoderSpecSwift.hpp>
 #include <NitroFilament/HybridCameraSpec.hpp>
@@ -68,7 +68,7 @@ namespace margelo::nitro::filament {
     HybridClassRegistry::registerHybridClass("filament.CollisionShape", HybridCollisionShapeSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.PhysicsWorld", HybridPhysicsWorldSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.RigidBody", HybridRigidBodySpec::Class::get());
-    HybridClassRegistry::registerHybridClass("filament.AssetIO", HybridAssetIOSpecSwift::Class::get());
+    HybridClassRegistry::registerHybridClass("filament.AssetIO", HybridAssetIOSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.PlatformServices", HybridPlatformServicesSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.VideoEncoder", HybridVideoEncoderSpecSwift::Class::get());
     HybridClassRegistry::registerHybridClass("filament.Camera", HybridCameraSpec::Class::get());

@@ -5,7 +5,7 @@ final class MetalView: UIView {
   override class var layerClass: AnyClass { CAMetalLayer.self }
 
   var metalLayer: CAMetalLayer { layer as! CAMetalLayer }
-  var onSurfaceChange: (() -> Void)?
+  var onSurfaceChange: (@MainActor () -> Void)?
 
   override func layoutSubviews() {
     super.layoutSubviews()

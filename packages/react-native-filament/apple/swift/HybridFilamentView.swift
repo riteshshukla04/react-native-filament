@@ -1,24 +1,30 @@
 import NitroModules
 import UIKit
 
-final class HybridFilamentView: HybridFilamentViewSpec_base, HybridFilamentViewSpec_protocol {
-  let view = MetalView()
+/** Fabric creates the view and sets its props on the main thread, which owns every member but `setSurfaceObserver`. */
+final class HybridFilamentView: HybridFilamentViewSpec_base, HybridFilamentViewSpec_protocol, @unchecked Sendable {
+  let view: MetalView
 
   private var observer: SurfaceObserver?
-  private var surface: HybridNativeSurface?
+  private var surface: NativeSurfaceLease?
 
   var transparent: Bool? {
     didSet {
       guard oldValue != transparent else { return }
-      applyTransparency()
-      replaceSurface()
+      MainActor.assumeIsolated {
+        applyTransparency()
+        replaceSurface()
+      }
     }
   }
 
-  override init() {
-    super.init()
-    applyTransparency()
-    view.onSurfaceChange = { [weak self] in self?.updateSurface() }
+  override init() throws {
+    view = MainActor.assumeIsolated { MetalView() }
+    try super.init()
+    MainActor.assumeIsolated {
+      applyTransparency()
+      view.onSurfaceChange = { [weak self] in self?.updateSurface() }
+    }
   }
 
   func setSurfaceObserver(observer: SurfaceObserver?) throws {
@@ -32,44 +38,44 @@ final class HybridFilamentView: HybridFilamentViewSpec_base, HybridFilamentViewS
 
   private var isTransparent: Bool { transparent ?? false }
 
-  private var contentScale: CGFloat {
+  @MainActor private var contentScale: CGFloat {
     view.window?.screen.scale ?? UIScreen.main.scale
   }
 
-  private var pixelSize: CGSize {
+  @MainActor private var pixelSize: CGSize {
     CGSize(width: view.bounds.width * contentScale, height: view.bounds.height * contentScale)
   }
 
-  private func applyTransparency() {
+  @MainActor private func applyTransparency() {
     view.isOpaque = !isTransparent
     view.metalLayer.isOpaque = !isTransparent
     view.backgroundColor = isTransparent ? .clear : .black
   }
 
-  private func replaceSurface() {
+  @MainActor private func replaceSurface() {
     guard let observer, let surface else { return }
     self.surface = nil
-    observer.onDestroyed(surface)
+    try? observer.onDestroyed.callSync(surface.toNativeSurface())
     updateSurface()
   }
 
-  private func updateSurface() {
+  @MainActor private func updateSurface() {
     let size = pixelSize
     view.metalLayer.drawableSize = size
     guard let observer else { return }
     let isVisible = view.window != nil && size.width > 0 && size.height > 0
     if isVisible, let surface {
       if surface.update(pixelSize: size) {
-        observer.onResized(surface)
+        try? observer.onResized.callSync(surface.toNativeSurface())
       }
     } else if isVisible {
-      let created = HybridNativeSurface(
+      let created = NativeSurfaceLease(
         layer: view.metalLayer, pixelSize: size, contentScale: Double(contentScale), transparent: isTransparent)
       surface = created
-      observer.onCreated(created)
+      try? observer.onCreated.callSync(created.toNativeSurface())
     } else if let surface {
       self.surface = nil
-      observer.onDestroyed(surface)
+      try? observer.onDestroyed.callSync(surface.toNativeSurface())
     }
   }
 }

@@ -7,18 +7,15 @@
 
 #pragma once
 
-// Forward declaration of `HybridAssetIOSpec_cxx` to properly resolve imports.
-namespace NitroFilament { class HybridAssetIOSpec_cxx; }
-namespace swift { class String; }
-#include <NitroModules/ArrayBuffer.hpp>
-#include <NitroModules/Promise.hpp>
-#include <NitroModules/Result.hpp>
 // Forward declaration of `HybridVideoEncoderSpec_cxx` to properly resolve imports.
 namespace NitroFilament { class HybridVideoEncoderSpec_cxx; }
+namespace swift { class String; }
+#include <NitroModules/Promise.hpp>
 #include <NitroModules/Callback.hpp>
 #include <exception>
 // Forward declaration of `VideoEncoderOptions` to properly resolve imports.
 namespace NitroFilament { class VideoEncoderOptions; }
+#include <NitroModules/Result.hpp>
 // Forward declaration of `HybridFilamentViewSpec_cxx` to properly resolve imports.
 namespace NitroFilament { class HybridFilamentViewSpec_cxx; }
 #ifndef SWIFT_SWIFT_H
@@ -29,27 +26,13 @@ namespace NitroFilament { class NativeSurface; }
 // Forward declaration of `SurfaceObserver` to properly resolve imports.
 namespace NitroFilament { class SurfaceObserver; }
 #include <NitroModules/HybridObject.hpp>
-// Forward declaration of `HybridAssetIOSpecSwift` to properly resolve imports.
-namespace margelo::nitro::filament { class HybridAssetIOSpecSwift; }
-#include <NitroModules/NitroDefines.hpp>
 // Forward declaration of `HybridVideoEncoderSpecSwift` to properly resolve imports.
 namespace margelo::nitro::filament { class HybridVideoEncoderSpecSwift; }
+#include <NitroModules/NitroDefines.hpp>
 // Forward declaration of `HybridFilamentViewSpecSwift` to properly resolve imports.
 namespace margelo::nitro::filament { class HybridFilamentViewSpecSwift; }
 
 namespace margelo::nitro::filament::swift_bridge {
-  using std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_ = std::shared_ptr<margelo::nitro::filament::HybridAssetIOSpecSwift>;
-  using std__weak_ptr_margelo__nitro__filament__HybridAssetIOSpec_ = std::weak_ptr<margelo::nitro::filament::HybridAssetIOSpecSwift>;
-  inline std__weak_ptr_margelo__nitro__filament__HybridAssetIOSpec_ weakify_std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_(const std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_& value) {
-    return value;
-  }
-  std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_ create_std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_(void* NON_NULL pointer);
-  void* NON_NULL get_std__shared_ptr_margelo__nitro__filament__HybridAssetIOSpec_(const std::shared_ptr<HybridObject>& value);
-  using Promise_ArrayBuffer = Promise<ArrayBuffer>;
-  // Distinct specializations prevent duplicate Swift metadata across module headers.
-  struct ResultTag {};
-  using Result_void = Result<void, margelo::nitro::filament::swift_bridge::ResultTag>;
-  using Result_void_ = Result<void*, margelo::nitro::filament::swift_bridge::ResultTag>;
   using std__shared_ptr_margelo__nitro__filament__HybridVideoEncoderSpec_ = std::shared_ptr<margelo::nitro::filament::HybridVideoEncoderSpecSwift>;
   using std__weak_ptr_margelo__nitro__filament__HybridVideoEncoderSpec_ = std::weak_ptr<margelo::nitro::filament::HybridVideoEncoderSpecSwift>;
   inline std__weak_ptr_margelo__nitro__filament__HybridVideoEncoderSpec_ weakify_std__shared_ptr_margelo__nitro__filament__HybridVideoEncoderSpec_(const std__shared_ptr_margelo__nitro__filament__HybridVideoEncoderSpec_& value) {
@@ -70,6 +53,9 @@ namespace margelo::nitro::filament::swift_bridge {
   void resolve_Promise___NitroFilament__HybridVideoEncoderSpec_cxx(const Promise___NitroFilament__HybridVideoEncoderSpec_cxx& promise, const void* NON_NULL value);
   void listen_Promise___NitroFilament__HybridVideoEncoderSpec_cxx(const Promise___NitroFilament__HybridVideoEncoderSpec_cxx& promise, std::function<void(const void* NON_NULL)> listener);
   using Promise_void = Promise<void>;
+  // Distinct specializations prevent duplicate Swift metadata across module headers.
+  struct ResultTag {};
+  using Result_void = Result<void, margelo::nitro::filament::swift_bridge::ResultTag>;
   using Callback_void = Callback<void()>;
   Result<void, margelo::nitro::filament::swift_bridge::ResultTag> callSync_Callback_void(const Callback_void& callback) noexcept;
   Callback_void create_Callback_void(std::function<Result<void, margelo::nitro::filament::swift_bridge::ResultTag>()> closure);
@@ -94,4 +80,5 @@ namespace margelo::nitro::filament::swift_bridge {
   Promise<void> callAsync_Callback_void___NitroFilament__NativeSurface(const Callback_void___NitroFilament__NativeSurface& callback, const void* NON_NULL param0);
   void callAndForget_Callback_void___NitroFilament__NativeSurface(const Callback_void___NitroFilament__NativeSurface& callback, const void* NON_NULL param0);
   Callback_void___NitroFilament__NativeSurface create_Callback_void___NitroFilament__NativeSurface(std::function<Result<void, margelo::nitro::filament::swift_bridge::ResultTag>(const void* NON_NULL param0)> closure);
+  using Result_void_ = Result<void*, margelo::nitro::filament::swift_bridge::ResultTag>;
 } // namespace margelo::nitro::filament::swift_bridge

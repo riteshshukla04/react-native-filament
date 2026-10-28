@@ -24,5 +24,10 @@
     "packages/*",
     "apps/*",
     "docs"
-  ]
+  ],
+  "patchedDependencies": {
+    "react-native-screens@4.30.1": "patches/react-native-screens@4.30.1.patch",
+    "react-native-blob-util@0.25.1": "patches/react-native-blob-util@0.25.1.patch",
+    "@react-native-harness/ui@1.6.0": "patches/@react-native-harness%2Fui@1.6.0.patch"
+  }
 }

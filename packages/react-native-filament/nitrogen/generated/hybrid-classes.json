@@ -42,9 +42,10 @@
       },
       "apple": {
         "implementation": {
-          "className": "HybridAssetIO"
+          "className": "HybridAssetIO",
+          "include": "\"HybridAssetIO.hpp\""
         },
-        "language": "swift"
+        "language": "c++"
       }
     },
     "Camera": {

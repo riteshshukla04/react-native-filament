@@ -68,7 +68,7 @@ Or generate the native projects first and build them with Xcode or Gradle:
 npx expo prebuild
 ```
 
-The first `pod install` and the first Gradle build download the prebuilt Filament binaries and verify their checksums. On EAS Build this happens on the build machine.
+The first Gradle build downloads the prebuilt Filament binaries and verifies their checksums. On EAS Build this happens on the build machine. iOS builds of react-native-filament use Swift Package Manager since Nitro Modules 1.0 and are not verified with Expo's CocoaPods prebuild yet.
 
 </Step>
 <Step>

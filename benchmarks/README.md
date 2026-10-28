@@ -62,7 +62,7 @@ Each FPS value is the average of all one-second samples, with the worst second i
    ```
 
    ```sh
-   cd apps/example/ios && xcodebuild -workspace AppExampleFabric.xcworkspace -scheme AppExampleFabric -configuration Release -sdk iphonesimulator -derivedDataPath build
+   cd apps/example/ios && xcodebuild -project AppExampleFabric.xcodeproj -scheme AppExampleFabric -configuration Release -sdk iphonesimulator -derivedDataPath build
    ```
 
 2. Run the scenes and write `results/<platform>-<version>[-<backend>].json`:
