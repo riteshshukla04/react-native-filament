@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import { Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const drone = Image.resolveAssetSource(require('../../assets/buster_drone.glb'))
-const skyboxFile = Image.resolveAssetSource(require('../../assets/default_env_skybox.ktx'))
+const drone = bundledAsset(require('../../assets/buster_drone.glb'))
+const skyboxFile = bundledAsset(require('../../assets/default_env_skybox.ktx'))
 
 export function SkyboxExample() {
   const [view, setView] = useState<FilamentView>()

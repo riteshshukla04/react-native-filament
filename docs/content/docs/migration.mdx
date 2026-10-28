@@ -8,10 +8,10 @@ react-native-filament 2.0 is a rewrite on [Nitro Modules](https://nitro.margelo.
 
 ## Requirements
 
-- New Architecture only, on React Native 0.83.
+- New Architecture only, on React Native 0.88.
 - [`react-native-nitro-modules`](https://nitro.margelo.com) 0.37.
 - [`react-native-gesture-handler`](https://docs.swmansion.com/react-native-gesture-handler) 2.30 or later, only for `useOrbitGestures`.
-- [`react-native-worklets`](https://docs.swmansion.com/react-native-worklets) 0.7 replaces `react-native-worklets-core`. Use its babel plugin:
+- [`react-native-worklets`](https://docs.swmansion.com/react-native-worklets) 0.13 replaces `react-native-worklets-core`. Use its babel plugin:
 
 ```js title="babel.config.js"
 module.exports = {
@@ -25,7 +25,7 @@ When the app uses Reanimated 4, keep `react-native-reanimated/plugin` instead; i
 Add the new peers next to react-native-filament 2.0:
 
 ```npm
-npm i react-native-nitro-modules@0.37 react-native-worklets@0.7
+npm i react-native-nitro-modules@0.37 react-native-worklets@0.13
 ```
 
 react-native-filament no longer uses `react-native-worklets-core`. Remove it unless another library in the app needs it.

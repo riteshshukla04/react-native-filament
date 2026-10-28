@@ -1,6 +1,10 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config')
+const { drawableFileTypes } = require('@react-native/asset-utils')
 const path = require('path')
 const fs = require('fs')
+
+// React Native 0.88 bundles .ktx files as Android drawables, which AGP rejects; keep them raw resources.
+drawableFileTypes.delete('ktx')
 
 const root = path.resolve(__dirname, '..', '..')
 const defaultConfig = getDefaultConfig(__dirname)

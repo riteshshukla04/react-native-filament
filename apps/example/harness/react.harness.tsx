@@ -1,5 +1,4 @@
 import React, { StrictMode, useEffect } from 'react'
-import { Image } from 'react-native'
 import { makeMutable } from 'react-native-reanimated'
 import { afterEach, beforeEach, describe, expect, it, render, waitUntil } from 'react-native-harness'
 import { runOnUIAsync, scheduleOnRN } from 'react-native-worklets'
@@ -23,8 +22,9 @@ import {
   type Model,
   type TransformationProps,
 } from 'react-native-filament'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
+const coin = bundledAsset(require('../assets/coin.glb'))
 
 interface Probe {
   context: FilamentContextValue

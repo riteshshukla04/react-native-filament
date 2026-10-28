@@ -27,7 +27,7 @@ public:
   void runAsync(std::function<void()>&& function) override {
     queue_->push([runtime = runtime_, function = std::move(function)] {
       if (std::shared_ptr<worklets::WorkletRuntime> strong = runtime.lock()) {
-        strong->runSync([&](jsi::Runtime&) { function(); });
+        strong->runSyncAndDrainMicrotasks([&](jsi::Runtime&) { function(); });
       }
     });
   }

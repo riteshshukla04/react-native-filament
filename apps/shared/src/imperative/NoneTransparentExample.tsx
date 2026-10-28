@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const drone = Image.resolveAssetSource(require('../../assets/buster_drone.glb'))
+const drone = bundledAsset(require('../../assets/buster_drone.glb'))
 
 export function NoneTransparentExample() {
   const [view, setView] = useState<FilamentView>()

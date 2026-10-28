@@ -27,7 +27,7 @@ bool FrameListeners::empty() const {
 bool FrameListeners::dispatch(const FrameInfo& frame, const worklets::WorkletRuntime& runtime) {
   std::vector<std::shared_ptr<FrameListener>> snapshot = listeners_;
   bool wantsFrame = false;
-  runtime.runSync([&](jsi::Runtime&) {
+  runtime.runSyncAndDrainMicrotasks([&](jsi::Runtime&) {
     for (const std::shared_ptr<FrameListener>& listener : snapshot) {
       if (listener->removed) {
         continue;

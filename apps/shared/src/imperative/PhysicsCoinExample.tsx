@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import { scheduleOnRN } from 'react-native-worklets'
 import {
@@ -16,9 +16,10 @@ import {
   type Quaternion,
   type RigidBody,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../../assets/coin.glb'))
-const shadowMaterial = Image.resolveAssetSource(require('../../assets/transparent_shadow_material.filamat'))
+const coin = bundledAsset(require('../../assets/coin.glb'))
+const shadowMaterial = bundledAsset(require('../../assets/transparent_shadow_material.filamat'))
 
 const COIN_SCALE = 0.5
 const FLOOR_HEIGHT = -1.5

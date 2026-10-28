@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { Image } from 'react-native'
 import { makeMutable } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 import { bindSharedValue, composeTransform, Filament, quaternionFromAxisAngle, runOnRenderThread, type Engine, type Mat4 } from 'react-native-filament'
 import { renderView } from './renderView'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
+const coin = bundledAsset(require('../assets/coin.glb'))
 
 function expectClose(actual: number[], expected: number[]) {
   expect(actual.length).toBe(expected.length)

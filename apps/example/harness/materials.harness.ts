@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
 import { Image } from 'react-native'
 import { Filament, runOnRenderThread, type Engine } from 'react-native-filament'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const backgroundMaterial = Image.resolveAssetSource(require('../assets/background_image.filamat'))
-const blueBaseColor = Image.resolveAssetSource(require('../assets/rocket_BaseColor_Blue.png'))
-const rocket = Image.resolveAssetSource(require('../assets/rocket.glb'))
-const skybox = Image.resolveAssetSource(require('../assets/default_env_skybox.ktx'))
+const backgroundMaterial = bundledAsset(require('../assets/background_image.filamat'))
+const blueBaseColor = bundledAsset(require('../assets/rocket_BaseColor_Blue.png'))
+const rocket = bundledAsset(require('../assets/rocket.glb'))
+const skybox = bundledAsset(require('../assets/default_env_skybox.ktx'))
 
 function attempt(run: () => unknown): string {
   'worklet'

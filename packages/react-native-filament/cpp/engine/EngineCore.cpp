@@ -267,7 +267,7 @@ std::shared_ptr<worklets::WorkletRuntime> EngineCore::runtime() const {
 void EngineCore::runWorklet(const std::shared_ptr<worklets::SerializableWorklet>& worklet) {
   std::shared_ptr<worklets::WorkletRuntime> runtime = this->runtime();
   try {
-    runtime->runSync([&](jsi::Runtime& rt) { worklet->toJSValue(rt).asObject(rt).asFunction(rt).call(rt); });
+    runtime->runSyncAndDrainMicrotasks([&](jsi::Runtime& rt) { worklet->toJSValue(rt).asObject(rt).asFunction(rt).call(rt); });
   } catch (const std::exception& error) {
     logError(std::string("A render thread worklet threw: ") + error.what());
   }

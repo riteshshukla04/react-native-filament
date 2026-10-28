@@ -11,7 +11,7 @@ export interface ExampleLink {
  * The example a `rnfexample://<route>?<params>` (CLI app) or `rnfexpo://<route>?<params>` (Expo app) link opens, matching the
  * route case-insensitively.
  */
-export function exampleRouteFromUrl(url: string | null, examples: Example[]): ExampleLink | undefined {
+export function exampleRouteFromUrl(url: string | null | undefined, examples: Example[]): ExampleLink | undefined {
   const scheme = SCHEMES.find((prefix) => url?.startsWith(prefix))
   if (url == null || scheme == null) return undefined
   const [path = '', query = ''] = url.slice(scheme.length).split('?')

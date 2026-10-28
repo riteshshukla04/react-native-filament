@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { callback } from 'react-native-nitro-modules'
 import { scheduleOnRN } from 'react-native-worklets'
@@ -12,8 +12,9 @@ import {
   type Model,
   type ViewTarget,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const rocket = Image.resolveAssetSource(require('../../assets/rocket.glb'))
+const rocket = bundledAsset(require('../../assets/rocket.glb'))
 
 interface Loaded {
   target: ViewTarget

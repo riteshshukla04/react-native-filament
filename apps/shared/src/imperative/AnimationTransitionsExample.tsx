@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, View, type GestureResponderEvent } from 'react-native'
+import { Alert, Button, Pressable, ScrollView, StyleSheet, View, type GestureResponderEvent } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
@@ -11,8 +11,9 @@ import {
   type FilamentView,
   type ViewTarget,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const dancer = Image.resolveAssetSource(require('../../assets/hiphopgirl.glb'))
+const dancer = bundledAsset(require('../../assets/hiphopgirl.glb'))
 const CROSS_FADE_SECONDS = 5
 
 interface Loaded {

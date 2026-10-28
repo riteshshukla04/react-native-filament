@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import { useSharedValue, withSpring } from 'react-native-reanimated'
 import { callback } from 'react-native-nitro-modules'
 import {
@@ -11,8 +11,9 @@ import {
   runOnRenderThread,
   type FilamentView,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../../assets/coin.glb'))
+const coin = bundledAsset(require('../../assets/coin.glb'))
 
 export function ScaleEffectExample() {
   const [view, setView] = useState<FilamentView>()

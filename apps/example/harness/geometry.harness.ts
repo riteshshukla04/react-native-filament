@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { Image } from 'react-native'
 import { Filament, runOnRenderThread, type Engine, type Material, type ViewTarget } from 'react-native-filament'
 import { renderView } from './renderView'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const backgroundMaterial = Image.resolveAssetSource(require('../assets/background_image.filamat'))
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
-const shadowMaterial = Image.resolveAssetSource(require('../assets/transparent_shadow_material.filamat'))
+const backgroundMaterial = bundledAsset(require('../assets/background_image.filamat'))
+const coin = bundledAsset(require('../assets/coin.glb'))
+const shadowMaterial = bundledAsset(require('../assets/transparent_shadow_material.filamat'))
 
 function attempt(run: () => unknown): string {
   'worklet'

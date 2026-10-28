@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
@@ -11,10 +11,11 @@ import {
   type Model,
   type Texture,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const rocket = Image.resolveAssetSource(require('../../assets/rocket.glb'))
-const blueBaseColor = Image.resolveAssetSource(require('../../assets/rocket_BaseColor_Blue.png'))
-const skybox = Image.resolveAssetSource(require('../../assets/default_env_skybox.ktx'))
+const rocket = bundledAsset(require('../../assets/rocket.glb'))
+const blueBaseColor = bundledAsset(require('../../assets/rocket_BaseColor_Blue.png'))
+const skybox = bundledAsset(require('../../assets/default_env_skybox.ktx'))
 
 interface Loaded {
   engine: Engine

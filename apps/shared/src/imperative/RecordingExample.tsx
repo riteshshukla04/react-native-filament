@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 import Video from 'react-native-video'
 import {
   defaultIndirectLightSource,
@@ -9,8 +9,9 @@ import {
   type Engine,
   type Recorder,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const drone = Image.resolveAssetSource(require('../../assets/buster_drone.glb'))
+const drone = bundledAsset(require('../../assets/buster_drone.glb'))
 
 const FPS = 60
 const SECONDS = 5

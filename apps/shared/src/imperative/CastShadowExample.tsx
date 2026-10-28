@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
@@ -11,9 +11,10 @@ import {
   type FilamentView,
   type ViewTarget,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../../assets/coin.glb'))
-const shadowMaterial = Image.resolveAssetSource(require('../../assets/transparent_shadow_material.filamat'))
+const coin = bundledAsset(require('../../assets/coin.glb'))
+const shadowMaterial = bundledAsset(require('../../assets/transparent_shadow_material.filamat'))
 
 interface Loaded {
   engine: Engine
