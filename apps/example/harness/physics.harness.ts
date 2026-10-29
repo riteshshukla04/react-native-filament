@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
 import { scheduleOnRN } from 'react-native-worklets'
 import { Filament, runOnRenderThread, type Engine } from 'react-native-filament'
+import { Physics } from 'react-native-filament-physics'
 import { renderView } from './renderView'
 import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
@@ -30,7 +31,7 @@ describe('Physics', () => {
   it('integrates free fall in fixed steps', async () => {
     const read = await runOnRenderThread(engine, () => {
       'worklet'
-      const world = engine.createPhysicsWorld({ gravity: [0, -10, 0], autoStep: false })
+      const world = Physics.createWorld(engine, { gravity: [0, -10, 0], autoStep: false })
       const ball = world.createRigidBody({ shape: world.createSphereShape(0.5), mass: 1, position: [0, 10, 0] })
       for (let frame = 0; frame < 60; frame++) world.step(1 / 60)
       return { height: ball.getTransform()[13], velocity: ball.linearVelocity[1], gravity: world.gravity, bodies: world.bodyCount }
@@ -44,7 +45,7 @@ describe('Physics', () => {
   it('rests a box on a static plane and reports the contact once to a listener that removes itself', async () => {
     const read = await runOnRenderThread(engine, () => {
       'worklet'
-      const world = engine.createPhysicsWorld({ autoStep: false })
+      const world = Physics.createWorld(engine, { autoStep: false })
       world.createRigidBody({ shape: world.createStaticPlaneShape([0, 1, 0], 0), mass: 0, id: 'floor' })
       const box = world.createRigidBody({ shape: world.createBoxShape([0.5, 0.5, 0.5]), mass: 2, position: [0, 3, 0], id: 'box' })
       const contacts: string[] = []
@@ -73,7 +74,7 @@ describe('Physics', () => {
       'worklet'
       const tm = engine.transformManager
       tm.setScale(model.rootEntity, [2, 2, 2])
-      const world = engine.createPhysicsWorld({ gravity: [0, 0, 0], autoStep: false })
+      const world = Physics.createWorld(engine, { gravity: [0, 0, 0], autoStep: false })
       const body = world.createRigidBody({
         shape: world.createSphereShape(1),
         mass: 1,
@@ -106,7 +107,7 @@ describe('Physics', () => {
     const ball = await runOnRenderThread(engine, () => {
       'worklet'
       target.setScene(engine.createScene())
-      const world = engine.createPhysicsWorld({})
+      const world = Physics.createWorld(engine, {})
       return world.createRigidBody({ shape: world.createSphereShape(0.5), mass: 1, position: [0, 100, 0] })
     })
     const height = await new Promise<number>((resolve) => {
@@ -129,7 +130,7 @@ describe('Physics', () => {
   it('applies impulses, damping and activation states', async () => {
     const read = await runOnRenderThread(engine, () => {
       'worklet'
-      const world = engine.createPhysicsWorld({ gravity: [0, 0, 0], autoStep: false })
+      const world = Physics.createWorld(engine, { gravity: [0, 0, 0], autoStep: false })
       const body = world.createRigidBody({ shape: world.createBoxShape([1, 1, 1]), mass: 4, friction: 0.25, restitution: 0.75 })
       body.applyCentralImpulse([8, 0, 0])
       const velocity = body.linearVelocity
@@ -155,7 +156,7 @@ describe('Physics', () => {
   it('disposes bodies with their world and validates arguments', async () => {
     const read = await runOnRenderThread(engine, () => {
       'worklet'
-      const world = engine.createPhysicsWorld({ autoStep: false })
+      const world = Physics.createWorld(engine, { autoStep: false })
       const plane = world.createStaticPlaneShape([0, 1, 0], 0)
       const sphere = world.createSphereShape(1)
       const errors = [

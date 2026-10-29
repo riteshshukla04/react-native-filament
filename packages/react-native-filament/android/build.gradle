@@ -101,6 +101,13 @@ android {
   buildFeatures {
     buildConfig true
     prefab true
+    prefabPublishing true
+  }
+
+  prefab {
+    NitroFilament {
+      headers "${project.buildDir}/headers/nitrofilament/"
+    }
   }
 
   buildTypes {
@@ -137,6 +144,17 @@ repositories {
   mavenCentral()
   google()
 }
+
+// Packages that extend react-native-filament, such as react-native-filament-physics, link NitroFilament through prefab.
+tasks.register('prepareHeaders', Sync) {
+  from('../nitrogen/generated/shared/c++/include') { include '**/*.hpp' }
+  from('../cpp/include') { include '**/*.hpp' }
+  into "${project.buildDir}/headers/nitrofilament/"
+  includeEmptyDirs = false
+  duplicatesStrategy = DuplicatesStrategy.FAIL
+}
+
+preBuild.dependsOn(prepareHeaders)
 
 
 dependencies {

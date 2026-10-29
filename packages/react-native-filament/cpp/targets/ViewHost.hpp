@@ -1,6 +1,6 @@
 #pragma once
 
-#include "resources/Resource.hpp"
+#include <NitroFilament/Resource.hpp>
 
 #include <filament/Engine.h>
 #include <filament/Renderer.h>

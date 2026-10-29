@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
 import { Filament, runOnRenderThread, type Engine } from 'react-native-filament'
+import { Physics } from 'react-native-filament-physics'
 import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
 const coin = bundledAsset(require('../assets/coin.glb'))
@@ -22,7 +23,7 @@ describe('Debug stats', () => {
       'worklet'
       const scene = engine.createScene()
       const light = engine.createDirectionalLight({})
-      const world = engine.createPhysicsWorld({ autoStep: false })
+      const world = Physics.createWorld(engine, { autoStep: false })
       world.createRigidBody({ shape: world.createSphereShape(1), mass: 1 })
       return { scene, light, world }
     })

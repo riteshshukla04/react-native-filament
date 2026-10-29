@@ -2,7 +2,7 @@
 
 #include "MaterialCore.hpp"
 #include "TextureCore.hpp"
-#include "resources/Resource.hpp"
+#include <NitroFilament/Resource.hpp>
 
 #include <filament/MaterialInstance.h>
 

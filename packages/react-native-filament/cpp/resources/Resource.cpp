@@ -1,4 +1,4 @@
-#include "Resource.hpp"
+#include <NitroFilament/Resource.hpp>
 
 #include <stdexcept>
 #include <string>

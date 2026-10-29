@@ -7,18 +7,20 @@ import {
   FilamentScene,
   FilamentView,
   quaternionFromAxisAngle,
-  useCylinderShape,
   useFilamentContext,
   useModel,
   useRenderThreadEffect,
+  type Float3,
+  type Model,
+} from 'react-native-filament'
+import {
+  useCylinderShape,
   useRigidBody,
   useStaticPlaneShape,
   useWorld,
   type CollisionShape,
-  type Float3,
-  type Model,
   type PhysicsWorld,
-} from 'react-native-filament'
+} from 'react-native-filament-physics'
 
 const coin = require('../../assets/coin.glb')
 const COIN_SCALE = 0.5

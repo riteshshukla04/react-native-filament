@@ -69,9 +69,6 @@ namespace margelo::nitro::filament { class HybridValueBindingSpec; }
 namespace margelo::nitro::filament { class HybridCameraManipulatorSpec; }
 #include <NitroFilament/OrbitManipulatorOptions.hpp>
 #include <NitroFilament/EngineDebugStats.hpp>
-// Forward declaration of `HybridPhysicsWorldSpec` to properly resolve imports.
-namespace margelo::nitro::filament { class HybridPhysicsWorldSpec; }
-#include <NitroFilament/PhysicsWorldOptions.hpp>
 // Forward declaration of `HybridFrameListenerSubscriptionSpec` to properly resolve imports.
 namespace margelo::nitro::filament { class HybridFrameListenerSubscriptionSpec; }
 #include <NitroFilament/FrameInfo.hpp>
@@ -143,7 +140,6 @@ namespace margelo::nitro::filament {
       virtual std::shared_ptr<HybridValueBindingSpec> createValueBinding(double initialValue) = 0;
       virtual std::shared_ptr<HybridCameraManipulatorSpec> createOrbitManipulator(const OrbitManipulatorOptions& options) = 0;
       virtual EngineDebugStats getDebugStats() = 0;
-      virtual std::shared_ptr<HybridPhysicsWorldSpec> createPhysicsWorld(const PhysicsWorldOptions& options) = 0;
       virtual std::shared_ptr<HybridFrameListenerSubscriptionSpec> addOnFrameListener(const Callback<bool(const FrameInfo& /* frame */)>& listener) = 0;
       virtual void requestFrame() = 0;
       virtual Promise<void> shutdown() = 0;

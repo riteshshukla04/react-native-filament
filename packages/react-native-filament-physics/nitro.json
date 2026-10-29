@@ -1,0 +1,12 @@
+{
+  "$schema": "https://nitro.margelo.com/nitro.schema.json",
+  "cxxNamespace": ["filament", "physics"],
+  "apple": {
+    "moduleName": "NitroFilamentPhysics"
+  },
+  "android": {
+    "namespace": ["filament", "physics"],
+    "cxxLibName": "NitroFilamentPhysics"
+  },
+  "ignorePaths": ["**/node_modules"]
+}

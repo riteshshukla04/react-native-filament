@@ -13,7 +13,7 @@
 react-native-filament is a powerful 3D rendering engine for React Native. It features:
 
 * 🧊 Native C++ physically based rendering using [filament](https://github.com/google/filament)
-* 🏀 Native C++ physics using [bullet3](https://github.com/bulletphysics/bullet3)
+* 🏀 Native C++ physics using [bullet3](https://github.com/bulletphysics/bullet3), in the separate `react-native-filament-physics` package
 * 🏎️ GPU-accelerated by Metal and OpenGL ES
 * 📹 Renders on its own thread with a native render loop: animations, gestures and physics run without JS per frame
 * 🐎 Reanimated SharedValues and Gesture Handler gestures drive scenes directly

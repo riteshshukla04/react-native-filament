@@ -6,13 +6,19 @@ icon: Atom
 
 ![Coins falling onto a floor](/img/demo-coins_physics.gif)
 
-react-native-filament includes [Bullet](https://github.com/bulletphysics/bullet3) physics. A physics world belongs to an Engine and steps natively on its render thread with every rendered frame. A rigid body can move an entity, so a falling model needs no JS per frame.
+[Bullet](https://github.com/bulletphysics/bullet3) physics ships as a separate package, `react-native-filament-physics`. A physics world belongs to an Engine and steps natively on its render thread with every rendered frame. A rigid body can move an entity, so a falling model needs no JS per frame.
+
+```npm
+npm i react-native-filament-physics
+```
+
+Install the same version as `react-native-filament`, because the two packages share native code. On iOS, run `npx react-native spm` again so the package is linked.
 
 Every member of `PhysicsWorld`, `CollisionShape` and `RigidBody` runs on the render thread, except a shape's `type` and a body's `id`, `mass` and `shape`. The hooks create these objects for you there; imperative code calls them inside [`runOnRenderThread`](/api/functions/run-on-render-thread).
 
 ## World, shapes and bodies
 
-`useWorld(options)` creates a world for the closest `<FilamentScene>`, returns `undefined` until it exists, and disposes it with its bodies and shapes on unmount. Imperatively, call `engine.createPhysicsWorld(options)`. Keep and dispose the world yourself: it and its bodies keep each other alive, and `world.dispose()` disposes the bodies and shapes too.
+`useWorld(options)` creates a world for the closest `<FilamentScene>`, returns `undefined` until it exists, and disposes it with its bodies and shapes on unmount. Imperatively, call `Physics.createWorld(engine, options)`. Keep and dispose the world yourself: it and its bodies keep each other alive, and `world.dispose()` disposes the bodies and shapes too.
 
 `PhysicsWorldOptions` default to `gravity: [0, -9.81, 0]` (meters per second squared), `fixedTimeStepSeconds: 1 / 60`, `maxSubSteps: 4` (most fixed steps taken per frame; time beyond them is dropped) and `autoStep: true`, which steps the world once per rendered frame by the frame's `deltaSeconds`. Turn `autoStep` off to call `world.step(deltaSeconds)` yourself.
 
@@ -35,10 +41,8 @@ The coin drops from 3 meters onto a static floor. The coin's root entity is boun
 <Declarative>
 
 ```tsx
-import {
-  Camera, DefaultLight, FilamentScene, FilamentView, useCylinderShape, useModel, useRigidBody, useStaticPlaneShape, useWorld,
-  type Model, type PhysicsWorld,
-} from 'react-native-filament'
+import { Camera, DefaultLight, FilamentScene, FilamentView, useModel, type Model } from 'react-native-filament'
+import { useCylinderShape, useRigidBody, useStaticPlaneShape, useWorld, type PhysicsWorld } from 'react-native-filament-physics'
 
 function Coin({ world, model }: { world: PhysicsWorld; model: Model }) {
   const shape = useCylinderShape(world, model.boundingBox.halfExtent, 'y')
@@ -76,6 +80,7 @@ export function PhysicsScreen() {
 ```tsx
 import { Image } from 'react-native'
 import { runOnRenderThread } from 'react-native-filament'
+import { Physics } from 'react-native-filament-physics'
 
 const coin = Image.resolveAssetSource(require('./coin.glb'))!
 const model = await engine.loadModel({ uri: coin.uri }, {})
@@ -83,7 +88,7 @@ const model = await engine.loadModel({ uri: coin.uri }, {})
 const world = await runOnRenderThread(engine, () => {
   'worklet'
   scene.addModel(model)
-  const created = engine.createPhysicsWorld({ gravity: [0, -9.81, 0] })
+  const created = Physics.createWorld(engine, { gravity: [0, -9.81, 0] })
   created.createRigidBody({ shape: created.createStaticPlaneShape([0, 1, 0], -1.5), mass: 0, id: 'floor' })
   created.createRigidBody({
     shape: created.createCylinderShape(model.boundingBox.halfExtent, 'y'),
@@ -105,7 +110,8 @@ const world = await runOnRenderThread(engine, () => {
 
 ```tsx
 import { scheduleOnRN } from 'react-native-worklets'
-import { useRenderThreadEffect, type PhysicsWorld } from 'react-native-filament'
+import { useRenderThreadEffect } from 'react-native-filament'
+import type { PhysicsWorld } from 'react-native-filament-physics'
 
 function useOnLanded(world: PhysicsWorld | undefined, onLanded: () => void) {
   useRenderThreadEffect(() => {
@@ -136,7 +142,8 @@ With `autoStep: false`, the world moves only when you call `world.step(deltaSeco
 
 ```tsx
 import { Button } from 'react-native'
-import { composeTransform, useFilamentContext, useFrameCallback, useRenderThreadCallback, useWorld, type RigidBody } from 'react-native-filament'
+import { composeTransform, useFilamentContext, useFrameCallback, useRenderThreadCallback } from 'react-native-filament'
+import { useWorld, type RigidBody } from 'react-native-filament-physics'
 
 function ResetButton({ body }: { body: RigidBody | undefined }) {
   const { engine } = useFilamentContext()
@@ -167,6 +174,7 @@ function SlowMotion() {
 
 ```tsx
 import { composeTransform, runOnRenderThread } from 'react-native-filament'
+import { Physics } from 'react-native-filament-physics'
 
 await runOnRenderThread(engine, () => {
   'worklet'
@@ -178,7 +186,7 @@ await runOnRenderThread(engine, () => {
 
 const manual = await runOnRenderThread(engine, () => {
   'worklet'
-  const created = engine.createPhysicsWorld({ autoStep: false })
+  const created = Physics.createWorld(engine, { autoStep: false })
   const subscription = engine.addOnFrameListener((frame) => {
     created.step(frame.deltaSeconds * 0.25)
     return true

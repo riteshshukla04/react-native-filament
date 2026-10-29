@@ -80,22 +80,6 @@
         "language": "c++"
       }
     },
-    "CollisionShape": {
-      "android": {
-        "implementation": {
-          "className": "HybridCollisionShape",
-          "include": "\"physics/HybridCollisionShape.hpp\""
-        },
-        "language": "c++"
-      },
-      "apple": {
-        "implementation": {
-          "className": "HybridCollisionShape",
-          "include": "\"physics/HybridCollisionShape.hpp\""
-        },
-        "language": "c++"
-      }
-    },
     "Engine": {
       "android": {
         "implementation": {
@@ -270,22 +254,6 @@
         "language": "c++"
       }
     },
-    "PhysicsWorld": {
-      "android": {
-        "implementation": {
-          "className": "HybridPhysicsWorld",
-          "include": "\"physics/HybridPhysicsWorld.hpp\""
-        },
-        "language": "c++"
-      },
-      "apple": {
-        "implementation": {
-          "className": "HybridPhysicsWorld",
-          "include": "\"physics/HybridPhysicsWorld.hpp\""
-        },
-        "language": "c++"
-      }
-    },
     "PlatformServices": {
       "android": {
         "implementation": {
@@ -390,22 +358,6 @@
         "implementation": {
           "className": "HybridRenderableManager",
           "include": "\"scene/HybridRenderableManager.hpp\""
-        },
-        "language": "c++"
-      }
-    },
-    "RigidBody": {
-      "android": {
-        "implementation": {
-          "className": "HybridRigidBody",
-          "include": "\"physics/HybridRigidBody.hpp\""
-        },
-        "language": "c++"
-      },
-      "apple": {
-        "implementation": {
-          "className": "HybridRigidBody",
-          "include": "\"physics/HybridRigidBody.hpp\""
         },
         "language": "c++"
       }

@@ -47,8 +47,6 @@
 #include <NitroFilament/HybridCameraManipulatorSpec.hpp>
 #include <NitroFilament/OrbitManipulatorOptions.hpp>
 #include <NitroFilament/EngineDebugStats.hpp>
-#include <NitroFilament/HybridPhysicsWorldSpec.hpp>
-#include <NitroFilament/PhysicsWorldOptions.hpp>
 #include <NitroFilament/HybridFrameListenerSubscriptionSpec.hpp>
 #include <NitroFilament/FrameInfo.hpp>
 #include <NitroModules/Callback.hpp>
@@ -89,7 +87,6 @@ namespace margelo::nitro::filament {
       clazz.registerHybridMethod("createValueBinding", &HybridEngineSpec::createValueBinding);
       clazz.registerHybridMethod("createOrbitManipulator", &HybridEngineSpec::createOrbitManipulator);
       clazz.registerHybridMethod("getDebugStats", &HybridEngineSpec::getDebugStats);
-      clazz.registerHybridMethod("createPhysicsWorld", &HybridEngineSpec::createPhysicsWorld);
       clazz.registerHybridMethod("addOnFrameListener", &HybridEngineSpec::addOnFrameListener);
       clazz.registerHybridMethod("requestFrame", &HybridEngineSpec::requestFrame);
       clazz.registerHybridMethod("shutdown", &HybridEngineSpec::shutdown);

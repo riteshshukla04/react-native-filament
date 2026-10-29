@@ -1,10 +1,10 @@
 #pragma once
 
 #include "engine/EngineCore.hpp"
-#include "resources/Resource.hpp"
 #include <NitroFilament/DirectionalLightOptions.hpp>
 #include <NitroFilament/LightType.hpp>
 #include <NitroFilament/PointLightOptions.hpp>
+#include <NitroFilament/Resource.hpp>
 #include <NitroFilament/SpotLightOptions.hpp>
 #include <NitroFilament/SunLightOptions.hpp>
 

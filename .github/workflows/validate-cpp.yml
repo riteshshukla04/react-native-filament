@@ -7,6 +7,8 @@ on:
       - 'packages/react-native-filament/cpp/**'
       - 'packages/react-native-filament/android/src/main/cpp/**'
       - 'packages/react-native-filament/ios/**'
+      - 'packages/react-native-filament-physics/cpp/**'
+      - 'packages/react-native-filament-physics/android/src/main/cpp/**'
 
 jobs:
   clang-format:
@@ -19,3 +21,6 @@ jobs:
         run: |
           files=$(git ls-files 'cpp/**/*.cpp' 'cpp/**/*.hpp' 'cpp/*.cpp' 'cpp/*.hpp' 'android/src/main/cpp/*.cpp' 'ios/*.mm' ':!:cpp/materials/*Package.hpp')
           [ -z "$files" ] || clang-format --dry-run --Werror $files
+      - name: Check formatting of react-native-filament-physics
+        working-directory: packages/react-native-filament-physics
+        run: clang-format --dry-run --Werror $(git ls-files 'cpp/*.cpp' 'cpp/*.hpp' 'android/src/main/cpp/*.cpp')

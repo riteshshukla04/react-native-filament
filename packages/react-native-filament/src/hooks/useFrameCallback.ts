@@ -6,7 +6,8 @@ import type { FrameInfo } from '../specs/types/FrameInfo'
 /**
  * Calls the worklet `callback` on the render thread at the start of every frame while the component
  * is mounted, after transform bindings and camera manipulators are applied and before animation
- * players, physics and skeleton followers run. Keeps the Engine rendering in `on-demand` mode.
+ * players, extension stages such as physics, and skeleton followers run. Keeps the Engine rendering
+ * in `on-demand` mode.
  */
 export function useFrameCallback(callback: (frame: FrameInfo) => void, deps: DependencyList): void {
   const commit = useRenderCommit()

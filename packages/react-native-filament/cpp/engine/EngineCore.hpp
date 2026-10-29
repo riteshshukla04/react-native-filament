@@ -12,6 +12,7 @@
 #include "threading/RenderThread.hpp"
 #include "utils/WeakRegistry.hpp"
 #include <NitroFilament/EngineBackend.hpp>
+#include <NitroFilament/EngineExtension.hpp>
 #include <NitroFilament/RenderMode.hpp>
 
 #include <NitroModules/Promise.hpp>
@@ -34,14 +35,13 @@ namespace margelo::nitro::filament {
 
 class AnimationPlayerCore;
 class ManipulatorCore;
-class PhysicsWorldCore;
 class RenderThreadQueue;
 class SceneCore;
 class SkeletonFollower;
 class TransformBindingCore;
 class ViewTargetCore;
 
-class EngineCore final : public std::enable_shared_from_this<EngineCore> {
+class EngineCore final : public EngineExtensionHost, public std::enable_shared_from_this<EngineCore> {
 public:
   using StartedHandler = std::function<void(const std::shared_ptr<EngineCore>& core, std::exception_ptr error)>;
 
@@ -57,13 +57,13 @@ public:
 
   RenderMode renderMode() const;
   void setRenderMode(RenderMode mode);
-  void requestFrame();
+  void requestFrame() override;
   void scheduleDemandUpdate();
   void updateDemand();
   void noteUploads();
 
-  void adopt(const std::shared_ptr<Resource>& resource);
-  void dispose(const std::shared_ptr<Resource>& resource);
+  void adopt(const std::shared_ptr<Resource>& resource) override;
+  void dispose(const std::shared_ptr<Resource>& resource) override;
   std::unordered_map<std::string, double> liveResourceCounts();
 
   GltfLoader& gltf();
@@ -72,10 +72,15 @@ public:
   void addTransformBinding(const std::shared_ptr<TransformBindingCore>& binding);
   void addManipulator(const std::shared_ptr<ManipulatorCore>& manipulator);
   void addSkeletonFollower(const std::shared_ptr<SkeletonFollower>& follower);
-  void addPhysicsWorld(const std::shared_ptr<PhysicsWorldCore>& world);
   Users<SceneCore>& scenes();
   MaterialAssignments& materialAssignments();
   void decodeTexture(const uint8_t* bytes, size_t size, bool srgb, TextureDecoder::Completion completion);
+
+  void requireRenderThread(const char* method) const override;
+  void addFrameStage(const std::shared_ptr<FrameStage>& stage) override;
+  void requireTransform(double entity, const char* method) override;
+  void setRigidTransform(double entity, const std::array<float, 16>& matrix) override;
+  bool runOnRenderRuntime(const std::function<void()>& body) override;
 
   void runFrameStages(const FrameInfo& frame);
   void setRecording(bool recording);
@@ -121,13 +126,13 @@ private:
   WeakRegistry<TransformBindingCore> transformBindings_;
   WeakRegistry<ManipulatorCore> manipulators_;
   WeakRegistry<SkeletonFollower> skeletonFollowers_;
-  WeakRegistry<PhysicsWorldCore> physicsWorlds_;
+  WeakRegistry<FrameStage> frameStages_;
   Users<SceneCore> scenes_;
   std::vector<std::shared_ptr<ViewTargetCore>> targets_;
   FrameListeners frameListeners_;
   bool listenersWantFrame_ = false;
   bool playersWantFrame_ = false;
-  bool physicsWantsFrame_ = false;
+  bool stagesWantFrame_ = false;
   bool vsyncEnabled_ = false;
   bool recording_ = false;
   bool unsettledUploads_ = false;
