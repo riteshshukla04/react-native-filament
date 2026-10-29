@@ -4,14 +4,13 @@ description: Install react-native-filament and render your first 3D model.
 icon: Rocket
 ---
 
-react-native-filament renders 3D scenes in React Native with Google's [Filament](https://google.github.io/filament) renderer. It is built on [Nitro Modules](https://nitro.margelo.com) and renders on its own thread with a native render loop.
+react-native-filament renders 3D scenes with Google's [Filament](https://google.github.io/filament) renderer. It is built on [Nitro Modules](https://nitro.margelo.com), and each Engine renders on its own native thread.
 
 ## Requirements
 
-- React Native 0.88 with the New Architecture.
-- iOS 15.1 or later.
-- Android 7 (API 24) or later.
-- iOS renders with Metal. Android renders with Vulkan 1.1 where the device supports it and falls back to OpenGL ES 3.0 otherwise. See [Rendering](/docs/rendering#backends) to choose a backend.
+- React Native 0.88 or later.
+- iOS 16 or later, and Android API 24 or later (the minimum of React Native 0.88).
+- iOS renders with Metal. Android renders with Vulkan 1.1 where the device supports it and with OpenGL ES 3.0 otherwise ([Rendering](/docs/rendering#backends)).
 
 ## Installation
 
@@ -20,15 +19,11 @@ react-native-filament renders 3D scenes in React Native with Google's [Filament]
 
 ### Install the packages
 
-Install react-native-filament with its two required peers, [Nitro Modules](https://nitro.margelo.com) and [react-native-worklets](https://docs.swmansion.com/react-native-worklets):
-
 ```npm
 npm i react-native-filament react-native-nitro-modules@alpha-nightly react-native-worklets@0.13
 ```
 
-react-native-filament 2.0 supports React Native 0.88, Nitro Modules 1.0 and react-native-worklets 0.13.x, so pin the peers to those versions.
-
-[Reanimated](https://docs.swmansion.com/react-native-reanimated) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler) are optional. Every animatable prop accepts a Reanimated `SharedValue`, and [`useOrbitGestures`](/api/hooks/use-orbit-gestures) returns a Gesture Handler gesture.
+[Nitro Modules](https://nitro.margelo.com) 1.0 and [react-native-worklets](https://docs.swmansion.com/react-native-worklets) 0.13 are required peers. [Reanimated](https://docs.swmansion.com/react-native-reanimated) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler) 2.30 or later are optional: Reanimated SharedValues drive the animatable props, and [`useOrbitGestures`](/api/hooks/use-orbit-gestures) returns a Gesture Handler gesture.
 
 </Step>
 <Step>
@@ -42,31 +37,32 @@ module.exports = {
 }
 ```
 
-If the app uses Reanimated 4, keep `react-native-reanimated/plugin` instead. It already includes the worklets plugin.
+Use this plugin with or without Reanimated 4: `react-native-reanimated/plugin` only re-exports it.
 
 </Step>
 <Step>
 
 ### Set up iOS
 
-Nitro Modules 1.0 builds iOS libraries with Swift Package Manager. Download Filament's iOS libraries once, then let React Native link every package into your Xcode project:
+The library builds iOS through Swift Package Manager (Nitro Modules 1.0), and its podspec contains no sources. Download Filament's iOS libraries once, then let React Native link the packages into your Xcode project:
 
 ```sh
 node node_modules/react-native-filament/scripts/prepare-filament-apple.js
 npx react-native spm
 ```
 
-The script and the first Android build download the prebuilt Filament binaries from GitHub, verify their SHA-256 checksums and cache them for every later build. Every native library of the app needs Swift Package Manager support. For one that only ships a podspec, `npx react-native spm scaffold` generates a `Package.swift`.
+Every native library of the app needs a `Package.swift`. `npx react-native spm scaffold` generates one for a library that ships only a podspec.
 
 </Step>
 <Step>
 
 ### Configure Metro
 
-Let Metro bundle 3D assets next to your code:
-
 ```js title="metro.config.js"
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config')
+const { drawableFileTypes } = require('@react-native/asset-utils')
+
+drawableFileTypes.delete('ktx')
 
 const defaultConfig = getDefaultConfig(__dirname)
 
@@ -77,27 +73,18 @@ module.exports = mergeConfig(defaultConfig, {
 })
 ```
 
+`assetExts` lets you `require()` models, environments and materials. `@react-native/asset-utils` lists `ktx` as an Android drawable type, so without `drawableFileTypes.delete('ktx')` a release bundle puts `.ktx` files into `drawable-*` folders, which the Android build rejects. Add `@react-native/asset-utils` to your `devDependencies`.
+
 </Step>
 </Steps>
 
-<Callout type="info" title="Models are glTF binaries">
-Models load from glTF 2.0 binaries (`.glb`). Convert other formats, such as glTF, OBJ or FBX, with Blender or an online converter.
-</Callout>
-
-<Callout type="info" title="Building without GitHub access">
-Set `RNF_FILAMENT_BASE_URL` to a mirror of the Filament release assets. To use a local copy, set `RNF_FILAMENT_IOS_ARCHIVE` for `prepare-filament-apple.js` and `RNF_FILAMENT_ARCHIVE` for Gradle. The checksum is verified either way.
-</Callout>
-
 Using Expo? See [Expo](/docs/expo).
+
+The Android build and `prepare-filament-apple.js` download the prebuilt Filament 1.78.0 binaries from GitHub and verify their SHA-256. To build without GitHub access, set `RNF_FILAMENT_BASE_URL` to a mirror of the release assets, or point `RNF_FILAMENT_IOS_ARCHIVE` (iOS) and `RNF_FILAMENT_ARCHIVE` (Android) at local copies.
 
 ## Render your first model
 
-A scene needs four things:
-
-- a view to draw into;
-- light, otherwise everything is black;
-- a model;
-- a camera.
+Models are glTF 2.0 binaries (`.glb`). A scene needs a view, a light (otherwise everything is black), a model and a camera.
 
 <ApiTabs>
 <Declarative>
@@ -122,11 +109,11 @@ export function MyScene() {
 <Imperative>
 
 ```tsx title="MyScene.tsx"
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Image } from 'react-native'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
-const drone = Image.resolveAssetSource(require('./drone.glb'))
+const drone = Image.resolveAssetSource(require('./drone.glb'))!
 
 export function MyScene() {
   const [view, setView] = useState<FilamentView>()
@@ -134,48 +121,38 @@ export function MyScene() {
   useEffect(() => {
     if (view == null) return
     const starting = Filament.createEngine({}).then(async (engine) => {
-      try {
-        const [target, model, environment] = await Promise.all([
-          engine.createViewTarget(view, {}),
-          engine.loadModel({ uri: drone.uri }, {}),
-          engine.loadIndirectLight(defaultIndirectLightSource, { intensity: 25_000 }),
-        ])
-        const { camera, sun } = await runOnRenderThread(engine, () => {
+      const [target, model, environment] = await Promise.all([
+        engine.createViewTarget(view, {}),
+        engine.loadModel({ uri: drone.uri }, {}),
+        engine.loadIndirectLight(defaultIndirectLightSource, { intensity: 25_000 }),
+      ])
+      const { camera, sun } = await runOnRenderThread(engine, () => {
+        'worklet'
+        const scene = engine.createScene()
+        const light = engine.createDirectionalLight({ castShadows: true })
+        scene.setIndirectLight(environment)
+        scene.addEntity(light.entity)
+        scene.addModel(model)
+        engine.transformManager.transformToUnitCube(model.rootEntity, model.boundingBox)
+        const lens = engine.createCamera()
+        lens.lookAt([0, 0, 8], [0, 0, 0], [0, 1, 0])
+        target.setScene(scene)
+        target.setCamera(lens)
+        return { camera: lens, sun: light }
+      })
+      const resize = target.addOnResizeListener((width, height) => {
+        runOnRenderThread(engine, () => {
           'worklet'
-          const scene = engine.createScene()
-          const sun = engine.createDirectionalLight({ castShadows: true })
-          scene.setIndirectLight(environment)
-          scene.addEntity(sun.entity)
-          scene.addModel(model)
-          engine.transformManager.transformToUnitCube(model.rootEntity, model.boundingBox)
-          const lens = engine.createCamera()
-          lens.lookAt([0, 0, 8], [0, 0, 0], [0, 1, 0])
-          target.setScene(scene)
-          target.setCamera(lens)
-          return { camera: lens, sun }
+          camera.setLensProjection(28, width / height, 0.1, 100)
         })
-        const resize = target.addOnResizeListener((width, height) => {
-          runOnRenderThread(engine, () => {
-            'worklet'
-            camera.setLensProjection(28, width / height, 0.1, 100)
-          })
-        })
-        // Keep the target and the light: the scene stores only the light's entity.
-        return { engine, target, resize, sun }
-      } catch (error) {
-        // Free the Engine and its render thread if setup fails, for example on a wrong .glb path.
-        await engine.shutdown()
-        throw error
-      }
+      })
+      return { engine, target, sun, resize }
     })
     return () => {
-      starting.then(
-        ({ engine, resize }) => {
-          resize.remove()
-          engine.shutdown()
-        },
-        () => undefined
-      )
+      starting.then(({ engine, resize }) => {
+        resize.remove()
+        engine.shutdown()
+      })
     }
   }, [view])
 
@@ -186,35 +163,22 @@ export function MyScene() {
 </Imperative>
 </ApiTabs>
 
-The declarative version uses React components:
+The declarative components:
 
-- [`<FilamentScene>`](/api/components/filament-scene) creates an Engine, a scene and its camera, and disposes them when it unmounts.
-- [`<FilamentView>`](/api/components/filament-view) shows the scene. Components inside it that draw nothing on screen, like `Camera` and `Model`, configure the scene.
-- [`<DefaultLight>`](/api/components/default-light) adds the bundled studio environment and a directional light that casts shadows.
-- [`<Model>`](/api/components/model) loads a `.glb` file and adds it to the scene.
-- [`<Camera>`](/api/components/camera) places the camera at `[0, 0, 8]`, looking at the origin.
+- [`<FilamentScene>`](/api/components/filament-scene) creates an Engine, a scene and a camera, and disposes them on unmount.
+- [`<FilamentView>`](/api/components/filament-view) shows the scene. `Camera`, `Model` and the other components inside it draw nothing themselves; they configure the scene.
+- [`<DefaultLight>`](/api/components/default-light) adds the bundled studio environment and a shadow-casting directional light.
+- [`<Model>`](/api/components/model) loads a `.glb` and adds it to the scene. `transformToUnitCube` fits it into the cube from -1 to 1.
+- [`<Camera>`](/api/components/camera) looks at the origin from `[0, 0, 8]`.
 
-The imperative version builds the same scene from the native objects:
+The imperative version uses the native objects. `engine.loadModel()` and `engine.loadIndirectLight()` work from any thread. Methods tagged `@thread render`, such as `createScene()` and `addModel()`, throw outside the render thread, so they run in [`runOnRenderThread()`](/api/functions/run-on-render-thread). The scene stores only a light's entity, and a `ViewTarget` stops rendering when it is garbage collected, so the example keeps `sun` and `target`. Imperative examples in the other guides use an `engine`, `scene`, `camera`, `target` and `model` created this way.
 
-- [`Filament.createEngine()`](/api/functions/filament) creates an [`Engine`](/api/hybrid-objects/engine) with its own render thread.
-- [`NativeFilamentView`](/api/components/native-filament-view) is the native view. Its `hybridRef` hands you the view, and [`engine.createViewTarget()`](/api/hybrid-objects/engine) renders into it.
-- `engine.loadModel()` and `engine.loadIndirectLight()` can be called from any thread. `loadModel()` resolves once every texture and buffer of the model is uploaded.
-- [`runOnRenderThread()`](/api/functions/run-on-render-thread) runs a worklet on the Engine's render thread. Methods that touch the scene, such as `createScene()`, `addModel()` and `setScene()`, must run there.
-- `engine.shutdown()` destroys everything the Engine created.
-
-Render regular React Native views on top of a `FilamentView` with absolute positioning, not as its children.
-
-You can mix both styles. Inside a `FilamentScene`, [`useFilamentContext()`](/api/hooks/use-filament-context) returns the Engine, scene, camera and managers that the components use.
-
-## How it renders
-
-The scene renders natively on the Engine's render thread. Animations, camera manipulators and physics run there natively, and SharedValue-driven props update through worklets, so none of them need the React Native JS thread. By default it renders on every display refresh. With `<FilamentScene renderMode="on-demand">` it renders only after something changed.
+You can mix both styles: inside a `FilamentScene`, [`useFilamentContext()`](/api/hooks/use-filament-context) returns the Engine, scene, camera and managers the components use.
 
 ## Next steps
 
 - [Models](/docs/models) and [Lights](/docs/lights): load assets and light the scene.
 - [Architecture](/docs/architecture): the native objects and who owns them.
-- [Threading](/docs/threading): which thread each method expects and how to run code on the render thread.
+- [Threading](/docs/threading): which thread each method expects.
 - [Rendering](/docs/rendering): backends, render modes and view options.
-- [Camera](/docs/camera): camera props, projections and orbit gestures.
 - [Migrating from 1.x](/docs/migration): what changed in 2.0.
