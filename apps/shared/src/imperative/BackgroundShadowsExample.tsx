@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
@@ -12,11 +12,12 @@ import {
   type Scene,
 } from 'react-native-filament'
 import { imageFitTransform } from '../utils/imageFitTransform'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const rocket = Image.resolveAssetSource(require('../../assets/rocket.glb'))
-const photo = Image.resolveAssetSource(require('../../assets/background.jpg'))
-const backgroundMaterial = Image.resolveAssetSource(require('../../assets/background_image.filamat'))
-const shadowMaterial = Image.resolveAssetSource(require('../../assets/transparent_shadow_material.filamat'))
+const rocket = bundledAsset(require('../../assets/rocket.glb'))
+const photo = bundledAsset(require('../../assets/background.jpg'))
+const backgroundMaterial = bundledAsset(require('../../assets/background_image.filamat'))
+const shadowMaterial = bundledAsset(require('../../assets/transparent_shadow_material.filamat'))
 
 interface Bounds {
   engine: Engine

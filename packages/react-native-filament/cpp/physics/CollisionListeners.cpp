@@ -19,7 +19,7 @@ bool CollisionListeners::empty() {
 
 void CollisionListeners::dispatch(const std::vector<ContactChange>& changes, const worklets::WorkletRuntime& runtime) {
   std::vector<std::shared_ptr<Entry>> snapshot = entries_;
-  runtime.runSync([&](jsi::Runtime&) {
+  runtime.runSyncAndDrainMicrotasks([&](jsi::Runtime&) {
     for (const std::shared_ptr<Entry>& entry : snapshot) {
       if (entry->removed) {
         continue;

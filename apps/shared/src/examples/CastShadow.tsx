@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import {
   Camera,
   DefaultLight,
@@ -11,8 +11,9 @@ import {
   useFilamentContext,
   useRenderThreadCallback,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const shadowMaterialSource = Image.resolveAssetSource(require('../../assets/transparent_shadow_material.filamat'))
+const shadowMaterialSource = bundledAsset(require('../../assets/transparent_shadow_material.filamat'))
 const coin = require('../../assets/coin.glb')
 
 function ShadowPlane() {

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { Image } from 'react-native'
 import { Filament, runOnRenderThread, type Engine, type Model, type ViewTarget } from 'react-native-filament'
 import { renderView } from './renderView'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
+const coin = bundledAsset(require('../assets/coin.glb'))
 
 describe('Picking and snapshots', () => {
   let engine: Engine

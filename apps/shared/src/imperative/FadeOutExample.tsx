@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import { useSharedValue, withTiming } from 'react-native-reanimated'
 import { callback } from 'react-native-nitro-modules'
 import {
@@ -11,8 +11,9 @@ import {
   runOnRenderThread,
   type FilamentView,
 } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../../assets/coin_with_alpha.glb'))
+const coin = bundledAsset(require('../../assets/coin_with_alpha.glb'))
 
 /**
  * Reanimated drives the opacity on the UI runtime into a ValueBinding; a render-thread frame

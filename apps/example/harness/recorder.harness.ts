@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { Image } from 'react-native'
 import { NitroModules, type HybridObject } from 'react-native-nitro-modules'
 import { Filament, runOnRenderThread, type Engine, type Model, type Recorder } from 'react-native-filament'
 import { readMp4Info } from './mp4'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
+const coin = bundledAsset(require('../assets/coin.glb'))
 
 interface AssetIO extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
   read(uri: string): Promise<ArrayBuffer>

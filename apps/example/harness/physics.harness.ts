@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { Image } from 'react-native'
 import { scheduleOnRN } from 'react-native-worklets'
 import { Filament, runOnRenderThread, type Engine } from 'react-native-filament'
 import { renderView } from './renderView'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
+const coin = bundledAsset(require('../assets/coin.glb'))
 
 function attempt(run: () => unknown): string {
   'worklet'

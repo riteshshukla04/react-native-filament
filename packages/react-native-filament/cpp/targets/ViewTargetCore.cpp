@@ -12,8 +12,8 @@
 
 namespace margelo::nitro::filament {
 
-ViewTargetCore::ViewTargetCore(::filament::Engine& engine, ::filament::Renderer& renderer,
-                               ::filament::backend::CallbackHandler& callbacks, ClearSettings clear)
+ViewTargetCore::ViewTargetCore(::filament::Engine& engine, ::filament::Renderer& renderer, ::filament::backend::CallbackHandler& callbacks,
+                               ClearSettings clear)
     : ViewHost("ViewTarget", engine, renderer, clear), callbacks_(callbacks) {}
 
 void ViewTargetCore::attach(const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {

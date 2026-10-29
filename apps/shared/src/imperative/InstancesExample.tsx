@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const dancer = Image.resolveAssetSource(require('../../assets/hiphopgirl.glb'))
+const dancer = bundledAsset(require('../../assets/hiphopgirl.glb'))
 
 export function InstancesExample() {
   const [view, setView] = useState<FilamentView>()

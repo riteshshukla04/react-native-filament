@@ -8,7 +8,7 @@ react-native-filament renders 3D scenes in React Native with Google's [Filament]
 
 ## Requirements
 
-- React Native 0.83 with the New Architecture.
+- React Native 0.88 with the New Architecture.
 - iOS 15.1 or later.
 - Android 7 (API 24) or later.
 - iOS renders with Metal. Android renders with Vulkan 1.1 where the device supports it and falls back to OpenGL ES 3.0 otherwise. See [Rendering](/docs/rendering#backends) to choose a backend.
@@ -23,10 +23,10 @@ react-native-filament renders 3D scenes in React Native with Google's [Filament]
 Install react-native-filament with its two required peers, [Nitro Modules](https://nitro.margelo.com) and [react-native-worklets](https://docs.swmansion.com/react-native-worklets):
 
 ```npm
-npm i react-native-filament react-native-nitro-modules@0.37 react-native-worklets@0.7
+npm i react-native-filament react-native-nitro-modules@0.37 react-native-worklets@0.13
 ```
 
-react-native-filament 2.0 supports React Native 0.83, Nitro Modules 0.37.x and react-native-worklets 0.7.x, so pin the peers to those versions.
+react-native-filament 2.0 supports React Native 0.88, Nitro Modules 0.37.x and react-native-worklets 0.13.x, so pin the peers to those versions.
 
 [Reanimated](https://docs.swmansion.com/react-native-reanimated) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler) are optional. Every animatable prop accepts a Reanimated `SharedValue`, and [`useOrbitGestures`](/api/hooks/use-orbit-gestures) returns a Gesture Handler gesture.
 

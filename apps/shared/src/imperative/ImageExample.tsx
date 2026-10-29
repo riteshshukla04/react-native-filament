@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
@@ -13,10 +13,11 @@ import {
   type ViewTarget,
 } from 'react-native-filament'
 import { imageFitTransform, type ImageFit } from '../utils/imageFitTransform'
+import { bundledAsset } from '../utils/bundledAsset'
 
-const drone = Image.resolveAssetSource(require('../../assets/buster_drone.glb'))
-const photo = Image.resolveAssetSource(require('../../assets/background.jpg'))
-const backgroundMaterial = Image.resolveAssetSource(require('../../assets/background_image.filamat'))
+const drone = bundledAsset(require('../../assets/buster_drone.glb'))
+const photo = bundledAsset(require('../../assets/background.jpg'))
+const backgroundMaterial = bundledAsset(require('../../assets/background_image.filamat'))
 
 interface Background {
   engine: Engine

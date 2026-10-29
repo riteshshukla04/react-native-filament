@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator()
 export default function App() {
   const navigation = useNavigationContainerRef()
 
-  const open = (url: string | null) => {
+  const open = (url: string | null | undefined) => {
     const link = exampleRouteFromUrl(url, examples)
     if (link != null) navigation.dispatch(CommonActions.navigate({ name: link.route, params: link.params }))
   }

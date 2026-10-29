@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { Image } from 'react-native'
 import { Filament, runOnRenderThread, type Engine } from 'react-native-filament'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
-const drone = Image.resolveAssetSource(require('../assets/buster_drone.glb'))
+const coin = bundledAsset(require('../assets/coin.glb'))
+const drone = bundledAsset(require('../assets/buster_drone.glb'))
 
 describe('Models', () => {
   let engine: Engine

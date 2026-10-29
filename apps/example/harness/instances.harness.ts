@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
-import { Image } from 'react-native'
 import { scheduleOnRN } from 'react-native-worklets'
 import { Filament, runOnRenderThread, type Engine, type Mat4 } from 'react-native-filament'
 import { renderView } from './renderView'
+import { bundledAsset } from 'shared/src/utils/bundledAsset'
 
-const coin = Image.resolveAssetSource(require('../assets/coin.glb'))
-const avatar = Image.resolveAssetSource(require('../assets/morphtargets.glb'))
-const dancer = Image.resolveAssetSource(require('../assets/hiphopgirl.glb'))
+const coin = bundledAsset(require('../assets/coin.glb'))
+const avatar = bundledAsset(require('../assets/morphtargets.glb'))
+const dancer = bundledAsset(require('../assets/hiphopgirl.glb'))
 
 function attempt(run: () => unknown): string {
   'worklet'
