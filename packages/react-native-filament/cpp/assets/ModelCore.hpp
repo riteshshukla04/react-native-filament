@@ -2,8 +2,8 @@
 
 #include "ModelSnapshot.hpp"
 #include "engine/EngineCore.hpp"
-#include "resources/Resource.hpp"
 #include "resources/Users.hpp"
+#include <NitroFilament/Resource.hpp>
 
 #include <gltfio/FilamentAsset.h>
 #include <gltfio/FilamentInstance.h>

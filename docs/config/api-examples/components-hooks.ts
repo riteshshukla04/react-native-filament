@@ -784,35 +784,6 @@ function DroneAnimation({ model }: { model: Model }) {
 }`,
   },
 
-  'hooks/useBoxShape': {
-    declarative: `import { useBoxShape, useRigidBody, type Entity, type PhysicsWorld } from 'react-native-filament'
-
-function Crate({ world, entity }: { world: PhysicsWorld | undefined; entity: Entity }) {
-  const shape = useBoxShape(world, [0.5, 0.5, 0.5])
-  useRigidBody(world, shape == null ? undefined : { shape, mass: 2, position: [0, 4, 0], entity })
-  return null
-}`,
-    imperative: `import { useEffect } from 'react'
-import { runOnRenderThread, useFilamentContext, type Entity, type PhysicsWorld } from 'react-native-filament'
-
-function Crate({ world, entity }: { world: PhysicsWorld; entity: Entity }) {
-  const { engine } = useFilamentContext()
-
-  useEffect(() => {
-    const creating = runOnRenderThread(engine, () => {
-      'worklet'
-      const shape = world.createBoxShape([0.5, 0.5, 0.5])
-      return world.createRigidBody({ shape, mass: 2, position: [0, 4, 0], entity })
-    })
-    return () => {
-      creating.then((body) => body.dispose())
-    }
-  }, [engine, world, entity])
-
-  return null
-}`,
-  },
-
   'hooks/useCameraManipulator': {
     declarative: `import { Camera, useCameraManipulator } from 'react-native-filament'
 
@@ -881,37 +852,6 @@ function DroneShadows({ model }: { model: Model }) {
       }
     })
   }, [engine, renderableManager, model])
-
-  return null
-}`,
-  },
-
-  'hooks/useCylinderShape': {
-    declarative: `import { useCylinderShape, useRigidBody, type Model, type PhysicsWorld } from 'react-native-filament'
-
-function Coin({ world, model }: { world: PhysicsWorld | undefined; model: Model }) {
-  const [x, y, z] = model.boundingBox.halfExtent
-  const shape = useCylinderShape(world, [x, y, z], 'y')
-  useRigidBody(world, shape == null ? undefined : { shape, mass: 1, position: [0, 3, 0], friction: 0.8, entity: model.rootEntity })
-  return null
-}`,
-    imperative: `import { useEffect } from 'react'
-import { runOnRenderThread, useFilamentContext, type Model, type PhysicsWorld } from 'react-native-filament'
-
-function Coin({ world, model }: { world: PhysicsWorld; model: Model }) {
-  const { engine } = useFilamentContext()
-
-  useEffect(() => {
-    const { halfExtent } = model.boundingBox
-    const creating = runOnRenderThread(engine, () => {
-      'worklet'
-      const shape = world.createCylinderShape(halfExtent, 'y')
-      return world.createRigidBody({ shape, mass: 1, position: [0, 3, 0], friction: 0.8, entity: model.rootEntity })
-    })
-    return () => {
-      creating.then((body) => body.dispose())
-    }
-  }, [engine, world, model])
 
   return null
 }`,
@@ -1549,58 +1489,6 @@ function NodeNames({ model }: { model: Model }) {
 }`,
   },
 
-  'hooks/useRigidBody': {
-    declarative: `import { Button } from 'react-native'
-import { useFilamentContext, useRenderThreadCallback, useRigidBody, useSphereShape, type Entity, type PhysicsWorld } from 'react-native-filament'
-
-function Ball({ world, entity }: { world: PhysicsWorld | undefined; entity: Entity }) {
-  const { engine } = useFilamentContext()
-  const shape = useSphereShape(world, 0.25)
-  const body = useRigidBody(world, shape == null ? undefined : { shape, mass: 1, position: [0, 3, 0], restitution: 0.6, id: 'ball', entity })
-  const kick = useRenderThreadCallback(() => {
-    'worklet'
-    body?.applyCentralImpulse([0, 4, 0])
-    // Changing a body does not request a frame in on-demand mode.
-    engine.requestFrame()
-  }, [body, engine])
-  return <Button title="Kick" disabled={body == null} onPress={() => kick()} />
-}`,
-    imperative: `import { useEffect, useState } from 'react'
-import { Button } from 'react-native'
-import { runOnRenderThread, useFilamentContext, type Entity, type PhysicsWorld, type RigidBody } from 'react-native-filament'
-
-function Ball({ world, entity }: { world: PhysicsWorld; entity: Entity }) {
-  const { engine } = useFilamentContext()
-  const [body, setBody] = useState<RigidBody>()
-
-  useEffect(() => {
-    let active = true
-    const creating = runOnRenderThread(engine, () => {
-      'worklet'
-      const shape = world.createSphereShape(0.25)
-      return world.createRigidBody({ shape, mass: 1, position: [0, 3, 0], restitution: 0.6, id: 'ball', entity })
-    })
-    creating.then((created) => {
-      if (active) setBody(created)
-    })
-    return () => {
-      active = false
-      setBody(undefined)
-      creating.then((created) => created.dispose())
-    }
-  }, [engine, world, entity])
-
-  const kick = () =>
-    runOnRenderThread(engine, () => {
-      'worklet'
-      body?.applyCentralImpulse([0, 4, 0])
-      // Changing a body does not request a frame in on-demand mode.
-      engine.requestFrame()
-    })
-  return <Button title="Kick" disabled={body == null} onPress={kick} />
-}`,
-  },
-
   'hooks/useSkybox': {
     declarative: `import { useSkybox } from 'react-native-filament'
 
@@ -1625,64 +1513,6 @@ function Sky({ night }: { night: boolean }) {
       creating.then((skybox) => skybox.dispose())
     }
   }, [engine, scene, night])
-
-  return null
-}`,
-  },
-
-  'hooks/useSphereShape': {
-    declarative: `import { useRigidBody, useSphereShape, type Entity, type PhysicsWorld } from 'react-native-filament'
-
-function Marble({ world, entity }: { world: PhysicsWorld | undefined; entity: Entity }) {
-  const shape = useSphereShape(world, 0.1)
-  useRigidBody(world, shape == null ? undefined : { shape, mass: 0.05, position: [0, 2, 0], restitution: 0.8, entity })
-  return null
-}`,
-    imperative: `import { useEffect } from 'react'
-import { runOnRenderThread, useFilamentContext, type Entity, type PhysicsWorld } from 'react-native-filament'
-
-function Marble({ world, entity }: { world: PhysicsWorld; entity: Entity }) {
-  const { engine } = useFilamentContext()
-
-  useEffect(() => {
-    const creating = runOnRenderThread(engine, () => {
-      'worklet'
-      const shape = world.createSphereShape(0.1)
-      return world.createRigidBody({ shape, mass: 0.05, position: [0, 2, 0], restitution: 0.8, entity })
-    })
-    return () => {
-      creating.then((body) => body.dispose())
-    }
-  }, [engine, world, entity])
-
-  return null
-}`,
-  },
-
-  'hooks/useStaticPlaneShape': {
-    declarative: `import { useRigidBody, useStaticPlaneShape, type PhysicsWorld } from 'react-native-filament'
-
-function Floor({ world }: { world: PhysicsWorld | undefined }) {
-  const shape = useStaticPlaneShape(world, [0, 1, 0], -1.5)
-  useRigidBody(world, shape == null ? undefined : { shape, mass: 0, friction: 1, id: 'floor' })
-  return null
-}`,
-    imperative: `import { useEffect } from 'react'
-import { runOnRenderThread, useFilamentContext, type PhysicsWorld } from 'react-native-filament'
-
-function Floor({ world }: { world: PhysicsWorld }) {
-  const { engine } = useFilamentContext()
-
-  useEffect(() => {
-    const creating = runOnRenderThread(engine, () => {
-      'worklet'
-      const shape = world.createStaticPlaneShape([0, 1, 0], -1.5)
-      return world.createRigidBody({ shape, mass: 0, friction: 1, id: 'floor' })
-    })
-    return () => {
-      creating.then((body) => body.dispose())
-    }
-  }, [engine, world])
 
   return null
 }`,
@@ -1899,40 +1729,6 @@ function MorphTargets({ model, entity }: { model: Model; entity: Entity }) {
   }, [engine, model, entity])
 
   return <Text>{names == null ? 'Loading…' : names.join(', ')}</Text>
-}`,
-  },
-
-  'hooks/useWorld': {
-    declarative: `import { useRigidBody, useSphereShape, useStaticPlaneShape, useWorld, type Entity } from 'react-native-filament'
-
-function Physics({ ball }: { ball: Entity }) {
-  const world = useWorld({ gravity: [0, -9.81, 0], fixedTimeStepSeconds: 1 / 120 })
-  const floorShape = useStaticPlaneShape(world, [0, 1, 0], 0)
-  const ballShape = useSphereShape(world, 0.25)
-  useRigidBody(world, floorShape == null ? undefined : { shape: floorShape, mass: 0 })
-  useRigidBody(world, ballShape == null ? undefined : { shape: ballShape, mass: 1, position: [0, 3, 0], restitution: 0.6, entity: ball })
-  return null
-}`,
-    imperative: `import { useEffect } from 'react'
-import { runOnRenderThread, useFilamentContext, type Entity } from 'react-native-filament'
-
-function Physics({ ball }: { ball: Entity }) {
-  const { engine } = useFilamentContext()
-
-  useEffect(() => {
-    const creating = runOnRenderThread(engine, () => {
-      'worklet'
-      const world = engine.createPhysicsWorld({ gravity: [0, -9.81, 0], fixedTimeStepSeconds: 1 / 120 })
-      world.createRigidBody({ shape: world.createStaticPlaneShape([0, 1, 0], 0), mass: 0 })
-      world.createRigidBody({ shape: world.createSphereShape(0.25), mass: 1, position: [0, 3, 0], restitution: 0.6, entity: ball })
-      return world
-    })
-    return () => {
-      creating.then((world) => world.dispose())
-    }
-  }, [engine, ball])
-
-  return null
 }`,
   },
 }

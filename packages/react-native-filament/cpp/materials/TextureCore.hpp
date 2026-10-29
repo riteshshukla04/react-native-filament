@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/EngineCore.hpp"
-#include "resources/Resource.hpp"
+#include <NitroFilament/Resource.hpp>
 
 #include <filament/Texture.h>
 

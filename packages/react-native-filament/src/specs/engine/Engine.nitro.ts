@@ -18,8 +18,6 @@ import type { ViewTargetOptions } from '../types/ViewTargetOptions'
 import type { FilamentView } from '../targets/FilamentView.nitro'
 import type { ViewTarget } from '../targets/ViewTarget.nitro'
 import type { Recorder } from '../targets/Recorder.nitro'
-import type { PhysicsWorld } from '../physics/PhysicsWorld.nitro'
-import type { PhysicsWorldOptions } from '../types/PhysicsWorldOptions'
 import type { EngineDebugStats } from '../types/EngineDebugStats'
 import type { RecorderOptions } from '../types/RecorderOptions'
 import type { Model } from '../assets/Model.nitro'
@@ -173,13 +171,8 @@ export declare class Engine extends HybridObject {
    */
   getDebugStats(): EngineDebugStats
   /**
-   * A Bullet physics world simulated on this Engine's render thread.
-   * @thread render
-   */
-  createPhysicsWorld(options: PhysicsWorldOptions): PhysicsWorld
-  /**
    * Calls `listener` once per rendered frame, after transform bindings and camera manipulators are
-   * applied and before animation players and physics run and the targets render, so a
+   * applied and before animation players and extension stages, such as physics, run and the targets render, so a
    * TransformBinding set in the listener takes effect on the next frame. The listener returns
    * whether it needs another frame: in `on-demand` mode the Engine keeps rendering while any
    * listener returns `true`. In `continuous` mode every frame renders anyway.

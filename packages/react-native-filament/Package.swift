@@ -23,21 +23,14 @@ let package = Package(
   dependencies: [
     .package(name: "RNWorklets", path: "../RNWorklets"),
   ],
-  targets: filamentTargets + [
-    .target(
-      name: "NitroFilamentBullet",
-      path: "vendor/bullet3/src",
-      publicHeadersPath: ".",
-      cxxSettings: [.unsafeFlags(["-w"])]
-    ),
-  ]
+  targets: filamentTargets
 )
 
 addNitrogenTargets(
   to: package,
   swiftSources: ["apple/swift"],
   cxxSources: ["cpp", "apple/cpp"],
-  dependencies: ["NitroFilamentBullet", .product(name: "RNWorklets", package: "RNWorklets")]
+  dependencies: [.product(name: "RNWorklets", package: "RNWorklets")]
     + filamentTargets.map { .target(name: $0.name) },
   cxxSettings: [
     .headerSearchPath("apple/Filament/include"),
@@ -49,10 +42,13 @@ for target in package.targets {
   switch target.name {
   case "NitroFilamentCxx":
     // apple/cpp implements AssetIO, whose spec is Apple-only C++ and generated next to the Swift bridge.
-    target.cxxSettings = (target.cxxSettings ?? []) + [.headerSearchPath("nitrogen/generated/apple/c++/include")]
+    // cpp/include holds the C++ API for packages that extend react-native-filament, such as react-native-filament-physics.
+    target.cxxSettings = (target.cxxSettings ?? []) + [.headerSearchPath("nitrogen/generated/apple/c++/include"), .headerSearchPath("cpp/include")]
     target.exclude.removeAll { $0 == "assets" }
     target.resources = [.copy("assets/RNF_default_env_ibl.ktx")]
     target.linkerSettings = [.linkedFramework("Metal"), .linkedFramework("QuartzCore"), .linkedFramework("CoreVideo"), .linkedLibrary("z")]
+  case "NitroFilamentSwiftBridge":
+    target.cxxSettings = (target.cxxSettings ?? []) + [.headerSearchPath("../../../cpp/include")]
   default:
     break
   }

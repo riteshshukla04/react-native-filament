@@ -3,8 +3,8 @@
 #include "IndirectLightCore.hpp"
 #include "SkyboxCore.hpp"
 #include "engine/EngineCore.hpp"
-#include "resources/Resource.hpp"
 #include "resources/Users.hpp"
+#include <NitroFilament/Resource.hpp>
 
 #include <filament/Scene.h>
 

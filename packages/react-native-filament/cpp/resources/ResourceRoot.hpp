@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Resource.hpp"
+#include <NitroFilament/Resource.hpp>
 
 namespace margelo::nitro::filament {
 

@@ -5,6 +5,9 @@
       "react-native-filament": [
         "../../packages/react-native-filament/src/index"
       ],
+      "react-native-filament-physics": [
+        "../../packages/react-native-filament-physics/src/index"
+      ],
       "react-native-filament/*": [
         "../../packages/react-native-filament/*"
       ]

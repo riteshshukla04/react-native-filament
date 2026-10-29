@@ -1,8 +1,8 @@
 #pragma once
 
 #include "engine/EngineCore.hpp"
-#include "resources/Resource.hpp"
 #include "resources/Users.hpp"
+#include <NitroFilament/Resource.hpp>
 
 #include <filament/IndirectLight.h>
 #include <filament/Texture.h>

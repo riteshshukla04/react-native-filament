@@ -11,10 +11,9 @@ import {
   type Engine,
   type Float3,
   type FilamentView,
-  type PhysicsWorld,
   type Quaternion,
-  type RigidBody,
 } from 'react-native-filament'
+import { Physics, type PhysicsWorld, type RigidBody } from 'react-native-filament-physics'
 import { bundledAsset } from '../utils/bundledAsset'
 
 const coin = bundledAsset(require('../../assets/coin.glb'))
@@ -81,7 +80,7 @@ export function PhysicsCoinExample() {
         engine.transformManager.setTranslation(ground.entity, [0, FLOOR_HEIGHT, 0])
         scene.addEntity(ground.entity)
 
-        const world = engine.createPhysicsWorld({})
+        const world = Physics.createWorld(engine, {})
         world.createRigidBody({ shape: world.createStaticPlaneShape([0, 1, 0], FLOOR_HEIGHT), mass: 0, friction: 1, id: 'floor' })
         const [x, y, z] = model.boundingBox.halfExtent
         const coinShape = world.createCylinderShape([x * COIN_SCALE, y * COIN_SCALE, z * COIN_SCALE], 'y')

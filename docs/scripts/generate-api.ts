@@ -95,7 +95,7 @@ const CATEGORY_TITLES: Record<Category, string> = {
 
 const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
   components: 'React components that build a scene declaratively.',
-  hooks: 'React hooks for engines, models, physics, threading and bindings.',
+  hooks: 'React hooks for engines, models, threading and bindings.',
   'hybrid-objects': 'The native Nitro objects behind every component, for imperative use.',
   functions: 'The `Filament` entry point, `runOnRenderThread` and `bindSharedValue`, the bundled `defaultIndirectLightSource`, and math helpers that run in any runtime.',
   types: 'Option, value and result types.',

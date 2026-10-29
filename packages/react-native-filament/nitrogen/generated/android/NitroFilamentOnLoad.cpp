@@ -30,9 +30,6 @@
 #include <NitroFilament/HybridMaterialSpec.hpp>
 #include <NitroFilament/HybridMaterialInstanceSpec.hpp>
 #include <NitroFilament/HybridTextureSpec.hpp>
-#include <NitroFilament/HybridCollisionShapeSpec.hpp>
-#include <NitroFilament/HybridPhysicsWorldSpec.hpp>
-#include <NitroFilament/HybridRigidBodySpec.hpp>
 #include <NitroFilament/HybridPlatformServicesSpec.hpp>
 #include <NitroFilament/HybridCameraSpec.hpp>
 #include <NitroFilament/HybridIndirectLightSpec.hpp>
@@ -75,9 +72,6 @@ namespace margelo::nitro::filament {
     HybridClassRegistry::registerHybridClass("filament.Material", HybridMaterialSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.MaterialInstance", HybridMaterialInstanceSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.Texture", HybridTextureSpec::Class::get());
-    HybridClassRegistry::registerHybridClass("filament.CollisionShape", HybridCollisionShapeSpec::Class::get());
-    HybridClassRegistry::registerHybridClass("filament.PhysicsWorld", HybridPhysicsWorldSpec::Class::get());
-    HybridClassRegistry::registerHybridClass("filament.RigidBody", HybridRigidBodySpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.AssetIO", JHybridAssetIOSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.PlatformServices", HybridPlatformServicesSpec::Class::get());
     HybridClassRegistry::registerHybridClass("filament.VideoEncoder", JHybridVideoEncoderSpec::Class::get());

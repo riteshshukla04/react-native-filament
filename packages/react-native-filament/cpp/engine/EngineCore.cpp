@@ -7,11 +7,16 @@
 #include "assets/SkeletonFollower.hpp"
 #include "control/ManipulatorCore.hpp"
 #include "control/TransformBindingCore.hpp"
-#include "physics/PhysicsWorldCore.hpp"
 #include "targets/ViewTargetCore.hpp"
 #include "threading/WorkerPool.hpp"
+#include "utils/ComponentChecks.hpp"
+#include "utils/EntityConversion.hpp"
 #include "utils/HeapRelease.hpp"
 #include "utils/Logger.hpp"
+#include "utils/ThreadChecks.hpp"
+#include "utils/Trs.hpp"
+
+#include <filament/TransformManager.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -184,8 +189,38 @@ void EngineCore::addSkeletonFollower(const std::shared_ptr<SkeletonFollower>& fo
   skeletonFollowers_.add(follower);
 }
 
-void EngineCore::addPhysicsWorld(const std::shared_ptr<PhysicsWorldCore>& world) {
-  physicsWorlds_.add(world);
+void EngineCore::requireRenderThread(const char* method) const {
+  margelo::nitro::filament::requireRenderThread(*thread_, method);
+}
+
+void EngineCore::addFrameStage(const std::shared_ptr<FrameStage>& stage) {
+  frameStages_.add(stage);
+}
+
+void EngineCore::requireTransform(double entity, const char* method) {
+  requireComponent(engine_->getTransformManager(), entity, method, "transform");
+}
+
+void EngineCore::setRigidTransform(double entity, const std::array<float, 16>& matrix) {
+  ::filament::TransformManager& transforms = engine_->getTransformManager();
+  ::filament::TransformManager::Instance instance = transforms.getInstance(toEntity(entity));
+  if (!instance.isValid()) {
+    return;
+  }
+  ::filament::math::mat4f rigid;
+  std::copy(matrix.begin(), matrix.end(), &rigid[0][0]);
+  Trs pose = Trs::decompose(rigid);
+  pose.scale = Trs::decompose(transforms.getTransform(instance)).scale;
+  transforms.setTransform(instance, pose.compose());
+}
+
+bool EngineCore::runOnRenderRuntime(const std::function<void()>& body) {
+  std::shared_ptr<worklets::WorkletRuntime> runtime = this->runtime();
+  if (runtime == nullptr) {
+    return false;
+  }
+  runtime->runSyncAndDrainMicrotasks([&](jsi::Runtime&) { body(); });
+  return true;
 }
 
 MaterialAssignments& EngineCore::materialAssignments() {
@@ -306,7 +341,7 @@ bool EngineCore::isUploading() const {
 }
 
 bool EngineCore::wantsFrame() const {
-  return renderMode_ == RenderMode::CONTINUOUS || frameRequested_ || listenersWantFrame_ || playersWantFrame_ || physicsWantsFrame_ ||
+  return renderMode_ == RenderMode::CONTINUOUS || frameRequested_ || listenersWantFrame_ || playersWantFrame_ || stagesWantFrame_ ||
          settleFrames_ > 0 || hasPendingReadbacks();
 }
 
@@ -377,12 +412,8 @@ void EngineCore::runFrameStages(const FrameInfo& frame) {
   }
   playersWantFrame_ = false;
   players_.forEachActive([&](AnimationPlayerCore& player) { playersWantFrame_ = player.advance(frame.deltaSeconds) || playersWantFrame_; });
-  physicsWantsFrame_ = false;
-  physicsWorlds_.forEachActive([&](PhysicsWorldCore& world) {
-    if (world.autoSteps()) {
-      physicsWantsFrame_ = world.step(frame.deltaSeconds) || physicsWantsFrame_;
-    }
-  });
+  stagesWantFrame_ = false;
+  frameStages_.forEachActive([&](FrameStage& stage) { stagesWantFrame_ = stage.runFrame(frame) || stagesWantFrame_; });
   skeletonFollowers_.forEachActive([&](SkeletonFollower& follower) { follower.apply(transforms); });
 }
 
@@ -428,7 +459,7 @@ void EngineCore::shutdownOnRenderThread() {
   transformBindings_.clear();
   manipulators_.clear();
   skeletonFollowers_.clear();
-  physicsWorlds_.clear();
+  frameStages_.clear();
   resources_->markDisposing();
   resources_->destroyTree();
   targets_.clear();

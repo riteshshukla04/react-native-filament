@@ -30,6 +30,8 @@ The same scenes on the Galaxy F14 with Vulkan, 3 runs each, before and after the
 
 Frame rates are unchanged, and JS and UI threads stay at 90 fps in every scene. CPU moves by at most 2.3 points. The continuous static scene and the rotations scene use 0.4 to 2.3 points more in every pass, inside a single-run spread of 27% to 32%: a separate 5-run pass of the static scene measured 30.5% on Nitro 0.37 and 30.9% on Nitro 1.0. The render loop, animation and physics run in C++, and the rotations scene's 400 calls per frame cross Nitro on the render thread in both versions, so the upgrade changes the code shape rather than the per-frame cost.
 
+After physics moved to `react-native-filament-physics`, the physics scene measured 86.8 fps at 10.5% CPU and the continuous static scene 90.3 fps at 31.8% (`results/android-rn088-nitro1-physics-pkg-vulkan.json`), the same as before. The stripped arm64 `libNitroFilament.so` went from 10.99 MB to 9.85 MB; apps that use physics also ship the 1.28 MB `libNitroFilamentPhysics.so`.
+
 ## Scenes
 
 The `Benchmarks` section of the example app holds one screen per scene. Each screen draws the scene full screen and logs one `RNFBENCH` line per second.

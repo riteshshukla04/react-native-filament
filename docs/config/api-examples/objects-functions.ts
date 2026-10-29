@@ -666,147 +666,6 @@ async function applyPhoto(engine: Engine, material: MaterialInstance) {
 `,
   },
 
-  'hybrid-objects/CollisionShape': {
-    declarative: `
-import { useBoxShape, useCylinderShape, useRenderThreadEffect, useRigidBody, useStaticPlaneShape, useWorld } from 'react-native-filament'
-
-function Shapes() {
-  const world = useWorld()
-  const floor = useStaticPlaneShape(world, [0, 1, 0], 0)
-  const crate = useBoxShape(world, [0.5, 0.5, 0.5])
-  const coin = useCylinderShape(world, [0.5, 0.05, 0.5], 'y')
-  useRigidBody(world, floor == null ? undefined : { shape: floor, mass: 0 })
-  useRigidBody(world, crate == null ? undefined : { shape: crate, mass: 2, position: [0, 3, 0] })
-  useRigidBody(world, coin == null ? undefined : { shape: coin, mass: 0.1, position: [1, 3, 0] })
-
-  useRenderThreadEffect(() => {
-    'worklet'
-    if (coin != null) coin.margin = 0.01
-  }, [coin])
-  return null
-}
-`,
-    imperative: `
-import { runOnRenderThread, type Engine } from 'react-native-filament'
-
-function createShapes(engine: Engine) {
-  return runOnRenderThread(engine, () => {
-    'worklet'
-    const world = engine.createPhysicsWorld({})
-    const floor = world.createStaticPlaneShape([0, 1, 0], 0)
-    const ball = world.createSphereShape(0.5)
-    const crate = world.createBoxShape([0.5, 0.5, 0.5])
-    const coin = world.createCylinderShape([0.5, 0.05, 0.5], 'y')
-    crate.localScaling = [2, 1, 1]
-    coin.margin = 0.01
-    world.createRigidBody({ shape: floor, mass: 0 })
-    world.createRigidBody({ shape: crate, mass: 2, position: [0, 2, 0] })
-    return { world, types: [floor.type, ball.type, crate.type, coin.type] }
-  })
-}
-`,
-  },
-
-  'hybrid-objects/PhysicsWorld': {
-    declarative: `
-import { scheduleOnRN } from 'react-native-worklets'
-import { useBoxShape, useRenderThreadEffect, useRigidBody, useStaticPlaneShape, useWorld } from 'react-native-filament'
-
-function Physics({ onContact }: { onContact: (ids: string[]) => void }) {
-  const world = useWorld({ gravity: [0, -9.81, 0] })
-  const floor = useStaticPlaneShape(world, [0, 1, 0], 0)
-  const box = useBoxShape(world, [0.5, 0.5, 0.5])
-  useRigidBody(world, floor == null ? undefined : { shape: floor, mass: 0, id: 'floor' })
-  useRigidBody(world, box == null ? undefined : { shape: box, mass: 1, position: [0, 4, 0], id: 'box' })
-
-  useRenderThreadEffect(() => {
-    'worklet'
-    if (world == null) return
-    const subscription = world.addOnCollisionListener((events) => {
-      scheduleOnRN(onContact, events.map((event) => [event.bodyA.id, event.bodyB.id].join('+')))
-      return true
-    })
-    return () => subscription.remove()
-  }, [world, onContact])
-  return null
-}
-`,
-    imperative: `
-import { runOnRenderThread, type Engine, type Model } from 'react-native-filament'
-
-function dropModel(engine: Engine, model: Model) {
-  return runOnRenderThread(engine, () => {
-    'worklet'
-    const world = engine.createPhysicsWorld({ gravity: [0, -9.81, 0], autoStep: false })
-    world.createRigidBody({ shape: world.createStaticPlaneShape([0, 1, 0], 0), mass: 0, id: 'floor' })
-    const ball = world.createSphereShape(0.5)
-    world.createRigidBody({ shape: ball, mass: 1, position: [0, 5, 0], id: 'ball', entity: model.rootEntity })
-    world.addOnCollisionListener((events) => {
-      const landed = events.some((event) => event.kind === 'began')
-      return !landed
-    })
-    const stepping = engine.addOnFrameListener(({ deltaSeconds }) => {
-      world.step(deltaSeconds)
-      return true
-    })
-    // Call stepping.remove() before world.dispose().
-    return { world, stepping }
-  })
-}
-`,
-  },
-
-  'hybrid-objects/RigidBody': {
-    declarative: `
-import React from 'react'
-import { Button } from 'react-native'
-import { useFilamentContext, useRenderThreadCallback, useRigidBody, useSphereShape, type Entity, type PhysicsWorld } from 'react-native-filament'
-
-function Ball({ world, entity }: { world: PhysicsWorld; entity: Entity }) {
-  const { engine } = useFilamentContext()
-  const shape = useSphereShape(world, 0.5)
-  const body = useRigidBody(world, shape == null ? undefined : { shape, mass: 1, position: [0, 4, 0], restitution: 0.6, entity })
-
-  const kick = useRenderThreadCallback(() => {
-    'worklet'
-    if (body == null) return
-    body.activationState = 'active'
-    body.applyCentralImpulse([0, 5, 0])
-    // Changing a body does not request a frame; on-demand mode needs one to show the change.
-    engine.requestFrame()
-  }, [body, engine])
-
-  return <Button title="Kick" onPress={() => kick()} />
-}
-`,
-    imperative: `
-import { composeTransform, runOnRenderThread, type Engine, type PhysicsWorld, type RigidBody } from 'react-native-filament'
-
-function createBall(engine: Engine, world: PhysicsWorld) {
-  return runOnRenderThread(engine, () => {
-    'worklet'
-    const ball = world.createRigidBody({ shape: world.createSphereShape(0.5), mass: 1, position: [0, 4, 0], id: 'ball' })
-    ball.restitution = 0.6
-    ball.setDamping(0.1, 0.1)
-    ball.applyCentralImpulse([2, 0, 0])
-    return ball
-  })
-}
-
-function resetBall(engine: Engine, ball: RigidBody) {
-  return runOnRenderThread(engine, () => {
-    'worklet'
-    ball.setTransform(composeTransform([0, 4, 0], [0, 0, 0, 1]))
-    ball.linearVelocity = [0, 0, 0]
-    ball.angularVelocity = [0, 0, 0]
-    // Changing a body does not request a frame; on-demand mode needs one to show the change.
-    engine.requestFrame()
-    return ball.getTransform()
-  })
-}
-`,
-  },
-
   'hybrid-objects/Camera': {
     declarative: `
 import React from 'react'
@@ -1655,13 +1514,15 @@ function spin(engine: Engine, entity: Entity, radiansPerSecond: number) {
 
   'functions/quaternionFromEuler': {
     declarative: `
-import { quaternionFromEuler, useBoxShape, useRigidBody, type Entity, type PhysicsWorld } from 'react-native-filament'
+import { useEffect } from 'react'
+import { quaternionFromEuler, useTransformBinding, type Entity } from 'react-native-filament'
 
-function TiltedCrate({ world, entity }: { world: PhysicsWorld; entity: Entity }) {
-  const shape = useBoxShape(world, [0.5, 0.5, 0.5])
-  const rotation = quaternionFromEuler([0, Math.PI / 4, Math.PI / 8])
-  useRigidBody(world, shape == null ? undefined : { shape, mass: 1, position: [0, 3, 0], rotation, entity })
-  return null
+function useTilt(entity: Entity | undefined) {
+  const binding = useTransformBinding(entity)
+  useEffect(() => {
+    const [x, y, z, w] = quaternionFromEuler([0, Math.PI / 4, Math.PI / 8])
+    binding?.setRotation(x, y, z, w)
+  }, [binding])
 }
 `,
     imperative: `

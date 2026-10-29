@@ -30,6 +30,10 @@ jobs:
         working-directory: packages/react-native-filament
         run: bun run typecheck
 
+      - name: Typecheck physics
+        working-directory: packages/react-native-filament-physics
+        run: bun run typecheck
+
       - name: Typecheck example
         working-directory: apps/example
         run: bunx tsc --noEmit -p .
@@ -38,12 +42,22 @@ jobs:
         working-directory: packages/react-native-filament
         run: bun run lint
 
+      - name: Lint physics
+        working-directory: packages/react-native-filament-physics
+        run: bun run lint
+
       - name: Generated Nitro code is up to date
         working-directory: packages/react-native-filament
         run: |
           bun run specs
           git diff --exit-code -- nitrogen
 
+      - name: Generated Nitro code of physics is up to date
+        working-directory: packages/react-native-filament-physics
+        run: |
+          bun run specs
+          git diff --exit-code -- nitrogen Package.swift
+
       - name: No banned patterns
         run: |
-          ! git grep -n -E '\b(setTimeout|setInterval|setImmediate|requestAnimationFrame|InteractionManager)\b|sleep_for|usleep\(|Thread\.sleep|asyncAfter|Task\.sleep|while \(true\)' -- packages/react-native-filament/src packages/react-native-filament/cpp packages/react-native-filament/ios packages/react-native-filament/android/src apps/shared/src ':!:apps/shared/src/benchmarks/BenchmarkOverlay.tsx'
+          ! git grep -n -E '\b(setTimeout|setInterval|setImmediate|requestAnimationFrame|InteractionManager)\b|sleep_for|usleep\(|Thread\.sleep|asyncAfter|Task\.sleep|while \(true\)' -- packages/react-native-filament/src packages/react-native-filament/cpp packages/react-native-filament/ios packages/react-native-filament/android/src packages/react-native-filament-physics/src packages/react-native-filament-physics/cpp packages/react-native-filament-physics/android/src apps/shared/src ':!:apps/shared/src/benchmarks/BenchmarkOverlay.tsx'
