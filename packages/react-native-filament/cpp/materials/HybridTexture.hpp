@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridTextureSpec.hpp"
 #include "TextureCore.hpp"
+#include <NitroFilament/HybridTextureSpec.hpp>
 
 #include <memory>
 

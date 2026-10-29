@@ -8,7 +8,7 @@
 namespace margelo::nitro::filament {
 
 HybridView::HybridView(std::shared_ptr<EngineCore> engine, std::shared_ptr<ViewHost> target)
-    : HybridObject(TAG), engine_(std::move(engine)), target_(std::move(target)) {}
+    : engine_(std::move(engine)), target_(std::move(target)) {}
 
 AntiAliasing HybridView::getAntiAliasing() {
   return usableView("View.antiAliasing").getAntiAliasing() == ::filament::AntiAliasing::FXAA ? AntiAliasing::FXAA : AntiAliasing::NONE;

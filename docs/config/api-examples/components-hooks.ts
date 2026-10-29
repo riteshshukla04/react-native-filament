@@ -14,7 +14,6 @@ export function App() {
   )
 }`,
     imperative: `import { useEffect, useState } from 'react'
-import { callback } from 'react-native-nitro-modules'
 import { Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 export function App() {
@@ -48,7 +47,7 @@ export function App() {
     }
   }, [view])
 
-  return <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 }`,
   },
 
@@ -446,7 +445,6 @@ export function App() {
   )
 }`,
     imperative: `import { useEffect, useState } from 'react'
-import { callback } from 'react-native-nitro-modules'
 import { NativeFilamentView, runOnRenderThread, useFilamentContext, type FilamentView } from 'react-native-filament'
 
 function SceneView() {
@@ -480,7 +478,7 @@ function SceneView() {
     }
   }, [engine, scene, camera, view])
 
-  return <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 }`,
   },
 
@@ -1061,7 +1059,6 @@ export function App() {
 }`,
     imperative: `import { useEffect, useState } from 'react'
 import { Button } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { Filament, NativeFilamentView, runOnRenderThread, type FilamentView, type ViewTarget } from 'react-native-filament'
 
 export function App() {
@@ -1095,7 +1092,7 @@ export function App() {
 
   return (
     <>
-      <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+      <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
       <Button title="Save snapshot" disabled={target == null} onPress={save} />
     </>
   )
@@ -1333,7 +1330,7 @@ export function useManipulatorGesture(manipulator: CameraManipulator, pinchSpeed
 
 // Attach it like the declarative version, around the view the camera follows the manipulator in:
 // <GestureDetector gesture={useManipulatorGesture(manipulator)}>
-//   <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+//   <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 // </GestureDetector>
 // See the useCameraManipulator example for creating the manipulator and following it with a camera.`,
   },

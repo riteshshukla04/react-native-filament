@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Button, Pressable, ScrollView, StyleSheet, View, type GestureResponderEvent } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
   Filament,
@@ -76,7 +75,7 @@ function DancerScene() {
   return (
     <View style={styles.container}>
       <Pressable style={styles.container} onPress={pick}>
-        <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+        <NativeFilamentView style={styles.container} hybridRef={setView} />
       </Pressable>
       <ScrollView style={styles.buttons}>
         {loaded?.animations.map((animation, index) => (

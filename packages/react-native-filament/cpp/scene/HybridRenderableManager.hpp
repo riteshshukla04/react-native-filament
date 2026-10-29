@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridRenderableManagerSpec.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridRenderableManagerSpec.hpp>
 
 #include <filament/RenderableManager.h>
 

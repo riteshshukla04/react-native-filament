@@ -35,7 +35,6 @@ function UsesTarget() {
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { callback } from 'react-native-nitro-modules'
 import { Filament, NativeFilamentView, type FilamentView, type ViewTarget } from 'react-native-filament'
 
 function Viewport() {
@@ -57,7 +56,7 @@ function Viewport() {
     }
   }, [view])
 
-  return <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 }
 ```
 
@@ -103,7 +102,6 @@ function PressableRocket() {
 
 ```tsx
 import { Alert, Pressable, type GestureResponderEvent } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { NativeFilamentView } from 'react-native-filament'
 
 // `target`, `model` and `setView` come from your setup
@@ -116,7 +114,7 @@ async function onPress(event: GestureResponderEvent) {
 }
 
 <Pressable style={{ flex: 1 }} onPress={onPress}>
-  <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 </Pressable>
 ```
 

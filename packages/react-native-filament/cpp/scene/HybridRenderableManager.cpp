@@ -14,7 +14,7 @@
 
 namespace margelo::nitro::filament {
 
-HybridRenderableManager::HybridRenderableManager(std::shared_ptr<EngineCore> engine) : HybridObject(TAG), engine_(std::move(engine)) {}
+HybridRenderableManager::HybridRenderableManager(std::shared_ptr<EngineCore> engine) : engine_(std::move(engine)) {}
 
 bool HybridRenderableManager::hasComponent(double entity) {
   requireRenderThread(engine_->thread(), "RenderableManager.hasComponent()");

@@ -1,14 +1,18 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { Aabb } from '../types/Aabb'
 import type { Entity } from '../types/Entity'
 import type { MaterialInstance } from '../materials/MaterialInstance.nitro'
+
+export * from '#nitro/RenderableManager'
 
 /**
  * Reads and writes the renderable components of entities. Every method runs on the render thread
  * and, except `hasComponent`, throws `FilamentInvalidEntityError` for an entity without a
  * renderable component in this Engine.
  */
-export interface RenderableManager extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"scene/HybridRenderableManager.hpp"', className: 'HybridRenderableManager' } })
+@Android({ language: 'c++', implementation: { include: '"scene/HybridRenderableManager.hpp"', className: 'HybridRenderableManager' } })
+export declare class RenderableManager extends HybridObject {
   hasComponent(entity: Entity): boolean
   getPrimitiveCount(entity: Entity): number
   isShadowCaster(entity: Entity): boolean

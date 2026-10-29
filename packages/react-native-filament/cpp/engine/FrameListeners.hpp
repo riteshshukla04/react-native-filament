@@ -1,6 +1,7 @@
 #pragma once
 
-#include "FrameInfo.hpp"
+#include <NitroFilament/FrameInfo.hpp>
+#include <NitroModules/Callback.hpp>
 
 #include <worklets/WorkletRuntime/WorkletRuntime.h>
 
@@ -12,15 +13,15 @@
 namespace margelo::nitro::filament {
 
 struct FrameListener {
-  explicit FrameListener(std::function<bool(const FrameInfo&)> callback) : callback(std::move(callback)) {}
+  explicit FrameListener(Callback<bool(const FrameInfo&)> callback) : callback(std::move(callback)) {}
 
-  std::function<bool(const FrameInfo&)> callback;
+  Callback<bool(const FrameInfo&)> callback;
   std::atomic<bool> removed{false};
 };
 
 class FrameListeners final {
 public:
-  std::shared_ptr<FrameListener> add(std::function<bool(const FrameInfo&)> callback);
+  std::shared_ptr<FrameListener> add(Callback<bool(const FrameInfo&)> callback);
   void remove(const std::shared_ptr<FrameListener>& listener);
   void clear();
   bool empty() const;

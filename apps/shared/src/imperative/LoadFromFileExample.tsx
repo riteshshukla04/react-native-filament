@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
 import ReactNativeBlobUtil from 'react-native-blob-util'
-import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 const HELMET_URL = 'https://raw.githubusercontent.com/google/filament/main/third_party/models/DamagedHelmet/DamagedHelmet.glb'
@@ -46,7 +45,7 @@ function FileModel({ fileUri }: { fileUri: string }) {
     }
   }, [fileUri, view])
 
-  return <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={styles.container} hybridRef={setView} />
 }
 
 export function LoadFromFileExample() {

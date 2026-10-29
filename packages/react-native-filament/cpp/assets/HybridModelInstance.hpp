@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridModelInstanceSpec.hpp"
 #include "ModelCore.hpp"
+#include <NitroFilament/HybridModelInstanceSpec.hpp>
 
 #include <memory>
 

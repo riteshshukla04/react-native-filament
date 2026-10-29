@@ -1,4 +1,4 @@
-import type { HybridObject, Sync } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { CollisionEvent } from '../types/CollisionEvent'
 import type { CylinderAxis } from '../types/CylinderAxis'
 import type { Float3 } from '../types/Float3'
@@ -7,12 +7,16 @@ import type { RigidBodyOptions } from '../types/RigidBodyOptions'
 import type { CollisionShape } from './CollisionShape.nitro'
 import type { RigidBody } from './RigidBody.nitro'
 
+export * from '#nitro/PhysicsWorld'
+
 /**
  * A Bullet dynamics world. Every member runs on the render thread. The world and its bodies keep each
  * other alive until you call `dispose()` or the Engine shuts down. Disposing it disposes its bodies and
  * shapes.
  */
-export interface PhysicsWorld extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"physics/HybridPhysicsWorld.hpp"', className: 'HybridPhysicsWorld' } })
+@Android({ language: 'c++', implementation: { include: '"physics/HybridPhysicsWorld.hpp"', className: 'HybridPhysicsWorld' } })
+export declare class PhysicsWorld extends HybridObject {
   gravity: Float3
   readonly bodyCount: number
   createBoxShape(halfExtent: Float3): CollisionShape
@@ -27,5 +31,5 @@ export interface PhysicsWorld extends HybridObject<{ ios: 'c++'; android: 'c++' 
    * Called on the render thread after each step with the contacts that began or ended in it, only
    * when there are any. Returning `false` removes the listener.
    */
-  addOnCollisionListener(listener: Sync<(events: CollisionEvent[]) => boolean>): ListenerSubscription
+  addOnCollisionListener(listener: (events: CollisionEvent[]) => boolean): ListenerSubscription
 }

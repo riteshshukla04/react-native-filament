@@ -1,7 +1,11 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
+
+export * from '#nitro/ValueBinding'
 
 /** A number that any thread can write and render-thread code can read without waiting on another runtime. */
-export interface ValueBinding extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"control/HybridValueBinding.hpp"', className: 'HybridValueBinding' } })
+@Android({ language: 'c++', implementation: { include: '"control/HybridValueBinding.hpp"', className: 'HybridValueBinding' } })
+export declare class ValueBinding extends HybridObject {
   /**
    * Stores the value and requests a frame.
    * @thread any

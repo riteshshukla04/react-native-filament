@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridSkyboxSpec.hpp"
 #include "SkyboxCore.hpp"
+#include <NitroFilament/HybridSkyboxSpec.hpp>
 
 #include <memory>
 

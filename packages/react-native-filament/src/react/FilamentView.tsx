@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { GestureResponderEvent, ViewProps } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { useDisposableResource } from '../hooks/useDisposableResource'
-import type { FilamentView as NativeView } from '../specs/targets/FilamentView.nitro'
+import { FilamentViewComponent, type FilamentView as NativeView } from '../specs/targets/FilamentView.nitro'
 import type { ViewTarget } from '../specs/targets/ViewTarget.nitro'
 import type { ClearOptions } from '../specs/types/ClearOptions'
 import type { FrameInfo } from '../specs/types/FrameInfo'
 import type { PickResult } from '../specs/types/PickResult'
-import { NativeFilamentView } from '../views/NativeFilamentView'
 import { useFilamentScene } from './useFilamentScene'
 import { FilamentViewContext, type FilamentViewValue } from './FilamentViewContext'
 import { useRenderCommit } from './useRenderCommit'
@@ -75,7 +73,6 @@ export function FilamentView({
   const commit = useRenderCommit()
   const fail = useReportFailure()
   const [nativeView, setNativeView] = useState<NativeView>()
-  const hybridRef = useMemo(() => callback(setNativeView), [])
 
   const bound = useDisposableResource<Bound>(async () => {
     if (nativeView == null) return undefined
@@ -208,7 +205,7 @@ export function FilamentView({
 
   return (
     <FilamentViewContext.Provider value={value}>
-      <NativeFilamentView {...viewProps} transparent={transparent} hybridRef={hybridRef} onTouchStart={handleTouchStart} />
+      <FilamentViewComponent {...viewProps} transparent={transparent} hybridRef={setNativeView} onTouchStart={handleTouchStart} />
       {children}
     </FilamentViewContext.Provider>
   )

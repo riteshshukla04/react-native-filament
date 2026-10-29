@@ -1,5 +1,7 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { Mat4 } from '../types/Mat4'
+
+export * from '#nitro/TransformBinding'
 
 /**
  * Owns the local transform of one entity while it is alive. Setters store the latest value and
@@ -7,7 +9,9 @@ import type { Mat4 } from '../types/Mat4'
  * start of the next frame. After `dispose()`, setter calls through other references to the binding,
  * such as a copy captured by a UI-runtime listener, are ignored.
  */
-export interface TransformBinding extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"control/HybridTransformBinding.hpp"', className: 'HybridTransformBinding' } })
+@Android({ language: 'c++', implementation: { include: '"control/HybridTransformBinding.hpp"', className: 'HybridTransformBinding' } })
+export declare class TransformBinding extends HybridObject {
   /** @thread any */
   setTranslation(x: number, y: number, z: number): void
   /**

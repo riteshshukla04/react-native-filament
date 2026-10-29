@@ -3,6 +3,8 @@
 #include "HybridRenderThreadCleanup.hpp"
 #include "RenderThreadQueue.hpp"
 
+#include <NitroModules/Callback.hpp>
+#include <NitroModules/HybridClass.hpp>
 #include <NitroModules/JSIConverter.hpp>
 
 namespace margelo::nitro::filament {
@@ -15,18 +17,18 @@ bool HybridRenderThread::getHasRuntime() {
   return engine_->hasRuntime();
 }
 
-std::shared_ptr<HybridRenderThreadCleanupSpec> HybridRenderThread::retainCleanup(const std::function<void()>& cleanup) {
+std::shared_ptr<HybridRenderThreadCleanupSpec> HybridRenderThread::retainCleanup(const Callback<void()>& cleanup) {
   return std::make_shared<HybridRenderThreadCleanup>(cleanup);
 }
 
-void HybridRenderThread::loadHybridMethods() {
-  HybridRenderThreadSpec::loadHybridMethods();
-  registerHybrids(this, [](Prototype& prototype) {
-    prototype.registerRawHybridMethod("createQueue", 0, &HybridRenderThread::createQueue);
-    prototype.registerRawHybridMethod("bindRuntime", 1, &HybridRenderThread::bindRuntime);
-    prototype.registerRawHybridMethod("bindPooledRuntime", 0, &HybridRenderThread::bindPooledRuntime);
-    prototype.registerRawHybridMethod("runAsync", 2, &HybridRenderThread::runAsync);
+const std::shared_ptr<const HybridClass>& HybridRenderThread::Class::get() {
+  static const auto hybridClass = HybridClass::create<Class>([](HybridClass& clazz) {
+    clazz.registerRawHybridMethod("createQueue", 0, &HybridRenderThread::createQueue);
+    clazz.registerRawHybridMethod("bindRuntime", 1, &HybridRenderThread::bindRuntime);
+    clazz.registerRawHybridMethod("bindPooledRuntime", 0, &HybridRenderThread::bindPooledRuntime);
+    clazz.registerRawHybridMethod("runAsync", 2, &HybridRenderThread::runAsync);
   });
+  return hybridClass;
 }
 
 jsi::Value HybridRenderThread::createQueue(jsi::Runtime& runtime, const jsi::Value&, const jsi::Value*, size_t) {
@@ -47,7 +49,7 @@ jsi::Value HybridRenderThread::bindPooledRuntime(jsi::Runtime&, const jsi::Value
 jsi::Value HybridRenderThread::runAsync(jsi::Runtime& runtime, const jsi::Value&, const jsi::Value* args, size_t) {
   auto worklet =
       worklets::extractSerializableOrThrow<worklets::SerializableWorklet>(runtime, args[0], "runOnRenderThread() expects a worklet.");
-  auto onCancelled = JSIConverter<std::function<void(std::string)>>::fromJSI(runtime, args[1]);
+  auto onCancelled = JSIConverter<Callback<void(std::string)>>::fromJSI(runtime, args[1]);
   std::shared_ptr<EngineCore> engine = engine_;
   engine->thread().post({
       .run =

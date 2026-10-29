@@ -1,4 +1,4 @@
-import type { NativeSurface } from '../platform/NativeSurface.nitro'
+import type { NativeSurface } from './NativeSurface'
 
 export interface SurfaceObserver {
   onCreated: (surface: NativeSurface) => void

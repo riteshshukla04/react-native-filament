@@ -1,16 +1,20 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { ActivationState } from '../types/ActivationState'
 import type { Entity } from '../types/Entity'
 import type { Float3 } from '../types/Float3'
 import type { Mat4 } from '../types/Mat4'
 import type { CollisionShape } from './CollisionShape.nitro'
 
+export * from '#nitro/RigidBody'
+
 /**
  * A body in a `PhysicsWorld`. The world keeps it until `dispose()` or until the world is disposed.
  * Every member except `id`, `mass` and `shape` runs on the render thread. Changing a body does not
  * request a frame: in `on-demand` mode, call `engine.requestFrame()` after waking a resting body.
  */
-export interface RigidBody extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"physics/HybridRigidBody.hpp"', className: 'HybridRigidBody' } })
+@Android({ language: 'c++', implementation: { include: '"physics/HybridRigidBody.hpp"', className: 'HybridRigidBody' } })
+export declare class RigidBody extends HybridObject {
   /** @thread any */
   readonly id: string
   /** @thread any */

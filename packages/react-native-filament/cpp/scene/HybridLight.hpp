@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridLightSpec.hpp"
 #include "LightCore.hpp"
+#include <NitroFilament/HybridLightSpec.hpp>
 
 #include <memory>
 

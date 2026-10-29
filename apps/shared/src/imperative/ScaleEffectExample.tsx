@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, View } from 'react-native'
 import { useSharedValue, withSpring } from 'react-native-reanimated'
-import { callback } from 'react-native-nitro-modules'
 import {
   bindSharedValue,
   defaultIndirectLightSource,
@@ -74,7 +73,7 @@ export function ScaleEffectExample() {
 
   return (
     <View style={styles.background}>
-      <NativeFilamentView style={styles.container} transparent hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} transparent hybridRef={setView} />
       <Button title="Scale" onPress={grow} />
     </View>
   )

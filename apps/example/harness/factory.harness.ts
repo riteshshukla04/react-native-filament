@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'react-native-harness'
 import { Platform } from 'react-native'
-import { Filament } from 'react-native-filament'
+import { Engine, Filament } from 'react-native-filament'
 import pin from 'react-native-filament/filament.json'
 
 describe('FilamentFactory', () => {
@@ -15,5 +15,11 @@ describe('FilamentFactory', () => {
     } else {
       expect(backends).toEqual(backends.includes('vulkan') ? ['vulkan', 'opengl'] : ['opengl'])
     }
+  })
+
+  it('creates Engines that are instances of the Engine class', async () => {
+    const engine = await Filament.createEngine({})
+    expect(engine).toBeInstanceOf(Engine)
+    await engine.shutdown()
   })
 })

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CollisionShapeCore.hpp"
-#include "HybridCollisionShapeSpec.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridCollisionShapeSpec.hpp>
 
 #include <memory>
 

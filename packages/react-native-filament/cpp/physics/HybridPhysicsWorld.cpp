@@ -15,7 +15,7 @@
 namespace margelo::nitro::filament {
 
 HybridPhysicsWorld::HybridPhysicsWorld(std::shared_ptr<HybridEngine> engine, std::shared_ptr<PhysicsWorldCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 std::tuple<double, double, double> HybridPhysicsWorld::getGravity() {
   return fromBtVector3(usable("PhysicsWorld.gravity").world().getGravity());
@@ -91,7 +91,7 @@ void HybridPhysicsWorld::step(double deltaSeconds) {
   world.step(deltaSeconds);
 }
 
-ListenerSubscription HybridPhysicsWorld::addOnCollisionListener(const std::function<bool(const std::vector<CollisionEvent>&)>& listener) {
+ListenerSubscription HybridPhysicsWorld::addOnCollisionListener(const Callback<bool(const std::vector<CollisionEvent>&)>& listener) {
   PhysicsWorldCore& world = usable("PhysicsWorld.addOnCollisionListener()");
   std::shared_ptr<EngineCore> engine = engine_->core();
   std::weak_ptr<CollisionListeners::Entry> entry =
@@ -101,13 +101,13 @@ ListenerSubscription HybridPhysicsWorld::addOnCollisionListener(const std::funct
         for (const ContactChange& change : changes) {
           events.emplace_back(change.kind, HybridRigidBody::of(engine, change.bodyA), HybridRigidBody::of(engine, change.bodyB));
         }
-        return listener(events);
+        return listener.callSync(events);
       });
-  return ListenerSubscription([entry] {
+  return ListenerSubscription(Callback<void()>::make([entry] {
     if (std::shared_ptr<CollisionListeners::Entry> registered = entry.lock()) {
       registered->removed = true;
     }
-  });
+  }));
 }
 
 void HybridPhysicsWorld::dispose() {

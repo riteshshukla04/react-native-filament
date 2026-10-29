@@ -71,7 +71,7 @@ The repository is a [bun](https://bun.sh) monorepo: the library is in `packages/
 bun install
 ```
 
-The first Android build and the first `pod install` download the prebuilt Filament binaries and verify them. Then build `apps/example` (React Native CLI) or `apps/expo-example` (Expo), and run the device tests with [react-native-harness](https://github.com/callstackincubator/react-native-harness):
+The first Android build and `bun run spm` in `apps/example` download the prebuilt Filament binaries and verify them. Then build `apps/example` (React Native CLI) or `apps/expo-example` (Expo), and run the device tests with [react-native-harness](https://github.com/callstackincubator/react-native-harness):
 
 ```sh
 cd apps/example

@@ -1,11 +1,15 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { RenderThreadCleanup } from './RenderThreadCleanup.nitro'
+
+export * from '#nitro/RenderThread'
 
 /**
  * The Engine's render thread, where render-thread worklets, frame listeners and `@thread render`
  * methods run.
  */
-export interface RenderThread extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"engine/HybridRenderThread.hpp"', className: 'HybridRenderThread' } })
+@Android({ language: 'c++', implementation: { include: '"engine/HybridRenderThread.hpp"', className: 'HybridRenderThread' } })
+export declare class RenderThread extends HybridObject {
   /**
    * Whether the calling thread is this Engine's render thread.
    * @thread any

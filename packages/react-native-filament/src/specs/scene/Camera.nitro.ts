@@ -1,13 +1,17 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { CameraManipulator } from '../control/CameraManipulator.nitro'
 import type { Entity } from '../types/Entity'
 import type { Float3 } from '../types/Float3'
+
+export * from '#nitro/Camera'
 
 /**
  * A camera created with `Engine.createCamera()`: its pose, projection and exposure. A ViewTarget or
  * Recorder renders through it after its `setCamera()`.
  */
-export interface Camera extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"scene/HybridCamera.hpp"', className: 'HybridCamera' } })
+@Android({ language: 'c++', implementation: { include: '"scene/HybridCamera.hpp"', className: 'HybridCamera' } })
+export declare class Camera extends HybridObject {
   /** @thread any */
   readonly entity: Entity
   /** @thread render */

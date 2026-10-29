@@ -22,10 +22,10 @@ The repository's `apps/expo-example` is an Expo app that runs the same shared ex
 ### Install the packages
 
 ```sh
-npx expo install react-native-filament react-native-nitro-modules@0.37 react-native-worklets
+npx expo install react-native-filament react-native-nitro-modules@alpha-nightly react-native-worklets
 ```
 
-`npx expo install` picks the version of `react-native-worklets` that matches your SDK. It does not pin Nitro Modules, so pin it to 0.37, the version react-native-filament 2.0 supports. Install `react-native-reanimated` and `react-native-gesture-handler` the same way if you use them. Both are optional.
+`npx expo install` picks the version of `react-native-worklets` that matches your SDK. It does not pin Nitro Modules, so install the 1.0 alpha, the version react-native-filament 2.0 supports. Install `react-native-reanimated` and `react-native-gesture-handler` the same way if you use them. Both are optional.
 
 </Step>
 <Step>
@@ -68,7 +68,7 @@ Or generate the native projects first and build them with Xcode or Gradle:
 npx expo prebuild
 ```
 
-The first `pod install` and the first Gradle build download the prebuilt Filament binaries and verify their checksums. On EAS Build this happens on the build machine.
+The first Gradle build downloads the prebuilt Filament binaries and verifies their checksums. On EAS Build this happens on the build machine. iOS builds of react-native-filament use Swift Package Manager since Nitro Modules 1.0 and are not verified with Expo's CocoaPods prebuild yet.
 
 </Step>
 <Step>

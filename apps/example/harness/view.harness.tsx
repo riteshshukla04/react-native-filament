@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'react-native-harness'
 import { Platform } from 'react-native'
-import { Filament, runOnRenderThread, type Engine, type ViewTarget } from 'react-native-filament'
+import { Filament, RenderTarget, runOnRenderThread, ViewTarget, type Engine } from 'react-native-filament'
 import { renderView } from './renderView'
 
 describe('View', () => {
@@ -14,6 +14,11 @@ describe('View', () => {
 
   afterEach(async () => {
     await engine.shutdown()
+  })
+
+  it('is a RenderTarget through the native class hierarchy', () => {
+    expect(target).toBeInstanceOf(ViewTarget)
+    expect(target).toBeInstanceOf(RenderTarget)
   })
 
   it('exposes the defaults and applies option changes', async () => {

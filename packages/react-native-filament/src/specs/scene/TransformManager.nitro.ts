@@ -1,15 +1,19 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { Aabb } from '../types/Aabb'
 import type { Entity } from '../types/Entity'
 import type { Float3 } from '../types/Float3'
 import type { Mat4 } from '../types/Mat4'
 import type { Quaternion } from '../types/Quaternion'
 
+export * from '#nitro/TransformManager'
+
 /**
  * Reads and writes the transform components of entities. Every method throws
  * `FilamentInvalidEntityError` for an entity without a transform component in this Engine.
  */
-export interface TransformManager extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"scene/HybridTransformManager.hpp"', className: 'HybridTransformManager' } })
+@Android({ language: 'c++', implementation: { include: '"scene/HybridTransformManager.hpp"', className: 'HybridTransformManager' } })
+export declare class TransformManager extends HybridObject {
   /**
    * Transform relative to the parent.
    * @thread render

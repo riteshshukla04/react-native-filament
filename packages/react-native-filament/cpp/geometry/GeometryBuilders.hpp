@@ -1,9 +1,9 @@
 #pragma once
 
-#include "DebugBoxOptions.hpp"
 #include "GeometryCore.hpp"
-#include "PlaneOptions.hpp"
 #include "materials/MaterialCore.hpp"
+#include <NitroFilament/DebugBoxOptions.hpp>
+#include <NitroFilament/PlaneOptions.hpp>
 
 #include <filament/MaterialInstance.h>
 

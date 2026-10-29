@@ -5,7 +5,7 @@
 namespace margelo::nitro::filament {
 
 HybridIndirectLight::HybridIndirectLight(std::shared_ptr<HybridEngine> engine, std::shared_ptr<IndirectLightCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 void HybridIndirectLight::dispose() {
   engineCore()->dispose(core_);

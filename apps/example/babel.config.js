@@ -9,6 +9,7 @@ const workletsPluginOptions = {}
 
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
+  overrides: [{ test: /\.nitro\.ts$/, parserOpts: { plugins: ['decorators'] } }],
   plugins: [
     [
       'module-resolver',

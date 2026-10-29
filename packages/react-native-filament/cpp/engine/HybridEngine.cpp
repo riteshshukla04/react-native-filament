@@ -45,7 +45,7 @@
 namespace margelo::nitro::filament {
 
 HybridEngine::HybridEngine(std::shared_ptr<EngineCore> core)
-    : HybridObject(TAG), core_(std::move(core)), renderThread_(std::make_shared<HybridRenderThread>(core_)),
+    : core_(std::move(core)), renderThread_(std::make_shared<HybridRenderThread>(core_)),
       transformManager_(std::make_shared<HybridTransformManager>(core_)), lightManager_(std::make_shared<HybridLightManager>(core_)),
       renderableManager_(std::make_shared<HybridRenderableManager>(core_)) {}
 
@@ -81,9 +81,9 @@ void HybridEngine::setRenderMode(RenderMode renderMode) {
   core_->setRenderMode(renderMode);
 }
 
-std::shared_ptr<Promise<std::shared_ptr<HybridViewTargetSpec>>>
-HybridEngine::createViewTarget(const std::shared_ptr<HybridFilamentViewSpec>& view, const ViewTargetOptions& options) {
-  auto promise = Promise<std::shared_ptr<HybridViewTargetSpec>>::create();
+Promise<std::shared_ptr<HybridViewTargetSpec>> HybridEngine::createViewTarget(const HybridFilamentViewSpecCxx& view,
+                                                                              const ViewTargetOptions& options) {
+  auto promise = Promise<std::shared_ptr<HybridViewTargetSpec>>::pending();
   ViewHost::ClearSettings clear = toClearSettings(options.clearOptions);
   auto engine = shared_cast<HybridEngine>();
   core_->thread().post({
@@ -93,9 +93,9 @@ HybridEngine::createViewTarget(const std::shared_ptr<HybridFilamentViewSpec>& vi
                 std::make_shared<ViewTargetCore>(engine->core()->engine(), engine->core()->renderer(), engine->core()->callbacks(), clear);
             engine->core()->adopt(target);
             engine->core()->addTarget(target);
-            promise->resolve(std::make_shared<HybridViewTarget>(engine, target, view));
+            promise.resolve(std::make_shared<HybridViewTarget>(engine, target, view));
           },
-      .cancel = [promise] { promise->reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
+      .cancel = [promise] { promise.reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
   });
   return promise;
 }
@@ -225,128 +225,125 @@ std::shared_ptr<MaterialCore> HybridEngine::debugLineMaterial() {
   return material;
 }
 
-std::shared_ptr<Promise<std::shared_ptr<HybridModelSpec>>> HybridEngine::loadModel(const AssetSource& source,
-                                                                                   const ModelLoadOptions& options) {
+Promise<std::shared_ptr<HybridModelSpec>> HybridEngine::loadModel(const AssetSource& source, const ModelLoadOptions& options) {
   double requested = options.instanceCount.value_or(1);
   if (requested < 1 || requested != std::floor(requested)) {
     throw std::invalid_argument("Engine.loadModel() needs an integer instanceCount >= 1.");
   }
   auto instanceCount = static_cast<size_t>(requested);
-  auto promise = Promise<std::shared_ptr<HybridModelSpec>>::create();
+  auto promise = Promise<std::shared_ptr<HybridModelSpec>>::pending();
   auto engine = shared_cast<HybridEngine>();
-  withAssetBytes(source, promise, [engine, promise, instanceCount](const std::shared_ptr<ArrayBuffer>& bytes) {
+  withAssetBytes(source, promise, [engine, promise, instanceCount](const ArrayBuffer& bytes) {
     std::vector<::filament::gltfio::FilamentInstance*> instances(instanceCount);
     ::filament::gltfio::FilamentAsset* asset =
-        bytes->size() > UINT32_MAX ? nullptr
-                                   : engine->core()->gltf().assetLoader().createInstancedAsset(
-                                         bytes->data(), static_cast<uint32_t>(bytes->size()), instances.data(), instanceCount);
+        bytes.size() > UINT32_MAX ? nullptr
+                                  : engine->core()->gltf().assetLoader().createInstancedAsset(
+                                        bytes.data(), static_cast<uint32_t>(bytes.size()), instances.data(), instanceCount);
     if (asset == nullptr) {
-      promise->reject(
+      promise.reject(
           std::make_exception_ptr(std::invalid_argument("FilamentAssetError: The source is not a valid glTF 2.0 binary (.glb).")));
       return;
     }
-    size_t sourceBytes = bytes->size();
+    size_t sourceBytes = bytes.size();
     engine->core()->startModelLoad(asset,
                                    [engine, promise, sourceBytes](::filament::gltfio::FilamentAsset* loaded, std::exception_ptr error) {
                                      if (error != nullptr) {
-                                       promise->reject(error);
+                                       promise.reject(std::exception_ptr(error));
                                        return;
                                      }
                                      auto model = std::make_shared<ModelCore>(engine->core(), loaded, sourceBytes);
                                      engine->core()->adopt(model);
-                                     promise->resolve(std::make_shared<HybridModel>(engine, model));
+                                     promise.resolve(std::make_shared<HybridModel>(engine, model));
                                    });
   });
   return promise;
 }
 
-std::shared_ptr<Promise<std::shared_ptr<HybridIndirectLightSpec>>> HybridEngine::loadIndirectLight(const AssetSource& source,
-                                                                                                   const IndirectLightOptions& options) {
+Promise<std::shared_ptr<HybridIndirectLightSpec>> HybridEngine::loadIndirectLight(const AssetSource& source,
+                                                                                  const IndirectLightOptions& options) {
   auto intensity = static_cast<float>(options.intensity.value_or(30000));
-  auto promise = Promise<std::shared_ptr<HybridIndirectLightSpec>>::create();
+  auto promise = Promise<std::shared_ptr<HybridIndirectLightSpec>>::pending();
   auto engine = shared_cast<HybridEngine>();
-  withAssetBytes(source, promise, [engine, promise, intensity](const std::shared_ptr<ArrayBuffer>& bytes) {
+  withAssetBytes(source, promise, [engine, promise, intensity](const ArrayBuffer& bytes) {
     try {
-      auto light = std::make_shared<IndirectLightCore>(engine->core(), bytes->data(), bytes->size(), intensity);
+      auto light = std::make_shared<IndirectLightCore>(engine->core(), bytes.data(), bytes.size(), intensity);
       engine->core()->adopt(light);
-      promise->resolve(std::make_shared<HybridIndirectLight>(engine, light));
+      promise.resolve(std::make_shared<HybridIndirectLight>(engine, light));
     } catch (...) {
-      promise->reject(std::current_exception());
+      promise.reject(std::current_exception());
     }
   });
   return promise;
 }
 
-std::shared_ptr<Promise<std::shared_ptr<HybridMaterialSpec>>> HybridEngine::loadMaterial(const AssetSource& source) {
-  auto promise = Promise<std::shared_ptr<HybridMaterialSpec>>::create();
+Promise<std::shared_ptr<HybridMaterialSpec>> HybridEngine::loadMaterial(const AssetSource& source) {
+  auto promise = Promise<std::shared_ptr<HybridMaterialSpec>>::pending();
   auto engine = shared_cast<HybridEngine>();
-  withAssetBytes(source, promise, [engine, promise](const std::shared_ptr<ArrayBuffer>& bytes) {
+  withAssetBytes(source, promise, [engine, promise](const ArrayBuffer& bytes) {
     try {
-      requireMaterialFile(bytes->data(), bytes->size());
-      ::filament::Material* material =
-          ::filament::Material::Builder().package(bytes->data(), bytes->size()).build(engine->core()->engine());
+      requireMaterialFile(bytes.data(), bytes.size());
+      ::filament::Material* material = ::filament::Material::Builder().package(bytes.data(), bytes.size()).build(engine->core()->engine());
       if (material == nullptr) {
         throw std::invalid_argument("FilamentAssetError: Filament could not build the material.");
       }
-      auto core = std::make_shared<MaterialCore>(engine->core(), material, bytes->size());
+      auto core = std::make_shared<MaterialCore>(engine->core(), material, bytes.size());
       engine->core()->adopt(core);
-      promise->resolve(std::make_shared<HybridMaterial>(engine->core(), core));
+      promise.resolve(std::make_shared<HybridMaterial>(engine->core(), core));
     } catch (...) {
-      promise->reject(std::current_exception());
+      promise.reject(std::current_exception());
     }
   });
   return promise;
 }
 
-std::shared_ptr<Promise<std::shared_ptr<HybridTextureSpec>>> HybridEngine::loadTexture(const AssetSource& source,
-                                                                                       const TextureLoadOptions& options) {
+Promise<std::shared_ptr<HybridTextureSpec>> HybridEngine::loadTexture(const AssetSource& source, const TextureLoadOptions& options) {
   bool srgb = options.srgb.value_or(true);
-  auto promise = Promise<std::shared_ptr<HybridTextureSpec>>::create();
+  auto promise = Promise<std::shared_ptr<HybridTextureSpec>>::pending();
   auto engine = shared_cast<HybridEngine>();
-  withAssetBytes(source, promise, [engine, promise, srgb](const std::shared_ptr<ArrayBuffer>& bytes) {
-    engine->core()->decodeTexture(bytes->data(), bytes->size(), srgb,
+  withAssetBytes(source, promise, [engine, promise, srgb](const ArrayBuffer& bytes) {
+    engine->core()->decodeTexture(bytes.data(), bytes.size(), srgb,
                                   [engine, promise](::filament::Texture* texture, std::exception_ptr error) {
                                     if (error != nullptr) {
-                                      promise->reject(error);
+                                      promise.reject(std::exception_ptr(error));
                                       return;
                                     }
                                     auto core = std::make_shared<TextureCore>(engine->core(), texture);
                                     engine->core()->adopt(core);
-                                    promise->resolve(std::make_shared<HybridTexture>(engine->core(), core));
+                                    promise.resolve(std::make_shared<HybridTexture>(engine->core(), core));
                                   });
   });
   return promise;
 }
 
-std::shared_ptr<Promise<std::shared_ptr<HybridSkyboxSpec>>> HybridEngine::loadSkybox(const AssetSource& source) {
-  auto promise = Promise<std::shared_ptr<HybridSkyboxSpec>>::create();
+Promise<std::shared_ptr<HybridSkyboxSpec>> HybridEngine::loadSkybox(const AssetSource& source) {
+  auto promise = Promise<std::shared_ptr<HybridSkyboxSpec>>::pending();
   auto engine = shared_cast<HybridEngine>();
-  withAssetBytes(source, promise, [engine, promise](const std::shared_ptr<ArrayBuffer>& bytes) {
+  withAssetBytes(source, promise, [engine, promise](const ArrayBuffer& bytes) {
     try {
-      std::unique_ptr<image::Ktx1Bundle> bundle = parseKtx1Cubemap(bytes->data(), bytes->size(), "skybox");
+      std::unique_ptr<image::Ktx1Bundle> bundle = parseKtx1Cubemap(bytes.data(), bytes.size(), "skybox");
       ::filament::Texture* environment = ktxreader::Ktx1Reader::createTexture(&engine->core()->engine(), bundle.release(), false);
       engine->core()->noteUploads();
       auto core = std::make_shared<SkyboxCore>(engine->core(), environment);
       engine->core()->adopt(core);
-      promise->resolve(std::make_shared<HybridSkybox>(engine, core));
+      promise.resolve(std::make_shared<HybridSkybox>(engine, core));
     } catch (...) {
-      promise->reject(std::current_exception());
+      promise.reject(std::current_exception());
     }
   });
   return promise;
 }
 
 template <typename T>
-void HybridEngine::withAssetBytes(const AssetSource& source, const std::shared_ptr<Promise<T>>& promise,
-                                  std::function<void(const std::shared_ptr<ArrayBuffer>& bytes)> onRenderThread) {
-  std::shared_ptr<Promise<std::shared_ptr<ArrayBuffer>>> bytes = readAssetBytes(source);
-  bytes->addOnResolvedListener([core = core_, promise, onRenderThread](const std::shared_ptr<ArrayBuffer>& data) {
+void HybridEngine::withAssetBytes(const AssetSource& source, const Promise<T>& promise,
+                                  std::function<void(const ArrayBuffer& bytes)> onRenderThread) {
+  Promise<ArrayBuffer> bytes = readAssetBytes(source);
+  bytes.addOnResolvedListener([core = core_, promise, onRenderThread](const ArrayBuffer& data) {
     core->thread().post({
         .run = [onRenderThread, data] { onRenderThread(data); },
-        .cancel = [promise] { promise->reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
+        .cancel = [promise] { promise.reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
     });
   });
-  bytes->addOnRejectedListener([promise](const std::exception_ptr& error) { promise->reject(error); });
+  bytes.addOnRejectedListener([promise](const std::exception_ptr& error) { promise.reject(std::exception_ptr(error)); });
 }
 
 std::shared_ptr<HybridTransformBindingSpec> HybridEngine::createTransformBinding(double entity) {
@@ -368,8 +365,7 @@ std::shared_ptr<HybridCameraManipulatorSpec> HybridEngine::createOrbitManipulato
   return std::make_shared<HybridCameraManipulator>(core_, manipulator);
 }
 
-std::shared_ptr<HybridFrameListenerSubscriptionSpec>
-HybridEngine::addOnFrameListener(const std::function<bool(const FrameInfo&)>& listener) {
+std::shared_ptr<HybridFrameListenerSubscriptionSpec> HybridEngine::addOnFrameListener(const Callback<bool(const FrameInfo&)>& listener) {
   requireRenderThread(core_->thread(), "Engine.addOnFrameListener()");
   std::shared_ptr<FrameListener> registered = core_->addFrameListener(listener);
   return std::make_shared<HybridFrameListenerSubscription>(core_, registered);
@@ -383,7 +379,7 @@ void HybridEngine::requestFrame() {
   core_->requestFrame();
 }
 
-std::shared_ptr<Promise<void>> HybridEngine::shutdown() {
+Promise<void> HybridEngine::shutdown() {
   return core_->shutdown();
 }
 

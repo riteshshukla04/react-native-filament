@@ -12,10 +12,10 @@
 namespace margelo::nitro::filament {
 
 HybridViewTarget::HybridViewTarget(std::shared_ptr<HybridEngine> engine, std::shared_ptr<ViewTargetCore> core,
-                                   std::shared_ptr<HybridFilamentViewSpec> view)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)), view_(std::move(view)),
+                                   HybridFilamentViewSpecCxx view)
+    : engine_(std::move(engine)), core_(std::move(core)), view_(std::move(view)),
       renderView_(std::make_shared<HybridView>(engine_->core(), core_)) {
-  view_->setSurfaceObserver(makeSurfaceObserver(engine_->core(), core_));
+  view_.setSurfaceObserver(makeSurfaceObserver(engine_->core(), core_));
 }
 
 HybridViewTarget::~HybridViewTarget() {
@@ -46,54 +46,54 @@ std::shared_ptr<HybridViewSpec> HybridViewTarget::getView() {
   return renderView_;
 }
 
-ListenerSubscription HybridViewTarget::addOnFirstFrameListener(const std::function<void()>& listener) {
+ListenerSubscription HybridViewTarget::addOnFirstFrameListener(const Callback<void()>& listener) {
   core_->requireLive("ViewTarget.addOnFirstFrameListener()");
-  return ListenerSubscription(core_->addFirstFrameListener(listener));
+  return ListenerSubscription(Callback<void()>::make(core_->addFirstFrameListener(listener)));
 }
 
-std::shared_ptr<Promise<std::optional<PickResult>>> HybridViewTarget::pick(double x, double y) {
+Promise<std::optional<PickResult>> HybridViewTarget::pick(double x, double y) {
   core_->requireLive("ViewTarget.pick()");
-  auto promise = Promise<std::optional<PickResult>>::create();
+  auto promise = Promise<std::optional<PickResult>>::pending();
   const std::shared_ptr<EngineCore>& engine = engine_->core();
   engine->thread().post({
       .run =
           [engine, core = core_, promise, x, y] {
             if (!core->isLive()) {
-              promise->reject(std::make_exception_ptr(
+              promise.reject(std::make_exception_ptr(
                   std::runtime_error("FilamentDisposedError: ViewTarget.pick() was called on a disposed ViewTarget.")));
               return;
             }
             core->pick(x, y, promise);
             engine->requestFrame();
           },
-      .cancel = [promise] { promise->reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
+      .cancel = [promise] { promise.reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
   });
   return promise;
 }
 
-std::shared_ptr<Promise<std::shared_ptr<HybridSnapshotSpec>>> HybridViewTarget::takeSnapshot() {
+Promise<std::shared_ptr<HybridSnapshotSpec>> HybridViewTarget::takeSnapshot() {
   core_->requireLive("ViewTarget.takeSnapshot()");
-  auto promise = Promise<std::shared_ptr<HybridSnapshotSpec>>::create();
+  auto promise = Promise<std::shared_ptr<HybridSnapshotSpec>>::pending();
   const std::shared_ptr<EngineCore>& engine = engine_->core();
   engine->thread().post({
       .run =
           [engine, core = core_, promise] {
             if (!core->isLive()) {
-              promise->reject(std::make_exception_ptr(
+              promise.reject(std::make_exception_ptr(
                   std::runtime_error("FilamentDisposedError: ViewTarget.takeSnapshot() was called on a disposed ViewTarget.")));
               return;
             }
             core->takeSnapshot(promise);
             engine->requestFrame();
           },
-      .cancel = [promise] { promise->reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
+      .cancel = [promise] { promise.reject(std::make_exception_ptr(std::runtime_error("The Engine was shut down."))); },
   });
   return promise;
 }
 
-ListenerSubscription HybridViewTarget::addOnResizeListener(const std::function<void(double width, double height)>& listener) {
+ListenerSubscription HybridViewTarget::addOnResizeListener(const Callback<void(double width, double height)>& listener) {
   core_->requireLive("ViewTarget.addOnResizeListener()");
-  return ListenerSubscription(core_->addResizeListener(listener));
+  return ListenerSubscription(Callback<void()>::make(core_->addResizeListener(listener)));
 }
 
 void HybridViewTarget::setScene(const std::shared_ptr<HybridSceneSpec>& scene) {
@@ -116,7 +116,7 @@ void HybridViewTarget::dispose() {
   if (disposed_.exchange(true)) {
     return;
   }
-  view_->setSurfaceObserver(std::nullopt);
+  view_.setSurfaceObserver(std::nullopt);
   const std::shared_ptr<EngineCore>& engine = engine_->core();
   if (!core_->markDisposing()) {
     return;
@@ -128,10 +128,10 @@ void HybridViewTarget::dispose() {
 }
 
 SurfaceObserver HybridViewTarget::makeSurfaceObserver(std::weak_ptr<EngineCore> weakEngine, std::weak_ptr<ViewTargetCore> weakTarget) {
-  auto onCreated = [weakEngine, weakTarget](const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {
+  auto onCreated = [weakEngine, weakTarget](const NativeSurface& surface) {
     std::shared_ptr<EngineCore> engine = weakEngine.lock();
     if (engine == nullptr) {
-      surface->release();
+      surface.release.callSync();
       return;
     }
     engine->thread().post({
@@ -139,17 +139,17 @@ SurfaceObserver HybridViewTarget::makeSurfaceObserver(std::weak_ptr<EngineCore> 
             [engine, weakTarget, surface] {
               std::shared_ptr<ViewTargetCore> target = weakTarget.lock();
               if (target == nullptr) {
-                surface->release();
+                surface.release.callSync();
                 return;
               }
               target->attach(surface);
               engine->updateDemand();
             },
-        .cancel = [surface] { surface->release(); },
+        .cancel = [surface] { surface.release.callSync(); },
     });
   };
 
-  auto onResized = [weakEngine, weakTarget](const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {
+  auto onResized = [weakEngine, weakTarget](const NativeSurface& surface) {
     std::shared_ptr<EngineCore> engine = weakEngine.lock();
     if (engine == nullptr) {
       return;
@@ -162,14 +162,14 @@ SurfaceObserver HybridViewTarget::makeSurfaceObserver(std::weak_ptr<EngineCore> 
     }});
   };
 
-  auto onDestroyed = [weakEngine, weakTarget](const std::shared_ptr<HybridNativeSurfaceSpec>& surface) {
+  auto onDestroyed = [weakEngine, weakTarget](const NativeSurface& surface) {
     std::shared_ptr<EngineCore> engine = weakEngine.lock();
     std::shared_ptr<ViewTargetCore> target = weakTarget.lock();
     if (engine == nullptr || target == nullptr) {
-      surface->release();
+      surface.release.callSync();
       return;
     }
-    if (surface->getSynchronousTeardown()) {
+    if (surface.synchronousTeardown) {
       target->revoke();
     }
     engine->thread().postFront({.run = [engine, target, surface] {
@@ -178,7 +178,8 @@ SurfaceObserver HybridViewTarget::makeSurfaceObserver(std::weak_ptr<EngineCore> 
     }});
   };
 
-  return SurfaceObserver(onCreated, onResized, onDestroyed);
+  return SurfaceObserver(Callback<void(const NativeSurface&)>::make(onCreated), Callback<void(const NativeSurface&)>::make(onResized),
+                         Callback<void(const NativeSurface&)>::make(onDestroyed));
 }
 
 size_t HybridViewTarget::getExternalMemorySize() noexcept {

@@ -20,7 +20,9 @@ class HybridAssetIO : HybridAssetIOSpec() {
     ArrayBuffer.wrap(AssetLocation.parse(uri).map(context))
   }
 
-  private companion object {
-    val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+  companion object : HybridAssetIOSpec.Companion {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    override fun constructor(): HybridAssetIO = HybridAssetIO()
   }
 }

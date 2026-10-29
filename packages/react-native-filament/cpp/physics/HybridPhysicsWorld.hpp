@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridPhysicsWorldSpec.hpp"
 #include "PhysicsWorldCore.hpp"
+#include <NitroFilament/HybridPhysicsWorldSpec.hpp>
 
 #include <memory>
 
@@ -24,7 +24,7 @@ public:
                                                                    double constant) override;
   std::shared_ptr<HybridRigidBodySpec> createRigidBody(const RigidBodyOptions& options) override;
   void step(double deltaSeconds) override;
-  ListenerSubscription addOnCollisionListener(const std::function<bool(const std::vector<CollisionEvent>&)>& listener) override;
+  ListenerSubscription addOnCollisionListener(const Callback<bool(const std::vector<CollisionEvent>&)>& listener) override;
   void dispose() override;
   size_t getExternalMemorySize() noexcept override;
 

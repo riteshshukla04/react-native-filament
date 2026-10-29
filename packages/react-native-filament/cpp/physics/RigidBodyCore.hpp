@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ActivationState.hpp"
 #include "CollisionShapeCore.hpp"
-#include "HybridRigidBodySpec.hpp"
 #include "resources/Resource.hpp"
+#include <NitroFilament/ActivationState.hpp>
+#include <NitroFilament/HybridRigidBodySpec.hpp>
 
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <LinearMath/btDefaultMotionState.h>

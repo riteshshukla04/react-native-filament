@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 export function FrameListenerExample() {
@@ -30,7 +29,7 @@ export function FrameListenerExample() {
 
   return (
     <View style={styles.container}>
-      <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} hybridRef={setView} />
     </View>
   )
 }

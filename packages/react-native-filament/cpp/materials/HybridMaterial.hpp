@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridMaterialSpec.hpp"
 #include "MaterialCore.hpp"
+#include <NitroFilament/HybridMaterialSpec.hpp>
 
 #include <memory>
 

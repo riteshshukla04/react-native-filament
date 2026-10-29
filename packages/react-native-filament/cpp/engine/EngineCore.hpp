@@ -1,8 +1,6 @@
 #pragma once
 
-#include "EngineBackend.hpp"
 #include "FrameListeners.hpp"
-#include "RenderMode.hpp"
 #include "RenderRuntimePool.hpp"
 #include "RenderThreadCallbackHandler.hpp"
 #include "assets/GltfLoader.hpp"
@@ -13,6 +11,8 @@
 #include "resources/Users.hpp"
 #include "threading/RenderThread.hpp"
 #include "utils/WeakRegistry.hpp"
+#include <NitroFilament/EngineBackend.hpp>
+#include <NitroFilament/RenderMode.hpp>
 
 #include <NitroModules/Promise.hpp>
 #include <filament/Engine.h>
@@ -25,6 +25,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -89,10 +90,10 @@ public:
   std::shared_ptr<worklets::WorkletRuntime> runtime() const;
   void runWorklet(const std::shared_ptr<worklets::SerializableWorklet>& worklet);
 
-  std::shared_ptr<FrameListener> addFrameListener(std::function<bool(const FrameInfo&)> callback);
+  std::shared_ptr<FrameListener> addFrameListener(Callback<bool(const FrameInfo&)> callback);
   void removeFrameListener(const std::shared_ptr<FrameListener>& listener);
 
-  std::shared_ptr<Promise<void>> shutdown();
+  Promise<void> shutdown();
 
 private:
   EngineCore(EngineBackend backend, std::shared_ptr<RenderRuntimePool> runtimes);
@@ -144,7 +145,7 @@ private:
   std::shared_ptr<RenderThreadQueue> runtimeQueue_;
   const std::shared_ptr<RenderRuntimePool> runtimes_;
   std::mutex shutdownMutex_;
-  std::shared_ptr<Promise<void>> shutdownPromise_;
+  std::optional<Promise<void>> shutdownPromise_;
 };
 
 } // namespace margelo::nitro::filament

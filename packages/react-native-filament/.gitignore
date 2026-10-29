@@ -93,5 +93,5 @@ ios/libs/bullet3
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-# Filament binaries vendored by ios/filament.rb
-ios/Filament/
+# Filament binaries vendored by scripts/prepare-filament-apple.js
+apple/Filament/

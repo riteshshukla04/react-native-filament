@@ -6,7 +6,7 @@
 
 namespace margelo::nitro::filament {
 
-std::shared_ptr<CollisionListeners::Entry> CollisionListeners::add(Callback callback) {
+std::shared_ptr<CollisionListeners::Entry> CollisionListeners::add(Listener callback) {
   auto entry = std::make_shared<Entry>(std::move(callback));
   entries_.push_back(entry);
   return entry;

@@ -1,13 +1,11 @@
 #include "HybridRecorder.hpp"
 
-#include "HybridVideoEncoderFactorySpec.hpp"
 #include "ViewHostCommands.hpp"
 #include "engine/HybridEngine.hpp"
+#include "platform/HybridPlatformServices.hpp"
 #include "scene/HybridView.hpp"
 #include "utils/TemporaryFiles.hpp"
 #include "utils/ThreadChecks.hpp"
-
-#include <NitroModules/HybridObjectRegistry.hpp>
 
 #include <cmath>
 #include <stdexcept>
@@ -15,21 +13,8 @@
 
 namespace margelo::nitro::filament {
 
-namespace {
-
-  std::shared_ptr<HybridVideoEncoderFactorySpec> createEncoderFactory() {
-    auto factory =
-        std::dynamic_pointer_cast<HybridVideoEncoderFactorySpec>(HybridObjectRegistry::createHybridObject("VideoEncoderFactory"));
-    if (factory == nullptr) {
-      throw std::runtime_error("The VideoEncoderFactory HybridObject is not registered.");
-    }
-    return factory;
-  }
-
-} // namespace
-
 HybridRecorder::HybridRecorder(std::shared_ptr<HybridEngine> engine, std::shared_ptr<RecorderCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)), view_(std::make_shared<HybridView>(engine_->core(), core_)) {}
+    : engine_(std::move(engine)), core_(std::move(core)), view_(std::make_shared<HybridView>(engine_->core(), core_)) {}
 
 HybridRecorder::~HybridRecorder() {
   dispose();
@@ -67,43 +52,42 @@ void HybridRecorder::setClearOptions(const ClearOptions& options) {
   core_->setClearOptions(toClearSettings(options));
 }
 
-std::shared_ptr<Promise<std::string>> HybridRecorder::record(double frameCount) {
+Promise<std::string> HybridRecorder::record(double frameCount) {
   core_->requireLive("Recorder.record()");
   if (!(frameCount >= 1) || std::floor(frameCount) != frameCount) {
     throw std::invalid_argument("Recorder.record() needs a positive whole number of frames, got " + std::to_string(frameCount) + ".");
   }
-  auto promise = Promise<std::string>::create();
+  auto promise = Promise<std::string>::pending();
   if (recording_->exchange(true)) {
-    promise->reject(
+    promise.reject(
         std::make_exception_ptr(std::runtime_error("FilamentBusyError: Recorder.record() was called while another recording is running.")));
     return promise;
   }
-  promise->addOnResolvedListener([recording = recording_](const std::string&) { *recording = false; });
-  promise->addOnRejectedListener([recording = recording_](const std::exception_ptr&) { *recording = false; });
+  promise.addOnResolvedListener([recording = recording_](const std::string&) { *recording = false; });
+  promise.addOnRejectedListener([recording = recording_](const std::exception_ptr&) { *recording = false; });
   try {
     startEncoder(static_cast<uint32_t>(frameCount), promise);
   } catch (...) {
-    promise->reject(std::current_exception());
+    promise.reject(std::current_exception());
   }
   return promise;
 }
 
-void HybridRecorder::startEncoder(uint32_t frameCount, const std::shared_ptr<Promise<std::string>>& promise) {
+void HybridRecorder::startEncoder(uint32_t frameCount, const Promise<std::string>& promise) {
   const RecorderCore::Format& format = core_->format();
   VideoEncoderOptions options(format.width, format.height, format.fps, format.bitRate, newTemporaryFilePath("rnf-recording", "mp4"));
-  std::shared_ptr<Promise<std::shared_ptr<HybridVideoEncoderSpec>>> encoder = createEncoderFactory()->createEncoder(options);
-  encoder->addOnResolvedListener(
-      [engine = engine_->core(), core = core_, frameCount, promise](const std::shared_ptr<HybridVideoEncoderSpec>& created) {
-        engine->thread().post({
-            .run = [core, created, frameCount, promise] { core->start(frameCount, created, promise); },
-            .cancel =
-                [created, promise] {
-                  created->cancel();
-                  promise->reject(std::make_exception_ptr(std::runtime_error("FilamentDisposedError: the Engine was shut down.")));
-                },
-        });
-      });
-  encoder->addOnRejectedListener([promise](const std::exception_ptr& error) { promise->reject(error); });
+  Promise<HybridVideoEncoderSpecCxx> encoder = HybridPlatformServices::createVideoEncoder(options);
+  encoder.addOnResolvedListener([engine = engine_->core(), core = core_, frameCount, promise](const HybridVideoEncoderSpecCxx& created) {
+    engine->thread().post({
+        .run = [core, created, frameCount, promise] { core->start(frameCount, created, promise); },
+        .cancel =
+            [created, promise] {
+              created.cancel();
+              promise.reject(std::make_exception_ptr(std::runtime_error("FilamentDisposedError: the Engine was shut down.")));
+            },
+    });
+  });
+  encoder.addOnRejectedListener([promise](const std::exception_ptr& error) { promise.reject(std::exception_ptr(error)); });
 }
 
 void HybridRecorder::dispose() {

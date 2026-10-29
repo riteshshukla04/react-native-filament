@@ -5,7 +5,7 @@
 namespace margelo::nitro::filament {
 
 HybridSkybox::HybridSkybox(std::shared_ptr<HybridEngine> engine, std::shared_ptr<SkyboxCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 void HybridSkybox::dispose() {
   engineCore()->dispose(core_);

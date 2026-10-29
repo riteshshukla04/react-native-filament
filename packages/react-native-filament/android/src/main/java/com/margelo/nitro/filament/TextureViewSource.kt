@@ -18,10 +18,10 @@ internal class TextureViewSource(context: Context, private val listener: Surface
     view.surfaceTextureListener = this
   }
 
-  override fun createLease(onReleased: (HybridNativeSurface) -> Unit): HybridNativeSurface? {
+  override fun createLease(onReleased: (NativeSurfaceLease) -> Unit): NativeSurfaceLease? {
     val texture = current ?: return null
     val density = view.resources.displayMetrics.density.toDouble()
-    val lease = HybridNativeSurface.acquire(texture.surface, size, density, transparent = true, synchronousTeardown = false) { released ->
+    val lease = NativeSurfaceLease.acquire(texture.surface, size, density, transparent = true, synchronousTeardown = false) { released ->
       texture.release()
       onReleased(released)
     } ?: return null

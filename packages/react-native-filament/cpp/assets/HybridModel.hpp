@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridModelSpec.hpp"
 #include "ModelCore.hpp"
+#include <NitroFilament/HybridModelSpec.hpp>
 
 #include <memory>
 #include <mutex>

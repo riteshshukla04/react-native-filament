@@ -23,10 +23,10 @@ react-native-filament renders 3D scenes in React Native with Google's [Filament]
 Install react-native-filament with its two required peers, [Nitro Modules](https://nitro.margelo.com) and [react-native-worklets](https://docs.swmansion.com/react-native-worklets):
 
 ```npm
-npm i react-native-filament react-native-nitro-modules@0.37 react-native-worklets@0.13
+npm i react-native-filament react-native-nitro-modules@alpha-nightly react-native-worklets@0.13
 ```
 
-react-native-filament 2.0 supports React Native 0.88, Nitro Modules 0.37.x and react-native-worklets 0.13.x, so pin the peers to those versions.
+react-native-filament 2.0 supports React Native 0.88, Nitro Modules 1.0 and react-native-worklets 0.13.x, so pin the peers to those versions.
 
 [Reanimated](https://docs.swmansion.com/react-native-reanimated) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler) are optional. Every animatable prop accepts a Reanimated `SharedValue`, and [`useOrbitGestures`](/api/hooks/use-orbit-gestures) returns a Gesture Handler gesture.
 
@@ -47,13 +47,16 @@ If the app uses Reanimated 4, keep `react-native-reanimated/plugin` instead. It 
 </Step>
 <Step>
 
-### Install the pods
+### Set up iOS
+
+Nitro Modules 1.0 builds iOS libraries with Swift Package Manager. Download Filament's iOS libraries once, then let React Native link every package into your Xcode project:
 
 ```sh
-cd ios && pod install
+node node_modules/react-native-filament/scripts/prepare-filament-apple.js
+npx react-native spm
 ```
 
-The first `pod install` and the first Android build download the prebuilt Filament binaries from GitHub, verify their SHA-256 checksums and cache them for every later build.
+The script and the first Android build download the prebuilt Filament binaries from GitHub, verify their SHA-256 checksums and cache them for every later build. Every native library of the app needs Swift Package Manager support. For one that only ships a podspec, `npx react-native spm scaffold` generates a `Package.swift`.
 
 </Step>
 <Step>
@@ -82,7 +85,7 @@ Models load from glTF 2.0 binaries (`.glb`). Convert other formats, such as glTF
 </Callout>
 
 <Callout type="info" title="Building without GitHub access">
-Set `RNF_FILAMENT_BASE_URL` to a mirror of the Filament release assets. To use a local copy, set `RNF_FILAMENT_IOS_ARCHIVE` for `pod install` and `RNF_FILAMENT_ARCHIVE` for Gradle. The checksum is verified either way.
+Set `RNF_FILAMENT_BASE_URL` to a mirror of the Filament release assets. To use a local copy, set `RNF_FILAMENT_IOS_ARCHIVE` for `prepare-filament-apple.js` and `RNF_FILAMENT_ARCHIVE` for Gradle. The checksum is verified either way.
 </Callout>
 
 Using Expo? See [Expo](/docs/expo).
@@ -121,7 +124,6 @@ export function MyScene() {
 ```tsx title="MyScene.tsx"
 import React, { useEffect, useState } from 'react'
 import { Image } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 const drone = Image.resolveAssetSource(require('./drone.glb'))
@@ -177,7 +179,7 @@ export function MyScene() {
     }
   }, [view])
 
-  return <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 }
 ```
 

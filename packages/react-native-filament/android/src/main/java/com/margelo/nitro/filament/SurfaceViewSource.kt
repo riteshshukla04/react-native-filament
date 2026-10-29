@@ -16,9 +16,9 @@ internal class SurfaceViewSource(context: Context, private val listener: Surface
     view.holder.addCallback(this)
   }
 
-  override fun createLease(onReleased: (HybridNativeSurface) -> Unit): HybridNativeSurface? {
+  override fun createLease(onReleased: (NativeSurfaceLease) -> Unit): NativeSurfaceLease? {
     if (!hasSurface) return null
-    return HybridNativeSurface.acquire(view.holder.surface, size, view.resources.displayMetrics.density.toDouble(), transparent = false, synchronousTeardown = true, onReleased)
+    return NativeSurfaceLease.acquire(view.holder.surface, size, view.resources.displayMetrics.density.toDouble(), transparent = false, synchronousTeardown = true, onReleased)
   }
 
   override fun surfaceCreated(holder: SurfaceHolder) = Unit

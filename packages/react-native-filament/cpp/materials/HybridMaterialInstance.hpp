@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridMaterialInstanceSpec.hpp"
 #include "MaterialInstanceRef.hpp"
+#include <NitroFilament/HybridMaterialInstanceSpec.hpp>
 
 #include <filament/Material.h>
 

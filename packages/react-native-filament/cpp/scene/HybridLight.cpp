@@ -6,7 +6,7 @@
 namespace margelo::nitro::filament {
 
 HybridLight::HybridLight(std::shared_ptr<HybridEngine> engine, std::shared_ptr<LightCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 double HybridLight::getEntity() {
   return fromEntity(core_->entity());

@@ -7,7 +7,7 @@
 namespace margelo::nitro::filament {
 
 HybridMaterial::HybridMaterial(std::shared_ptr<EngineCore> engine, std::shared_ptr<MaterialCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 std::string HybridMaterial::getMaterialName() {
   return core_->name();

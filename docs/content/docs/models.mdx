@@ -33,7 +33,6 @@ export function DroneScreen() {
 ```tsx title="DroneScreen.tsx"
 import { useEffect, useState } from 'react'
 import { Image } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import { defaultIndirectLightSource, Filament, NativeFilamentView, runOnRenderThread, type FilamentView } from 'react-native-filament'
 
 const drone = Image.resolveAssetSource(require('./drone.glb'))
@@ -78,7 +77,7 @@ export function DroneScreen() {
     }
   }, [view])
 
-  return <NativeFilamentView style={{ flex: 1 }} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={{ flex: 1 }} hybridRef={setView} />
 }
 ```
 

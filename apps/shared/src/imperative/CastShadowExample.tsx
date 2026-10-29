@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, View } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
   Filament,
@@ -88,7 +87,7 @@ export function CastShadowExample() {
 
   return (
     <View style={styles.background}>
-      <NativeFilamentView style={styles.container} transparent hybridRef={callback(setView)} />
+      <NativeFilamentView style={styles.container} transparent hybridRef={setView} />
       <Button title={`Toggle shadow (${shadows ? 'enabled' : 'disabled'})`} onPress={() => setShadows((value) => !value)} />
       <Button title={`Toggle SSAO (${ambientOcclusion ? 'enabled' : 'disabled'})`} onPress={() => setAmbientOcclusion((value) => !value)} />
     </View>

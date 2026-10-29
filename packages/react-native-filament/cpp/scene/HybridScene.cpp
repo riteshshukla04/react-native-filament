@@ -17,7 +17,7 @@
 namespace margelo::nitro::filament {
 
 HybridScene::HybridScene(std::shared_ptr<HybridEngine> engine, std::shared_ptr<SceneCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 double HybridScene::getEntityCount() {
   requireUsable("Scene.entityCount");

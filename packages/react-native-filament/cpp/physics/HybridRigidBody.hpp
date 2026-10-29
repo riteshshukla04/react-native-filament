@@ -1,9 +1,9 @@
 #pragma once
 
-#include "HybridRigidBodySpec.hpp"
 #include "RigidBodyCore.hpp"
 #include "engine/EngineCore.hpp"
 #include "utils/MatrixConversion.hpp"
+#include <NitroFilament/HybridRigidBodySpec.hpp>
 
 #include <memory>
 
@@ -29,7 +29,7 @@ public:
   std::tuple<double, double, double> getAngularVelocity() override;
   void setAngularVelocity(const std::tuple<double, double, double>& angularVelocity) override;
   std::optional<double> getEntity() override;
-  void setEntity(std::optional<double> entity) override;
+  void setEntity(const std::optional<double>& entity) override;
   void setDamping(double linear, double angular) override;
   void applyCentralImpulse(const std::tuple<double, double, double>& impulse) override;
   void applyCentralForce(const std::tuple<double, double, double>& force) override;

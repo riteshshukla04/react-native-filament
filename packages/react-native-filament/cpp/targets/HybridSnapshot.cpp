@@ -10,7 +10,7 @@
 
 namespace margelo::nitro::filament {
 
-HybridSnapshot::HybridSnapshot(std::shared_ptr<const SnapshotCore> core) : HybridObject(TAG), core_(std::move(core)) {}
+HybridSnapshot::HybridSnapshot(std::shared_ptr<const SnapshotCore> core) : core_(std::move(core)) {}
 
 double HybridSnapshot::getWidth() {
   return core_->width;
@@ -20,13 +20,13 @@ double HybridSnapshot::getHeight() {
   return core_->height;
 }
 
-std::shared_ptr<ArrayBuffer> HybridSnapshot::toArrayBuffer() {
+ArrayBuffer HybridSnapshot::toArrayBuffer() {
   return ArrayBuffer::copy(core_->rgba);
 }
 
-std::shared_ptr<Promise<std::string>> HybridSnapshot::saveToTemporaryFile() {
+Promise<std::string> HybridSnapshot::saveToTemporaryFile() {
   std::string path = newTemporaryFilePath("rnf-snapshot", "png");
-  auto promise = Promise<std::string>::create();
+  auto promise = Promise<std::string>::pending();
   WorkerPool::shared().post([core = core_, path, promise] {
     try {
       std::vector<uint8_t> png = encodePng(core->rgba.data(), core->width, core->height);
@@ -35,9 +35,9 @@ std::shared_ptr<Promise<std::string>> HybridSnapshot::saveToTemporaryFile() {
       if (!file) {
         throw std::runtime_error("Snapshot.saveToTemporaryFile() could not write " + path + ".");
       }
-      promise->resolve("file://" + path);
+      promise.resolve("file://" + path);
     } catch (...) {
-      promise->reject(std::current_exception());
+      promise.reject(std::current_exception());
     }
   });
   return promise;

@@ -1,8 +1,12 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { MaterialInstance } from './MaterialInstance.nitro'
 
+export * from '#nitro/Material'
+
 /** A compiled material (`.filamat`, from Filament's `matc` of the same version). */
-export interface Material extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"materials/HybridMaterial.hpp"', className: 'HybridMaterial' } })
+@Android({ language: 'c++', implementation: { include: '"materials/HybridMaterial.hpp"', className: 'HybridMaterial' } })
+export declare class Material extends HybridObject {
   /** @thread any */
   readonly materialName: string
   /** @thread any */

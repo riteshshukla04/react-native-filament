@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridSceneSpec.hpp"
 #include "SceneCore.hpp"
+#include <NitroFilament/HybridSceneSpec.hpp>
 
 #include <memory>
 

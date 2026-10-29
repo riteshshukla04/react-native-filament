@@ -10,7 +10,7 @@ on:
       - 'packages/react-native-filament/cpp/**'
       - 'packages/react-native-filament/ios/**'
       - 'packages/react-native-filament/nitrogen/**'
-      - 'packages/react-native-filament/*.podspec'
+      - 'packages/react-native-filament/Package.swift'
       - 'packages/react-native-filament/filament.json'
       - 'apps/example/ios/**'
       - 'apps/expo-example/**'
@@ -19,7 +19,8 @@ on:
 jobs:
   build:
     name: Build example app (simulator, debug)
-    runs-on: macos-latest
+    # Nitro Modules 1.0 needs Swift tools 6.4, which ships with Xcode 27.
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v4
 
@@ -39,15 +40,15 @@ jobs:
           path: ~/Library/Caches/react-native-filament
           key: filament-ios-${{ hashFiles('packages/react-native-filament/filament.json') }}
 
-      - name: Install pods
-        working-directory: apps/example/ios
-        run: pod install
+      - name: Set up Swift packages
+        working-directory: apps/example
+        run: bun run spm
 
       - name: Build
         working-directory: apps/example/ios
         run: |
           set -o pipefail
-          xcodebuild -workspace AppExampleFabric.xcworkspace -scheme AppExampleFabric \
+          xcodebuild -project AppExampleFabric.xcodeproj -scheme AppExampleFabric \
             -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO build | tee xcodebuild.log | tail -50
 
@@ -57,37 +58,3 @@ jobs:
         with:
           name: ios-build-log
           path: apps/example/ios/xcodebuild.log
-
-  build-expo:
-    name: Build Expo app (simulator, debug)
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-
-      - uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
-          restore-keys: ${{ runner.os }}-bun-
-
-      - run: bun install --frozen-lockfile
-
-      - name: Restore Filament store
-        uses: actions/cache@v4
-        with:
-          path: ~/Library/Caches/react-native-filament
-          key: filament-ios-${{ hashFiles('packages/react-native-filament/filament.json') }}
-
-      - name: Prebuild
-        working-directory: apps/expo-example
-        run: bunx expo prebuild --platform ios
-
-      - name: Build
-        working-directory: apps/expo-example/ios
-        run: |
-          set -o pipefail
-          xcodebuild -workspace ExpoExample.xcworkspace -scheme ExpoExample \
-            -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath build COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO build | tee xcodebuild.log | tail -50

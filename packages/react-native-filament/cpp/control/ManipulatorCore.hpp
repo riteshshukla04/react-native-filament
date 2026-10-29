@@ -1,9 +1,9 @@
 #pragma once
 
-#include "LookAt.hpp"
 #include "ManipulatorCommandQueue.hpp"
-#include "OrbitManipulatorOptions.hpp"
 #include "resources/Users.hpp"
+#include <NitroFilament/LookAt.hpp>
+#include <NitroFilament/OrbitManipulatorOptions.hpp>
 
 #include <camutils/Manipulator.h>
 
@@ -43,13 +43,13 @@ private:
   ::filament::math::float3 homeTarget_;
   ::filament::math::float3 pivot_;
   bool strafing_ = false;
-  LookAt cameraPose_;
+  LookAt cameraPose_{{0, 0, 0}, {0, 0, 0}, {0, 1, 0}};
   ManipulatorCommandQueue commands_;
   std::mutex viewportMutex_;
   std::optional<std::pair<double, double>> pendingViewport_;
   int viewportHeight_ = 1;
   mutable std::mutex lookAtMutex_;
-  LookAt lookAt_;
+  LookAt lookAt_{{0, 0, 0}, {0, 0, 0}, {0, 1, 0}};
   Users<CameraCore> cameras_;
   std::atomic<bool> stopped_{false};
 };

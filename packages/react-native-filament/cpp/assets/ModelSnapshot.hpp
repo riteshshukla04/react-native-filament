@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Aabb.hpp"
-#include "AnimationInfo.hpp"
+#include <NitroFilament/Aabb.hpp>
+#include <NitroFilament/AnimationInfo.hpp>
 
 #include <gltfio/FilamentAsset.h>
 #include <gltfio/FilamentInstance.h>

@@ -1,4 +1,4 @@
-import type { HybridObject } from 'react-native-nitro-modules'
+import { Android, Apple, type HybridObject } from 'react-native-nitro-modules'
 import type { AmbientOcclusionOptions } from '../types/AmbientOcclusionOptions'
 import type { AntiAliasing } from '../types/AntiAliasing'
 import type { BloomOptions } from '../types/BloomOptions'
@@ -9,11 +9,15 @@ import type { Float3 } from '../types/Float3'
 import type { ShadowType } from '../types/ShadowType'
 import type { TemporalAntiAliasingOptions } from '../types/TemporalAntiAliasingOptions'
 
+export * from '#nitro/View'
+
 /**
  * Rendering options of one `ViewTarget` or `Recorder`. Every member runs on the render thread. Each
  * `set*Options` call replaces all options of that group; omitted fields take Filament's defaults.
  */
-export interface View extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+@Apple({ language: 'c++', implementation: { include: '"scene/HybridView.hpp"', className: 'HybridView' } })
+@Android({ language: 'c++', implementation: { include: '"scene/HybridView.hpp"', className: 'HybridView' } })
+export declare class View extends HybridObject {
   /**
    * @default 'fxaa'
    * @thread render

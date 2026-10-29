@@ -1,8 +1,8 @@
 #pragma once
 
-#include "HybridTransformManagerSpec.hpp"
 #include "engine/EngineCore.hpp"
 #include "utils/MatrixConversion.hpp"
+#include <NitroFilament/HybridTransformManagerSpec.hpp>
 
 #include <filament/TransformManager.h>
 
@@ -21,7 +21,7 @@ public:
   void setRotation(double entity, const std::tuple<double, double, double, double>& rotation) override;
   void setScale(double entity, const std::tuple<double, double, double>& scale) override;
   std::optional<double> getParent(double entity) override;
-  void setParent(double entity, std::optional<double> parent) override;
+  void setParent(double entity, const std::optional<double>& parent) override;
   void transformToUnitCube(double entity, const Aabb& boundingBox) override;
   void openLocalTransformTransaction() override;
   void commitLocalTransformTransaction() override;

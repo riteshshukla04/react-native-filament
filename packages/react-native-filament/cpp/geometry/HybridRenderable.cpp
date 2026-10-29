@@ -6,7 +6,7 @@
 namespace margelo::nitro::filament {
 
 HybridRenderable::HybridRenderable(std::shared_ptr<HybridEngine> engine, std::shared_ptr<GeometryCore> core)
-    : HybridObject(TAG), engine_(std::move(engine)), core_(std::move(core)) {}
+    : engine_(std::move(engine)), core_(std::move(core)) {}
 
 double HybridRenderable::getEntity() {
   return fromEntity(core_->entity());

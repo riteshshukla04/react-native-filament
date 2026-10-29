@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ClearOptions.hpp"
-#include "HybridCameraSpec.hpp"
-#include "HybridSceneSpec.hpp"
 #include "ViewHost.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/ClearOptions.hpp>
+#include <NitroFilament/HybridCameraSpec.hpp>
+#include <NitroFilament/HybridSceneSpec.hpp>
 
 #include <memory>
 #include <optional>

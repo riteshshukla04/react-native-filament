@@ -1,9 +1,9 @@
 #pragma once
 
-#include "HybridVideoEncoderSpec.hpp"
 #include "RecordingSession.hpp"
 #include "ViewHost.hpp"
 #include "engine/EngineCore.hpp"
+#include <NitroFilament/HybridVideoEncoderSpecCxx.hpp>
 
 #include <NitroModules/Promise.hpp>
 #include <filament/SwapChain.h>
@@ -28,7 +28,7 @@ public:
 
   const std::shared_ptr<EngineCore>& engineCore() const;
   const Format& format() const;
-  void start(uint32_t frameCount, std::shared_ptr<HybridVideoEncoderSpec> encoder, std::shared_ptr<Promise<std::string>> promise);
+  void start(uint32_t frameCount, HybridVideoEncoderSpecCxx encoder, Promise<std::string> promise);
 
 protected:
   void destroyNative() override;

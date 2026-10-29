@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridSnapshotSpec.hpp"
 #include "SnapshotCore.hpp"
+#include <NitroFilament/HybridSnapshotSpec.hpp>
 
 #include <memory>
 
@@ -13,8 +13,8 @@ public:
 
   double getWidth() override;
   double getHeight() override;
-  std::shared_ptr<ArrayBuffer> toArrayBuffer() override;
-  std::shared_ptr<Promise<std::string>> saveToTemporaryFile() override;
+  ArrayBuffer toArrayBuffer() override;
+  Promise<std::string> saveToTemporaryFile() override;
   size_t getExternalMemorySize() noexcept override;
 
 private:

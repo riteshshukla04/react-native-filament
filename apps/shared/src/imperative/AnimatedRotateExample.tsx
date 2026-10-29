@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { callback } from 'react-native-nitro-modules'
 import {
   defaultIndirectLightSource,
   Filament,
@@ -63,7 +62,7 @@ export function AnimatedRotateExample() {
     }
   }, [view])
 
-  return <NativeFilamentView style={styles.container} hybridRef={callback(setView)} />
+  return <NativeFilamentView style={styles.container} hybridRef={setView} />
 }
 
 const styles = StyleSheet.create({

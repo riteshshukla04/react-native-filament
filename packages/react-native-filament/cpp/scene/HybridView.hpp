@@ -1,8 +1,8 @@
 #pragma once
 
-#include "HybridViewSpec.hpp"
 #include "engine/EngineCore.hpp"
 #include "targets/ViewHost.hpp"
+#include <NitroFilament/HybridViewSpec.hpp>
 
 #include <filament/View.h>
 

@@ -34,21 +34,13 @@ yarn android
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+The iOS app builds React Native and its libraries through Swift Package Manager. On first clone and after updating native dependencies, download Filament's iOS libraries and refresh the Swift packages:
 
 ```sh
-bundle install
+bun run spm
 ```
 
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+react-native-screens, react-native-blob-util and @react-native-harness/ui ship no `Package.swift`, so the root `patches/` add the ones `react-native spm scaffold` generates. react-native-video mixes Swift and Objective-C, which Swift Package Manager cannot build, so `react-native.config.js` leaves it out on iOS and the recording examples play no video there.
 
 ```sh
 # Using npm

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HybridIndirectLightSpec.hpp"
 #include "IndirectLightCore.hpp"
+#include <NitroFilament/HybridIndirectLightSpec.hpp>
 
 #include <memory>
 
