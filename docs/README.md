@@ -6,11 +6,11 @@ The documentation website, built with [Fumadocs](https://fumadocs.dev) on Next.j
 
 - `content/docs`: the guides, written in MDX.
 - `content/api`: the API reference. Generated, not checked in.
-- `config/api-examples`: the Declarative and Imperative usage examples shown on every API page, keyed by `<category>/<ExportName>`.
+- `config/api-examples`: the Declarative and Imperative usage examples shown on every API page except the types, keyed by `<category>/<ExportName>`.
 - `scripts/generate-api.ts`: turns the TypeDoc JSON of `packages/react-native-filament` into `content/api`.
 - `src/components/landing`: the home page hero, a Klein bottle rendered live with Filament for WebGL from `public/filament`.
 
-Every guide and API page that documents an API shows both styles in an `<ApiTabs>` block: `<Declarative>` for the React components and hooks, `<Imperative>` for the native Nitro objects.
+Pages show an API in both styles with an `<ApiTabs>` block where the styles differ: `<Declarative>` for the React components and hooks, `<Imperative>` for the native Nitro objects.
 
 ## Development
 
@@ -29,7 +29,7 @@ bun run --cwd docs dev
 bun run --cwd docs build
 ```
 
-The static site is written to `docs/out` and served under `/react-native-filament`. The `Deploy to GitHub Pages` workflow builds and deploys it on every push to `main` that touches `docs` or the package sources.
+The static site is written to `docs/out` and served under `/react-native-filament`. The `Deploy to GitHub Pages` workflow builds and deploys it on every push to `main` that touches `docs` or `packages/react-native-filament/src`.
 
 ## Deploy to Cloudflare
 
